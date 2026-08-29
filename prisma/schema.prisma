@@ -1,0 +1,70 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id            String         @id @default(uuid())
+  email         String         @unique
+  name          String?
+  passwordHash  String
+  role          String         @default("USER") // USER | ADMIN
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  subscription  Subscription?
+  payments      Payment[]
+  toolUsages    ToolUsage[]
+}
+
+model Subscription {
+  id                   String    @id @default(uuid())
+  userId               String    @unique
+  user                 User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  status               String    @default("TRIAL") // TRIAL | ACTIVE | PAST_DUE | GRACE_PERIOD | SUSPENDED | CANCELED
+  trialEndsAt          DateTime
+  gracePeriodEndsAt    DateTime?
+  currentPeriodEnd     DateTime?
+  stripeCustomerId     String?
+  stripeSubscriptionId String?
+  cancelAtPeriodEnd    Boolean   @default(false)
+  planPrice            Float     @default(19.99)
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+}
+
+model Payment {
+  id               String   @id @default(uuid())
+  userId           String
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  amount           Float
+  currency         String   @default("USD")
+  status           String   // PAID | FAILED | REFUNDED
+  gatewayReference String?
+  invoiceUrl       String?
+  createdAt        DateTime @default(now())
+}
+
+model ToolUsage {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  toolName    String   // REMOVE_BG | ENHANCE | REMOVE_COLOR | CLEAN_ALPHA | DTF_BUILDER
+  inputName   String?
+  outputDpi   Int      @default(300)
+  canvasSize  String?  // e.g. "58x100cm", "58x200cm"
+  status      String   @default("SUCCESS")
+  createdAt   DateTime @default(now())
+}
+
+model Setting {
+  id          String   @id @default(uuid())
+  key         String   @unique
+  value       String
+  description String?
+  updatedAt   DateTime @updatedAt
+}
