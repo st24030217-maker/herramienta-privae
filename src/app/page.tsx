@@ -5,140 +5,180 @@ import {
   Pipette, 
   Layers, 
   LayoutGrid, 
-  Check, 
-  ArrowRight, 
-  Zap
+  Sliders
 } from "lucide-react";
 
 export default function HomePage() {
-  const tools = [
+  const prepTools = [
     {
       id: "remove-bg",
-      num: "01",
-      name: "Remover Fondo",
-      desc: "Elimina el fondo detectando sujetos principales con bordes limpios, cabello y formas complejas.",
-      badge: "Transparencia Pura",
+      name: "Limpieza de Fondo",
+      spec: "Canal Alfa RGBA",
+      desc: "Aísla el diseño y siluetas principales con recorte nítido y preservación de transparencias reales.",
       href: "/tools/remove-bg",
       icon: Scissors,
+      action: "Depurar fondo",
     },
     {
       id: "enhance",
-      num: "02",
-      name: "Mejorar Calidad / Resolución",
-      desc: "Aumenta la nitidez, definición y resolución sin deformar el diseño. Salida lista a 300 DPI.",
-      badge: "Super Resolución",
+      name: "Interpolación y Nitidez",
+      spec: "Salida 300 DPI",
+      desc: "Superresolución con algoritmo Lanczos3 y máscara de enfoque para archivos de baja resolución.",
       href: "/tools/enhance",
       icon: Sparkles,
+      action: "Escalar archivo",
     },
     {
       id: "remove-color",
-      num: "03",
-      name: "Eliminar un Color",
-      desc: "Cuentagotas interactivo para retirar cualquier color específico con tolerancia ajustable en tiempo real.",
-      badge: "Cuentagotas",
+      name: "Extracción Cromática",
+      spec: "Muestreo Euclidiano",
+      desc: "Cuentagotas interactivo para eliminar colores de fondo específicos con control de tolerancia.",
       href: "/tools/remove-color",
       icon: Pipette,
+      action: "Seleccionar tono",
     },
     {
       id: "clean-alpha",
-      num: "04",
-      name: "Quitar Semitransparencias",
-      desc: "Corrige el canal alfa para DTF evitando halos o manchas translúcidas que dañan la impresión.",
-      badge: "Especial DTF",
+      name: "Depuración de Semitransparencias",
+      spec: "Control de Tinta Blanca",
+      desc: "Purga halos translúcidos para evitar que la impresora DTF genere depósitos irregulares de tinta blanca.",
       href: "/tools/clean-alpha",
       icon: Layers,
-    },
-    {
-      id: "dtf-builder",
-      num: "05",
-      name: "Armador de Archivos DTF",
-      desc: "Lienzo a escala en 58×100 cm y 58×200 cm. Acomoda múltiples PNG, escala con medidas en cm y exporta a 300 DPI.",
-      badge: "Lienzo 58 cm",
-      href: "/tools/dtf-builder",
-      icon: LayoutGrid,
-      featured: true,
+      action: "Corregir alfa",
     },
   ];
 
   return (
-    <div className="relative overflow-hidden bg-black text-white">
-      {/* Hero Section */}
-      <section className="relative mx-auto max-w-7xl px-4 pt-16 pb-12 sm:px-6 lg:px-8 text-center">
-        <div className="inline-flex items-center gap-2 rounded-full border border-neutral-700 bg-neutral-900 px-3.5 py-1 text-xs font-bold text-neutral-200 mb-6">
-          <Zap className="h-3.5 w-3.5 text-white" /> PLATAFORMA OFICIAL PRIVAE TEXTIL
-        </div>
-
-        <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight text-white max-w-4xl mx-auto uppercase">
-          Preparación de Archivos e Impresión <span className="underline decoration-white underline-offset-8">DTF</span>
-        </h1>
-
-        <p className="mt-6 text-base sm:text-lg text-neutral-400 max-w-2xl mx-auto">
-          Optimiza, limpia y arma tus archivos en minutos. Salida certificada a <strong>300 DPI</strong>, canal alfa real RGBA y dimensiones físicas exactas de <strong>58 cm</strong>.
-        </p>
-
-        {/* Badges de Garantía */}
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-3 text-xs font-semibold text-neutral-300">
-          <div className="flex items-center gap-1.5 rounded-lg border border-neutral-800 bg-neutral-950 px-3 py-1.5">
-            <Check className="h-4 w-4 text-white" /> Salida Mínima 300 DPI
+    <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+      {/* Barra de Parámetros de Taller */}
+      <section className="mb-10 border-b border-[#20232A] pb-8">
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+          <div>
+            <div className="flex items-center gap-2 mb-2 font-mono text-xs text-[#00A3FF]">
+              <span className="inline-block h-2 w-2 rounded-full bg-[#00A3FF]"></span>
+              <span>MESA DE PREIMPRESIÓN ACTIVA</span>
+            </div>
+            <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#F3F4F6]">
+              Consola de Preparación DTF
+            </h1>
+            <p className="mt-2 text-sm text-[#8E95A5] max-w-2xl leading-relaxed">
+              Herramientas de taller para calibrar transparencias, densidad de tinta blanca y armar pliegos continuos de impresión textil a 300 DPI reales.
+            </p>
           </div>
-          <div className="flex items-center gap-1.5 rounded-lg border border-neutral-800 bg-neutral-950 px-3 py-1.5">
-            <Check className="h-4 w-4 text-white" /> Ancho DTF Exacto 58 cm
-          </div>
-          <div className="flex items-center gap-1.5 rounded-lg border border-neutral-800 bg-neutral-950 px-3 py-1.5">
-            <Check className="h-4 w-4 text-white" /> 5 Días de Prueba Gratis
+
+          {/* Ficha de Calibración Técnica */}
+          <div className="flex flex-wrap items-center gap-4 font-mono text-xs text-[#8E95A5] bg-[#16181D] border border-[#20232A] px-4 py-2.5 rounded">
+            <div>
+              <span className="text-[#8E95A5]/60 block text-[10px]">ANCHO BOBINA</span>
+              <span className="text-[#F3F4F6] font-semibold">58.0 cm</span>
+            </div>
+            <div className="h-6 w-px bg-[#20232A]" />
+            <div>
+              <span className="text-[#8E95A5]/60 block text-[10px]">DENSIDAD</span>
+              <span className="text-[#F3F4F6] font-semibold">300 DPI</span>
+            </div>
+            <div className="h-6 w-px bg-[#20232A]" />
+            <div>
+              <span className="text-[#8E95A5]/60 block text-[10px]">CANAL COLOR</span>
+              <span className="text-[#F3F4F6] font-semibold">RGBA + White</span>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Grid de las 5 Herramientas */}
-      <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <div className="mb-6 flex items-center justify-between border-b border-neutral-850 pb-3">
-          <h2 className="text-xs font-black uppercase tracking-widest text-neutral-400">
-            5 Módulos Especializados
-          </h2>
+      {/* ESTACIÓN PRINCIPAL: Armador de Pliegos DTF */}
+      <section className="mb-12">
+        <div className="rounded-lg border border-[#20232A] bg-[#16181D] p-6 lg:p-8">
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+            <div className="flex-1">
+              <div className="flex items-center gap-2.5 mb-2">
+                <span className="font-mono text-xs text-[#00A3FF] border border-[#00A3FF]/30 px-2 py-0.5 rounded bg-[#00A3FF]/10 font-semibold">
+                  ESTACIÓN CENTRAL
+                </span>
+                <span className="font-mono text-xs text-[#8E95A5]">
+                  580 × 1000 mm / 580 × 2000 mm
+                </span>
+              </div>
+
+              <h2 className="text-xl sm:text-2xl font-bold text-[#F3F4F6] tracking-tight">
+                Armador de Archivos y Pliegos DTF
+              </h2>
+              <p className="mt-2 text-sm text-[#8E95A5] max-w-2xl leading-relaxed">
+                Distribuye múltiples diseños en un lienzo calibrado a escala real. Mide dimensiones en centímetros, verifica advertencias de resolución baja (&lt; 250 DPI) y exporta el PNG maestro a 300 DPI.
+              </p>
+
+              <div className="mt-4 flex flex-wrap gap-2 text-xs font-mono text-[#8E95A5]">
+                <span className="rounded bg-[#0D0E11] border border-[#20232A] px-2.5 py-1">
+                  Formatos: 58×100 cm y 58×200 cm
+                </span>
+                <span className="rounded bg-[#0D0E11] border border-[#20232A] px-2.5 py-1">
+                  Cálculo de resolución efectiva en vivo
+                </span>
+                <span className="rounded bg-[#0D0E11] border border-[#20232A] px-2.5 py-1">
+                  Salida hasta 6,850 × 23,622 px
+                </span>
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row lg:flex-col gap-3 shrink-0">
+              <Link
+                href="/tools/dtf-builder"
+                className="inline-flex items-center justify-center gap-2 rounded bg-[#F3F4F6] px-5 py-2.5 text-xs font-bold text-[#0D0E11] hover:bg-white transition-colors text-center"
+              >
+                <LayoutGrid className="h-4 w-4" />
+                <span>Armar pliego de 58 cm</span>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* MÓDULOS DE CALIBRACIÓN Y PRE-PRENSA */}
+      <section>
+        <div className="mb-4 flex items-center justify-between border-b border-[#20232A] pb-2">
+          <h3 className="font-mono text-xs uppercase tracking-wider text-[#8E95A5]">
+            Módulos de Calibración y Pre-Prensa
+          </h3>
+          <span className="font-mono text-xs text-[#8E95A5]/60">
+            4 utilidades individuales
+          </span>
         </div>
 
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {tools.map((tool) => {
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {prepTools.map((tool) => {
             const Icon = tool.icon;
             return (
-              <Link
+              <div
                 key={tool.id}
-                href={tool.href}
-                className={`group relative flex flex-col justify-between rounded-2xl border p-6 transition-all hover:border-white hover:-translate-y-1 ${
-                  tool.featured
-                    ? "border-neutral-700 bg-neutral-950 md:col-span-2 lg:col-span-2 shadow-glow-subtle"
-                    : "border-neutral-850 bg-black"
-                }`}
+                className="flex flex-col justify-between rounded-lg border border-[#20232A] bg-[#16181D] p-5 transition-colors hover:border-[#8E95A5]/40"
               >
                 <div>
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="rounded-xl border border-neutral-700 bg-neutral-900 p-3 text-white">
-                      <Icon className="h-6 w-6" />
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex h-8 w-8 items-center justify-center rounded border border-[#20232A] bg-[#0D0E11] text-[#F3F4F6]">
+                      <Icon className="h-4 w-4 text-[#00A3FF]" />
                     </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs font-mono font-bold text-neutral-500">
-                        {tool.num}
-                      </span>
-                      <span className="rounded bg-neutral-900 border border-neutral-800 px-2 py-0.5 text-[10px] font-bold text-neutral-300">
-                        {tool.badge}
-                      </span>
-                    </div>
+                    <span className="font-mono text-[11px] text-[#8E95A5]">
+                      {tool.spec}
+                    </span>
                   </div>
 
-                  <h3 className="text-lg font-black text-white group-hover:underline">
+                  <h4 className="text-sm font-bold text-[#F3F4F6]">
                     {tool.name}
-                  </h3>
-                  <p className="mt-2 text-xs sm:text-sm text-neutral-400 leading-relaxed">
+                  </h4>
+                  <p className="mt-2 text-xs text-[#8E95A5] leading-relaxed">
                     {tool.desc}
                   </p>
                 </div>
 
-                <div className="mt-6 flex items-center gap-1 text-xs font-bold text-white group-hover:translate-x-1 transition-transform">
-                  <span>Abrir Herramienta</span>
-                  <ArrowRight className="h-3.5 w-3.5" />
+                <div className="mt-5 pt-3 border-t border-[#20232A]">
+                  <Link
+                    href={tool.href}
+                    className="inline-flex w-full items-center justify-center gap-1.5 rounded border border-[#20232A] bg-[#0D0E11] py-1.5 text-xs font-semibold text-[#F3F4F6] hover:bg-[#20232A] hover:border-[#8E95A5]/40 transition-colors"
+                  >
+                    <span>{tool.action}</span>
+                  </Link>
                 </div>
-              </Link>
+              </div>
             );
           })}
         </div>

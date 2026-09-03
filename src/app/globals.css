@@ -3,26 +3,28 @@
 @tailwind utilities;
 
 :root {
-  --background: #050505;
-  --foreground: #ffffff;
+  --background: #0D0E11;
+  --foreground: #F3F4F6;
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   min-height: 100vh;
   overflow-x: hidden;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* Patrón de transparencia profesional en escala de grises / B&W */
+/* DTF Technical Film Transparency Grid: Calibrada para inspección de tinta blanca RGBA */
 .bg-transparency-grid {
-  background-color: #121212;
+  background-color: #1A1C23;
   background-image: 
-    linear-gradient(45deg, #050505 25%, transparent 25%), 
-    linear-gradient(-45deg, #050505 25%, transparent 25%), 
-    linear-gradient(45deg, transparent 75%, #050505 75%), 
-    linear-gradient(-45deg, transparent 75%, #050505 75%);
+    linear-gradient(45deg, #12141A 25%, transparent 25%), 
+    linear-gradient(-45deg, #12141A 25%, transparent 25%), 
+    linear-gradient(45deg, transparent 75%, #12141A 75%), 
+    linear-gradient(-45deg, transparent 75%, #12141A 75%);
   background-size: 16px 16px;
   background-position: 0 0, 0 8px, 8px -8px, -8px 0px;
 }

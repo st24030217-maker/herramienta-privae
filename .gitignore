@@ -33,3 +33,8 @@ Thumbs.db
 .idea/
 .vscode/
 *.swp
+
+# .NET / C# Build Artifacts
+bin/
+obj/
+PrivaeDTF/

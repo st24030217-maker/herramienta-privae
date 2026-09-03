@@ -9,8 +9,16 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        background: "#000000",
-        foreground: "#ffffff",
+        background: "#0D0E11",
+        foreground: "#F3F4F6",
+        workshop: {
+          film: "#0D0E11",
+          platen: "#16181D",
+          border: "#20232A",
+          muted: "#8E95A5",
+          cyan: "#00A3FF",
+          white: "#F3F4F6",
+        },
         privae: {
           50: "#fafafa",
           100: "#f5f5f5",
@@ -26,8 +34,8 @@ module.exports = {
         }
       },
       boxShadow: {
-        'glow-white': '0 0 25px -5px rgba(255, 255, 255, 0.25)',
-        'glow-subtle': '0 0 20px -5px rgba(255, 255, 255, 0.1)',
+        'subtle-edge': '0 1px 2px 0 rgba(0, 0, 0, 0.4)',
+        'cyan-focus': '0 0 0 2px rgba(0, 163, 255, 0.3)',
       }
     },
   },

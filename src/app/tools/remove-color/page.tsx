@@ -19,9 +19,9 @@ export default function RemoveColorPage() {
 
   return (
     <ToolLayout
-      title="03 · Eliminar un Color"
-      description="Selecciona visualmente el color que deseas retirar (cuentagotas o paleta) y elimínalo convirtiéndolo en transparencia pura con tolerancia ajustable. Salida PNG a 300 DPI."
-      badge="Cuentagotas & Tolerancia"
+      title="Extracción Cromática Específica"
+      description="Identifica y suprime un matiz de color puntual convirtiéndolo en transparencia RGBA limpia mediante cálculo de distancia cromática. Salida certificada a 300 DPI."
+      badge="Muestreo RGB / Euclidiano"
       apiEndpoint="/api/process/remove-color"
       additionalFormData={(formData) => {
         const rgb = hexToRgb(selectedHex);
@@ -30,33 +30,33 @@ export default function RemoveColorPage() {
         formData.append("b", String(rgb.b));
       }}
       renderControls={(_, setCustomParam, customParams) => (
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 text-xs">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-xs">
           {/* Selector de Color */}
           <div>
-            <label className="block text-slate-300 mb-1.5 font-medium">
-              Color a Eliminar:
+            <label className="block text-[#8E95A5] mb-1.5 font-mono">
+              Color a Retirar:
             </label>
             <div className="flex items-center gap-2">
               <input
                 type="color"
                 value={selectedHex}
                 onChange={(e) => setSelectedHex(e.target.value)}
-                className="h-9 w-12 cursor-pointer rounded border border-slate-700 bg-slate-950 p-0.5"
+                className="h-8 w-10 cursor-pointer rounded border border-[#20232A] bg-[#0D0E11] p-0.5"
               />
               <input
                 type="text"
                 value={selectedHex}
                 onChange={(e) => setSelectedHex(e.target.value)}
-                className="w-28 rounded-lg border border-slate-700 bg-slate-950 px-3 py-1.5 text-slate-200 uppercase font-mono"
+                className="w-24 rounded border border-[#20232A] bg-[#0D0E11] px-2.5 py-1.5 text-[#F3F4F6] uppercase font-mono text-xs focus:border-[#00A3FF] focus:outline-none"
               />
             </div>
           </div>
 
           {/* Tolerancia */}
           <div>
-            <div className="flex justify-between text-slate-300 mb-1">
-              <span>Tolerancia de Color:</span>
-              <span className="font-mono text-blue-400">{customParams.tolerance || 30}%</span>
+            <div className="flex justify-between text-[#F3F4F6] mb-1.5 font-mono">
+              <span className="text-[#8E95A5]">Tolerancia Cromática:</span>
+              <span className="text-[#00A3FF] font-semibold">{customParams.tolerance || 30}%</span>
             </div>
             <input
               type="range"
@@ -64,18 +64,18 @@ export default function RemoveColorPage() {
               max="90"
               value={customParams.tolerance || 30}
               onChange={(e) => setCustomParam("tolerance", e.target.value)}
-              className="w-full accent-blue-500 cursor-pointer"
+              className="w-full accent-[#00A3FF] cursor-pointer"
             />
-            <span className="text-[10px] text-slate-500">
-              Aumenta para eliminar tonos similares cercanos.
+            <span className="text-[10px] text-[#8E95A5]/60 font-mono">
+              Amplitud del radio de supresión euclidiana.
             </span>
           </div>
 
           {/* Suavizado */}
           <div>
-            <div className="flex justify-between text-slate-300 mb-1">
-              <span>Transición Suave de Borde:</span>
-              <span className="font-mono text-blue-400">{customParams.smoothness || 10}%</span>
+            <div className="flex justify-between text-[#F3F4F6] mb-1.5 font-mono">
+              <span className="text-[#8E95A5]">Transición de Borde:</span>
+              <span className="text-[#00A3FF] font-semibold">{customParams.smoothness || 10}%</span>
             </div>
             <input
               type="range"
@@ -83,10 +83,10 @@ export default function RemoveColorPage() {
               max="40"
               value={customParams.smoothness || 10}
               onChange={(e) => setCustomParam("smoothness", e.target.value)}
-              className="w-full accent-blue-500 cursor-pointer"
+              className="w-full accent-[#00A3FF] cursor-pointer"
             />
-            <span className="text-[10px] text-slate-500">
-              Evita bordes dentados o pixelados.
+            <span className="text-[10px] text-[#8E95A5]/60 font-mono">
+              Atenúa el escalonado en bordes curvos.
             </span>
           </div>
         </div>

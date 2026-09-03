@@ -15,18 +15,20 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es" className="dark">
-      <body className="flex min-h-screen flex-col bg-slate-950 text-slate-100 antialiased">
+      <body className="flex min-h-screen flex-col bg-[#0D0E11] text-[#F3F4F6] antialiased selection:bg-[#00A3FF]/30 selection:text-white">
         <Navbar />
         <main className="flex-1">{children}</main>
-        <footer className="border-t border-slate-850 bg-slate-950 py-6 text-center text-xs text-slate-500">
+        <footer className="border-t border-[#20232A] bg-[#16181D] py-5 text-xs text-[#8E95A5]">
           <div className="mx-auto max-w-7xl px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-            <div>
-              © 2026 <strong>Privae Textil</strong> · Todos los derechos reservados.
+            <div className="flex items-center gap-2">
+              <span className="font-semibold text-[#F3F4F6]">Privae Textil</span>
+              <span>—</span>
+              <span>Consola de Preparación y Salida DTF</span>
             </div>
-            <div className="flex gap-4">
-              <span className="text-slate-400">Salida Certificada 300 DPI</span>
-              <span>·</span>
-              <span className="text-slate-400">Canal Alfa RGBA</span>
+            <div className="flex items-center gap-4 font-mono text-[11px] text-[#8E95A5]">
+              <span>300 DPI CERTIFICADO</span>
+              <span>ANCHO 580 MM</span>
+              <span>CANAL RGBA ALFA</span>
             </div>
           </div>
         </footer>

@@ -65,25 +65,25 @@ export function Navbar() {
   ];
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-neutral-800 bg-black/90 backdrop-blur-md">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        {/* Logo & Marca Blanco y Negro */}
-        <div className="flex items-center gap-6">
-          <Link href="/" className="flex items-center gap-3 group">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-white text-black font-black text-lg shadow-glow-white">
+    <header className="sticky top-0 z-50 w-full border-b border-[#20232A] bg-[#16181D]/95 backdrop-blur-md">
+      <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        {/* Marca Técnica Industrial */}
+        <div className="flex items-center gap-8">
+          <Link href="/" className="flex items-center gap-2.5 group">
+            <div className="flex h-7 w-7 items-center justify-center rounded border border-[#20232A] bg-[#0D0E11] text-[#F3F4F6] font-mono font-bold text-sm">
               P
             </div>
             <div className="flex flex-col">
-              <span className="font-black tracking-wider text-white text-base">
-                PRIVAE <span className="text-neutral-400 font-normal">TEXTIL</span>
+              <span className="font-bold tracking-tight text-[#F3F4F6] text-sm leading-tight">
+                PRIVAE <span className="text-[#8E95A5] font-normal">DTF</span>
               </span>
-              <span className="text-[10px] uppercase tracking-widest text-neutral-400 font-medium">
-                HERRAMIENTAS DTF · 300 DPI
+              <span className="font-mono text-[9px] tracking-wider text-[#8E95A5]">
+                300 DPI PRE-PRESS
               </span>
             </div>
           </Link>
 
-          {/* Menú de Herramientas */}
+          {/* Menú de Herramientas de Taller */}
           <nav className="hidden md:flex items-center gap-1">
             {navLinks.map((item) => {
               const Icon = item.icon;
@@ -92,16 +92,16 @@ export function Navbar() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md transition-all ${
+                  className={`flex items-center gap-1.5 px-3 py-1.5 text-xs rounded transition-colors ${
                     isActive
-                      ? "bg-white text-black font-bold shadow-sm"
+                      ? "bg-[#0D0E11] text-[#F3F4F6] font-semibold border border-[#00A3FF]/40"
                       : item.highlight
-                      ? "text-white bg-neutral-900 border border-neutral-700 hover:bg-neutral-800"
-                      : "text-neutral-300 hover:text-white hover:bg-neutral-900"
+                      ? "text-[#F3F4F6] bg-[#20232A]/60 border border-[#20232A] hover:bg-[#20232A]"
+                      : "text-[#8E95A5] hover:text-[#F3F4F6] hover:bg-[#20232A]/40"
                   }`}
                 >
-                  <Icon className="h-3.5 w-3.5" />
-                  {item.label}
+                  <Icon className="h-3.5 w-3.5 shrink-0" />
+                  <span>{item.label}</span>
                 </Link>
               );
             })}
@@ -112,32 +112,32 @@ export function Navbar() {
         <div className="flex items-center gap-3">
           {userData ? (
             <div className="flex items-center gap-3">
-              {/* Badges Monocromáticos */}
+              {/* Badges Técnicos de Acceso */}
               {userData.role === "ADMIN" ? (
-                <span className="inline-flex items-center gap-1 rounded-full bg-white text-black px-2.5 py-0.5 text-xs font-bold">
-                  <Crown className="h-3 w-3" /> Admin
+                <span className="inline-flex items-center gap-1 rounded border border-[#20232A] bg-[#0D0E11] text-[#F3F4F6] px-2 py-0.5 font-mono text-[11px] font-semibold">
+                  <Crown className="h-3 w-3 text-[#00A3FF]" /> ADMIN
                 </span>
               ) : userData.subscription.status === "ACTIVE" ? (
-                <span className="inline-flex items-center gap-1 rounded-full bg-neutral-900 text-white px-2.5 py-0.5 text-xs font-bold border border-neutral-700">
-                  <Crown className="h-3 w-3" /> Premium Activo
+                <span className="inline-flex items-center gap-1 rounded border border-[#00A3FF]/30 bg-[#00A3FF]/10 text-[#00A3FF] px-2 py-0.5 font-mono text-[11px] font-semibold">
+                  <Crown className="h-3 w-3" /> PREMIUM ACTIVO
                 </span>
               ) : userData.subscription.status === "GRACE_PERIOD" ? (
-                <span className="inline-flex items-center gap-1 rounded-full bg-neutral-800 text-white px-2.5 py-0.5 text-xs font-bold border border-white">
-                  <ShieldAlert className="h-3 w-3" /> Gracia: {userData.subscription.daysRemaining}d
+                <span className="inline-flex items-center gap-1 rounded border border-amber-500/30 bg-amber-500/10 text-amber-300 px-2 py-0.5 font-mono text-[11px]">
+                  <ShieldAlert className="h-3 w-3" /> GRACIA: {userData.subscription.daysRemaining}D
                 </span>
               ) : userData.subscription.status === "TRIAL" ? (
-                <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-bold border ${
+                <span className={`inline-flex items-center gap-1 rounded border px-2 py-0.5 font-mono text-[11px] ${
                   userData.subscription.isAccessGranted
-                    ? "bg-neutral-900 text-white border-neutral-700"
-                    : "bg-neutral-950 text-neutral-400 border-neutral-800 line-through"
+                    ? "border-[#20232A] bg-[#0D0E11] text-[#F3F4F6]"
+                    : "border-[#20232A] bg-[#0D0E11] text-[#8E95A5] line-through"
                 }`}>
                   {userData.subscription.isAccessGranted
-                    ? `Prueba: ${userData.subscription.daysRemaining} días`
-                    : "Prueba Vencida"}
+                    ? `PRUEBA: ${userData.subscription.daysRemaining} DÍAS`
+                    : "PRUEBA VENCIDA"}
                 </span>
               ) : (
-                <span className="inline-flex items-center gap-1 rounded-full bg-neutral-900 text-neutral-400 px-2.5 py-0.5 text-xs font-bold border border-neutral-800">
-                  Suspendido
+                <span className="inline-flex items-center gap-1 rounded border border-[#20232A] bg-[#0D0E11] text-[#8E95A5] px-2 py-0.5 font-mono text-[11px]">
+                  SUSPENDIDO
                 </span>
               )}
 
@@ -145,41 +145,41 @@ export function Navbar() {
               <div className="relative">
                 <button
                   onClick={() => setMenuOpen(!menuOpen)}
-                  className="flex items-center gap-2 rounded-lg border border-neutral-800 bg-neutral-900 px-3 py-1.5 text-xs font-medium text-white hover:bg-neutral-800"
+                  className="flex items-center gap-2 rounded border border-[#20232A] bg-[#0D0E11] px-2.5 py-1.5 text-xs text-[#F3F4F6] hover:border-[#8E95A5]/40"
                 >
-                  <User className="h-3.5 w-3.5 text-neutral-300" />
-                  <span className="max-w-[100px] truncate">{userData.name || userData.email}</span>
-                  <ChevronDown className="h-3 w-3 text-neutral-400" />
+                  <User className="h-3.5 w-3.5 text-[#8E95A5]" />
+                  <span className="max-w-[110px] truncate">{userData.name || userData.email}</span>
+                  <ChevronDown className="h-3 w-3 text-[#8E95A5]" />
                 </button>
 
                 {menuOpen && (
-                  <div className="absolute right-0 mt-2 w-48 rounded-lg border border-neutral-800 bg-neutral-950 py-1 shadow-2xl z-50">
+                  <div className="absolute right-0 mt-2 w-48 rounded border border-[#20232A] bg-[#16181D] py-1 shadow-xl z-50">
                     <Link
                       href="/account"
                       onClick={() => setMenuOpen(false)}
-                      className="flex items-center gap-2 px-4 py-2 text-xs text-neutral-200 hover:bg-neutral-900"
+                      className="flex items-center gap-2 px-4 py-2 text-xs text-[#F3F4F6] hover:bg-[#20232A]"
                     >
-                      <User className="h-3.5 w-3.5 text-neutral-400" /> Mi Cuenta & Suscripción
+                      <User className="h-3.5 w-3.5 text-[#8E95A5]" /> Mi Cuenta & Suscripción
                     </Link>
 
                     {userData.role === "ADMIN" && (
                       <Link
                         href="/admin"
                         onClick={() => setMenuOpen(false)}
-                        className="flex items-center gap-2 px-4 py-2 text-xs text-white font-semibold hover:bg-neutral-900"
+                        className="flex items-center gap-2 px-4 py-2 text-xs text-[#00A3FF] font-medium hover:bg-[#20232A]"
                       >
-                        <Crown className="h-3.5 w-3.5 text-white" /> Panel Administrador
+                        <Crown className="h-3.5 w-3.5" /> Panel Administrador
                       </Link>
                     )}
 
-                    <hr className="my-1 border-neutral-800" />
+                    <hr className="my-1 border-[#20232A]" />
 
                     <button
                       onClick={() => {
                         setMenuOpen(false);
                         handleLogout();
                       }}
-                      className="flex w-full items-center gap-2 px-4 py-2 text-xs text-neutral-400 hover:text-white hover:bg-neutral-900"
+                      className="flex w-full items-center gap-2 px-4 py-2 text-xs text-[#8E95A5] hover:text-[#F3F4F6] hover:bg-[#20232A]"
                     >
                       <LogOut className="h-3.5 w-3.5" /> Cerrar Sesión
                     </button>
@@ -191,15 +191,15 @@ export function Navbar() {
             <div className="flex items-center gap-2">
               <Link
                 href="/auth/login"
-                className="px-3 py-1.5 text-xs font-medium text-neutral-300 hover:text-white"
+                className="px-3 py-1.5 text-xs font-medium text-[#8E95A5] hover:text-[#F3F4F6]"
               >
-                Iniciar Sesión
+                Ingresar
               </Link>
               <Link
                 href="/auth/register"
-                className="rounded-lg bg-white px-3.5 py-1.5 text-xs font-bold text-black hover:bg-neutral-200 transition-colors"
+                className="rounded border border-[#F3F4F6] bg-[#F3F4F6] px-3 py-1.5 text-xs font-bold text-[#0D0E11] hover:bg-white transition-colors"
               >
-                Probar 5 Días Gratis
+                Iniciar prueba de 5 días
               </Link>
             </div>
           ) : null}

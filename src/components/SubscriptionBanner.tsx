@@ -18,17 +18,17 @@ export function SubscriptionBanner({
 
   if (status === "GRACE_PERIOD") {
     return (
-      <div className="bg-neutral-900 border-b border-neutral-700 px-4 py-2.5 text-center text-xs text-white">
+      <div className="bg-[#16181D] border-b border-amber-500/30 px-4 py-2 text-center text-xs text-amber-200">
         <div className="mx-auto flex max-w-7xl items-center justify-center gap-2">
-          <AlertTriangle className="h-4 w-4 text-white shrink-0" />
+          <AlertTriangle className="h-4 w-4 text-amber-400 shrink-0" />
           <span>
-            <strong>Aviso de Pago Pendiente:</strong> Cuentas con <strong>{daysRemaining} días de gracia</strong> antes de la suspensión de tus herramientas.
+            <strong>Período de gracia activo:</strong> Restan <strong>{daysRemaining} días</strong> para regularizar el acceso al taller.
           </span>
           <Link
             href="/account"
-            className="ml-2 font-bold underline hover:text-neutral-300"
+            className="ml-2 font-mono font-semibold underline text-[#F3F4F6] hover:text-white"
           >
-            Actualizar método de pago →
+            Actualizar facturación
           </Link>
         </div>
       </div>
@@ -37,17 +37,17 @@ export function SubscriptionBanner({
 
   if (status === "TRIAL" && !isAccessGranted) {
     return (
-      <div className="bg-neutral-950 border-b border-neutral-800 px-4 py-3 text-center text-xs text-white">
-        <div className="mx-auto flex max-w-7xl items-center justify-center gap-2">
-          <AlertTriangle className="h-4 w-4 text-white shrink-0" />
+      <div className="bg-[#16181D] border-b border-[#20232A] px-4 py-3 text-center text-xs text-[#F3F4F6]">
+        <div className="mx-auto flex max-w-7xl items-center justify-center gap-2 font-mono">
+          <AlertTriangle className="h-4 w-4 text-[#00A3FF] shrink-0" />
           <span>
-            <strong>Tu prueba gratuita de 5 días ha concluido.</strong> Desbloquea acceso ilimitado a todas las herramientas DTF.
+            El período de prueba de 5 días ha concluido. Reactiva las herramientas de preimpresión.
           </span>
           <Link
             href="/account"
-            className="ml-3 inline-flex items-center gap-1 rounded bg-white px-3 py-1 text-xs font-bold text-black hover:bg-neutral-200"
+            className="ml-3 inline-flex items-center gap-1 rounded bg-[#00A3FF] px-3 py-1 text-xs font-bold text-white hover:bg-[#00A3FF]/90 transition-colors font-sans"
           >
-            <Sparkles className="h-3 w-3" /> Activar Plan Premium
+            Activar cuenta de producción
           </Link>
         </div>
       </div>
@@ -56,17 +56,17 @@ export function SubscriptionBanner({
 
   if (status === "TRIAL" && daysRemaining <= 2) {
     return (
-      <div className="bg-neutral-900 border-b border-neutral-800 px-4 py-2 text-center text-xs text-neutral-300">
-        <div className="mx-auto flex max-w-7xl items-center justify-center gap-2">
-          <Clock className="h-3.5 w-3.5 text-white shrink-0" />
+      <div className="bg-[#16181D] border-b border-[#20232A] px-4 py-2 text-center text-xs text-[#8E95A5]">
+        <div className="mx-auto flex max-w-7xl items-center justify-center gap-2 font-mono text-[11px]">
+          <Clock className="h-3.5 w-3.5 text-[#00A3FF] shrink-0" />
           <span>
-            Te quedan <strong>{daysRemaining} días</strong> de tu prueba gratuita.
+            Quedan <strong className="text-[#F3F4F6]">{daysRemaining} días</strong> de prueba técnica.
           </span>
           <Link
             href="/account"
-            className="ml-2 font-bold text-white underline hover:text-neutral-300"
+            className="ml-2 font-semibold text-[#00A3FF] underline hover:text-white"
           >
-            Suscríbete ahora para no perder acceso
+            Configurar plan continuo
           </Link>
         </div>
       </div>
