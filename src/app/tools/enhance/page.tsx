@@ -6,9 +6,9 @@ import { Sparkles, SlidersHorizontal } from "lucide-react";
 export default function EnhancePage() {
   return (
     <ToolLayout
-      title="Interpolación y Nitidez de Resolución"
-      description="Aumenta la densidad de píxeles, nitidez y definición de artes rasterizados sin distorsión geométrica. Interpolación adaptativa para salida certificada a 300 DPI."
-      badge="Lanczos3 a 300 DPI"
+      title="+ Mejorar Calidad (Superresolución 300 DPI)"
+      description="Multiplica la densidad de píxeles, nitidez y definición de artes rasterizados con interpolación Lanczos3 y máscara de enfoque sin halos. Salida lista a 300 DPI para impresión textil."
+      badge="+Resolución 300 DPI"
       apiEndpoint="/api/process/enhance"
       renderControls={(_, setCustomParam, customParams) => (
         <div className="space-y-6">
@@ -16,12 +16,12 @@ export default function EnhancePage() {
             {/* Factor de Escala con Botones Grandes */}
             <div className="space-y-2">
               <label className="block text-xs font-mono text-[#8E95A5] uppercase tracking-wider">
-                1. Factor de Escala:
+                1. Multiplicador de Calidad:
               </label>
               <div className="grid grid-cols-2 gap-2">
                 {[
-                  { val: "2", label: "2X", desc: "Duplicar Píxeles" },
-                  { val: "4", label: "4X", desc: "Ultra Resolución" },
+                  { val: "2", label: "+2X Calidad", desc: "Duplicar Píxeles" },
+                  { val: "4", label: "+4X Ultra", desc: "Ultra Resolución" },
                 ].map((scale) => {
                   const isSelected = String(customParams.scaleFactor || "2") === scale.val;
                   return (
@@ -29,9 +29,9 @@ export default function EnhancePage() {
                       key={scale.val}
                       type="button"
                       onClick={() => setCustomParam("scaleFactor", scale.val)}
-                      className={`p-3 rounded-xl border text-center transition-all ${
+                      className={`p-3 rounded-xl border text-center transition-all active:scale-95 ${
                         isSelected
-                          ? "border-[#00A3FF] bg-[#00A3FF]/15 text-white shadow-sm ring-1 ring-[#00A3FF]"
+                          ? "border-[#00A3FF] bg-[#00A3FF]/15 text-white shadow-md ring-2 ring-[#00A3FF]"
                           : "border-[#20232A] bg-[#0D0E11] text-[#8E95A5] hover:border-[#8E95A5]/40 hover:text-white"
                       }`}
                     >

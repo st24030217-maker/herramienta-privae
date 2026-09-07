@@ -5,22 +5,22 @@ import { ToolLayout } from "@/components/ToolLayout";
 export default function RemoveBgPage() {
   return (
     <ToolLayout
-      title="Limpieza y Recorte de Fondo"
-      description="Aísla el sujeto principal, elimina el fondo con bordes limpios y conserva transparencia real en contornos y detalles finos. Salida certificada a 300 DPI."
-      badge="Transparencia Alfa 300 DPI"
+      title="Quitar Fondo (Depurar)"
+      description="Depura el fondo de cualquier arte o diseño, aislando el estampado con bordes limpios y preservando transparencias reales sin halos lechosos. Salida certificada a 300 DPI."
+      badge="Transparencia Alfa DTF"
       apiEndpoint="/api/process/remove-bg"
       renderControls={(_, setCustomParam, customParams) => (
         <div className="space-y-5">
           {/* Selector de Fondo con Botones Grandes */}
           <div>
             <label className="block text-xs font-mono text-[#8E95A5] mb-2 uppercase tracking-wider">
-              1. Tipo de Fondo a Eliminar:
+              1. Fondo a Depurar (A la Mano):
             </label>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               {[
-                { id: "auto", title: "Automático", desc: "Muestreo perimetral multizona" },
-                { id: "white", title: "Fondo Blanco", desc: "Ideal para diseños sobre blanco" },
-                { id: "black", title: "Fondo Negro", desc: "Ideal para siluetas sobre negro" },
+                { id: "auto", title: "Automático (Muestreo)", desc: "Detecta bordes y fondo inteligente" },
+                { id: "white", title: "Quitar Fondo Blanco", desc: "Artes sobre blanco / JPG común" },
+                { id: "black", title: "Quitar Fondo Negro", desc: "Siluetas y estampados oscuros" },
               ].map((bg) => {
                 const isSelected = (customParams.bgType || "auto") === bg.id;
                 return (
@@ -28,9 +28,9 @@ export default function RemoveBgPage() {
                     key={bg.id}
                     type="button"
                     onClick={() => setCustomParam("bgType", bg.id)}
-                    className={`flex flex-col items-start p-3.5 rounded-xl border text-left transition-all ${
+                    className={`flex flex-col items-start p-3.5 rounded-xl border text-left transition-all active:scale-95 ${
                       isSelected
-                        ? "border-[#00A3FF] bg-[#00A3FF]/10 text-white shadow-sm ring-1 ring-[#00A3FF]"
+                        ? "border-[#00A3FF] bg-[#00A3FF]/15 text-white shadow-md ring-2 ring-[#00A3FF]"
                         : "border-[#20232A] bg-[#0D0E11] text-[#8E95A5] hover:border-[#8E95A5]/40 hover:text-white"
                     }`}
                   >

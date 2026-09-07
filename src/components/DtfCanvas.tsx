@@ -16,7 +16,9 @@ import {
   X,
   LogIn,
   Crown,
-  UploadCloud
+  UploadCloud,
+  Maximize2,
+  Minimize2
 } from "lucide-react";
 
 export interface CanvasDesign {
@@ -29,7 +31,7 @@ export interface CanvasDesign {
   yCm: number;       // posición vertical en cm
   widthCm: number;   // ancho en cm
   heightCm: number;  // alto en cm
-  rotation: number;  // grados (0, 90, 180, 270)
+  rotation: number;  // grados (0 a 359)
   aspectRatio: number;
 }
 
@@ -43,8 +45,10 @@ export function DtfCanvas() {
   const [exportErrorStatus, setExportErrorStatus] = useState<number | null>(null);
   const [exportSuccess, setExportSuccess] = useState<boolean>(false);
   const [isCanvasDragging, setIsCanvasDragging] = useState<boolean>(false);
+  const [isCanvasFullscreen, setIsCanvasFullscreen] = useState<boolean>(false);
 
   const canvasContainerRef = useRef<HTMLDivElement>(null);
+  const canvasWrapperRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const canvasWidthCm = 58;
@@ -55,6 +59,37 @@ export function DtfCanvas() {
   const visualHeightPx = canvasHeightCm * pxPerCm;
 
   const selectedDesign = designs.find((d) => d.id === selectedId);
+
+  const toggleCanvasFullscreen = () => {
+    if (!document.fullscreenElement) {
+      if (canvasWrapperRef.current?.requestFullscreen) {
+        canvasWrapperRef.current.requestFullscreen().catch(() => {
+          setIsCanvasFullscreen(!isCanvasFullscreen);
+        });
+      } else {
+        setIsCanvasFullscreen(!isCanvasFullscreen);
+      }
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen().catch(() => {});
+      }
+      setIsCanvasFullscreen(false);
+    }
+  };
+
+  useEffect(() => {
+    const handleFsChange = () => {
+      setIsCanvasFullscreen(!!document.fullscreenElement);
+    };
+    document.addEventListener("fullscreenchange", handleFsChange);
+    return () => document.removeEventListener("fullscreenchange", handleFsChange);
+  }, []);
+
+  const handleCanvasWheel = (e: React.WheelEvent) => {
+    e.preventDefault();
+    const delta = e.deltaY < 0 ? 0.1 : -0.1;
+    setZoom((z) => Math.min(3.0, Math.max(0.3, parseFloat((z + delta).toFixed(2)))));
+  };
 
   // Atajo de teclado: Borrar elemento con Delete/Backspace
   useEffect(() => {
@@ -194,6 +229,43 @@ export function DtfCanvas() {
 
       setDesigns((prev) =>
         prev.map((d) => (d.id === design.id ? { ...d, xCm: newX, yCm: newY } : d))
+      );
+    };
+
+    const handleMouseUp = () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseUp);
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mouseup", handleMouseUp);
+  };
+
+  const handleRotateStart = (e: React.MouseEvent, design: CanvasDesign, element: HTMLDivElement | null) => {
+    e.stopPropagation();
+    e.preventDefault();
+    setSelectedId(design.id);
+
+    if (!element) return;
+    const rect = element.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+
+    const handleMouseMove = (moveEvent: MouseEvent) => {
+      const deltaX = moveEvent.clientX - centerX;
+      const deltaY = moveEvent.clientY - centerY;
+      // Calcular ángulo con respecto al centro
+      let degrees = Math.round((Math.atan2(deltaY, deltaX) * 180) / Math.PI + 90);
+      if (degrees < 0) degrees += 360;
+      degrees = degrees % 360;
+
+      // Si presiona Shift, ajusta en pasos de 15 grados
+      if (moveEvent.shiftKey) {
+        degrees = Math.round(degrees / 15) * 15;
+      }
+
+      setDesigns((prev) =>
+        prev.map((d) => (d.id === design.id ? { ...d, rotation: degrees } : d))
       );
     };
 
@@ -673,45 +745,68 @@ export function DtfCanvas() {
         </div>
 
         {/* LIENZO INTERACTIVO CON SOPORTE DRAG & DROP */}
-        <div className="lg:col-span-8 flex flex-col">
-          <div className="mb-2 flex items-center justify-between bg-[#16181D] border border-[#20232A] px-4 py-2 rounded-t-lg text-xs text-[#8E95A5]">
+        <div 
+          ref={canvasWrapperRef}
+          className={`lg:col-span-8 flex flex-col ${
+            isCanvasFullscreen ? "fixed inset-0 z-50 p-6 bg-[#0D0E11] w-screen h-screen" : ""
+          }`}
+        >
+          <div className="mb-2 flex items-center justify-between bg-[#16181D] border border-[#20232A] px-4 py-2.5 rounded-t-xl text-xs text-[#8E95A5]">
             <div className="flex items-center gap-2">
               <span className="font-semibold text-[#F3F4F6]">Lienzo de Montaje:</span>
-              <span className="text-[#00A3FF] font-mono">
+              <span className="text-[#00A3FF] font-mono font-bold">
                 {canvasWidthCm} cm × {canvasHeightCm} cm
               </span>
               <span className="hidden sm:inline-block text-[#8E95A5]/60 text-[11px]">
-                (Arrastra imágenes aquí o pulsa Supr para eliminar)
+                (Gira con el mouse • Rueda del ratón: Zoom • Supr para eliminar)
               </span>
             </div>
 
             <div className="flex items-center gap-2">
               <button
-                onClick={() => setZoom((z) => Math.max(0.4, z - 0.1))}
+                onClick={() => setZoom((z) => Math.max(0.4, parseFloat((z - 0.1).toFixed(2))))}
                 className="h-8 w-8 flex items-center justify-center text-[#8E95A5] hover:text-white rounded-lg bg-[#0D0E11] border border-[#20232A] hover:border-[#8E95A5]/60 transition-all active:scale-95"
                 title="Alejar zoom"
               >
                 <ZoomOut className="h-4 w-4" />
               </button>
-              <span className="font-mono text-xs font-bold w-14 text-center text-[#F3F4F6] bg-[#0D0E11] py-1 rounded-md border border-[#20232A]">
-                {Math.round(zoom * 100)}%
-              </span>
               <button
-                onClick={() => setZoom((z) => Math.min(2.5, z + 0.1))}
+                onClick={() => setZoom(1)}
+                className="font-mono text-xs font-bold px-2.5 py-1 rounded-md text-[#F3F4F6] bg-[#0D0E11] border border-[#20232A] hover:border-[#00A3FF]"
+                title="Resetear zoom a 100%"
+              >
+                {Math.round(zoom * 100)}%
+              </button>
+              <button
+                onClick={() => setZoom((z) => Math.min(2.5, parseFloat((z + 0.1).toFixed(2))))}
                 className="h-8 w-8 flex items-center justify-center text-[#8E95A5] hover:text-white rounded-lg bg-[#0D0E11] border border-[#20232A] hover:border-[#8E95A5]/60 transition-all active:scale-95"
                 title="Acercar zoom"
               >
                 <ZoomIn className="h-4 w-4" />
+              </button>
+              <button
+                onClick={toggleCanvasFullscreen}
+                className="h-8 w-8 flex items-center justify-center text-[#8E95A5] hover:text-white rounded-lg bg-[#0D0E11] border border-[#20232A] hover:border-[#00A3FF] transition-all active:scale-95 ml-1"
+                title={isCanvasFullscreen ? "Salir de pantalla completa" : "Pantalla completa de taller"}
+              >
+                {isCanvasFullscreen ? (
+                  <Minimize2 className="h-4 w-4 text-[#00A3FF]" />
+                ) : (
+                  <Maximize2 className="h-4 w-4 text-[#00A3FF]" />
+                )}
               </button>
             </div>
           </div>
 
           <div
             ref={canvasContainerRef}
+            onWheel={handleCanvasWheel}
             onDragOver={handleCanvasDragOver}
             onDragLeave={handleCanvasDragLeave}
             onDrop={handleCanvasDrop}
-            className={`relative flex-1 min-h-[600px] max-h-[750px] overflow-auto rounded-b-lg border bg-[#0D0E11] p-8 custom-scrollbar flex justify-center items-start transition-colors ${
+            className={`relative flex-1 ${
+              isCanvasFullscreen ? "h-[calc(100vh-120px)] max-h-none" : "min-h-[600px] max-h-[750px]"
+            } overflow-auto rounded-b-xl border bg-[#0D0E11] p-8 custom-scrollbar flex justify-center items-start transition-colors ${
               isCanvasDragging
                 ? "border-[#00A3FF] bg-[#00A3FF]/5"
                 : "border-[#20232A]"
@@ -732,7 +827,7 @@ export function DtfCanvas() {
               }}
               className="relative shadow-2xl border-2 border-[#00A3FF]/40 bg-transparency-grid shrink-0 transition-all"
             >
-              <div className="absolute top-0 left-0 bg-[#0D0E11] text-[#00A3FF] border-r border-b border-[#20232A] text-[10px] font-mono px-2 py-0.5 z-10">
+              <div className="absolute top-0 left-0 bg-[#0D0E11] text-[#00A3FF] border-r border-b border-[#20232A] text-[10px] font-mono px-2 py-0.5 z-10 font-bold">
                 58 cm × {canvasHeightCm} cm • 300 DPI
               </div>
 
@@ -758,10 +853,26 @@ export function DtfCanvas() {
                     }}
                     className={`cursor-move group select-none ${
                       isSelected
-                        ? "ring-2 ring-[#00A3FF]"
+                        ? "ring-2 ring-[#00A3FF] shadow-2xl"
                         : "hover:ring-1 hover:ring-[#8E95A5]/60"
                     }`}
                   >
+                    {/* Tirador de Rotación con el Mouse */}
+                    {isSelected && (
+                      <>
+                        <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-0.5 h-4 bg-[#00A3FF] pointer-events-none" />
+                        <div
+                          onMouseDown={(e) =>
+                            handleRotateStart(e, d, e.currentTarget.parentElement as HTMLDivElement)
+                          }
+                          className="absolute -top-9 left-1/2 -translate-x-1/2 h-7 w-7 rounded-full bg-[#00A3FF] text-white flex items-center justify-center cursor-grab active:cursor-grabbing shadow-xl hover:scale-110 transition-transform z-30 ring-2 ring-[#0D0E11]"
+                          title="Gira este diseño con el mouse (mantén Shift para pasos de 15°)"
+                        >
+                          <RotateCw className="h-3.5 w-3.5" />
+                        </div>
+                      </>
+                    )}
+
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={d.previewUrl}
@@ -769,11 +880,16 @@ export function DtfCanvas() {
                       className="h-full w-full object-fill pointer-events-none"
                     />
 
-                    {isSelected && (
-                      <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 bg-[#0D0E11] border border-[#00A3FF]/50 text-[10px] text-[#00A3FF] font-semibold px-2 py-0.5 rounded whitespace-nowrap z-20 font-mono">
-                        {d.widthCm} × {d.heightCm} cm ({calculateEffectiveDpi(d)} DPI)
-                      </div>
-                    )}
+                    {/* Cota de Medida Visible en Centímetros */}
+                    <div
+                      className={`absolute -bottom-6 left-1/2 -translate-x-1/2 px-2.5 py-0.5 rounded-lg whitespace-nowrap z-20 font-mono text-[11px] font-bold shadow-md transition-all ${
+                        isSelected
+                          ? "bg-[#0D0E11] border border-[#00A3FF] text-[#00A3FF] ring-1 ring-[#00A3FF]/40 scale-105"
+                          : "bg-[#0D0E11]/90 border border-[#20232A] text-[#F3F4F6] text-[10px]"
+                      }`}
+                    >
+                      {d.widthCm} × {d.heightCm} cm {d.rotation !== 0 ? `• ${d.rotation}°` : ""}
+                    </div>
                   </div>
                 );
               })}

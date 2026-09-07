@@ -60,9 +60,9 @@ export default function RemoveColorPage() {
 
   return (
     <ToolLayout
-      title="Extracción Cromática Específica"
-      description="Identifica y suprime un matiz de color puntual convirtiéndolo en transparencia RGBA limpia mediante cálculo de distancia cromática. Salida certificada a 300 DPI."
-      badge="Muestreo RGB / Gotero"
+      title="Quitar Color (Tono Específico)"
+      description="Selecciona cualquier color de tu diseño (como fondos negros, fondos rojos o fondos difíciles) y conviértelo en transparencia limpia para impresión DTF. Salida certificada a 300 DPI."
+      badge="Gotero & Muestras Táctiles"
       apiEndpoint="/api/process/remove-color"
       additionalFormData={(formData) => {
         const rgb = hexToRgb(selectedHex);
@@ -72,18 +72,86 @@ export default function RemoveColorPage() {
       }}
       renderControls={(_, setCustomParam, customParams) => (
         <div className="space-y-6">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-            {/* Selector de Color y Gotero Grande */}
+          {/* ACCESOS DIRECTOS A LA MANO: NEGRO, ROJO Y BLANCO */}
+          <div>
+            <span className="text-xs font-mono font-bold text-[#F3F4F6] uppercase tracking-wider block mb-3">
+              ⚡ Colores de Taller Más Frecuentes (A la Mano):
+            </span>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              {/* Botón Quitar Negro */}
+              <button
+                type="button"
+                onClick={() => setSelectedHex("#000000")}
+                className={`flex items-center justify-between p-4 rounded-xl border transition-all active:scale-95 ${
+                  selectedHex.toLowerCase() === "#000000"
+                    ? "border-[#00A3FF] bg-[#16181D] ring-2 ring-[#00A3FF] shadow-lg"
+                    : "border-[#20232A] bg-[#0D0E11] hover:border-gray-500"
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <span className="h-6 w-6 rounded-lg bg-black border-2 border-[#333] shadow-inner" />
+                  <div className="text-left">
+                    <span className="font-bold text-sm text-[#F3F4F6] block">Quitar Negro</span>
+                    <span className="font-mono text-[11px] text-[#8E95A5]">Tono #000000</span>
+                  </div>
+                </div>
+                <span className="font-mono text-xs px-2.5 py-1 rounded bg-[#20232A] text-white font-bold">1 Clic</span>
+              </button>
+
+              {/* Botón Quitar Rojo */}
+              <button
+                type="button"
+                onClick={() => setSelectedHex("#ff0000")}
+                className={`flex items-center justify-between p-4 rounded-xl border transition-all active:scale-95 ${
+                  selectedHex.toLowerCase() === "#ff0000"
+                    ? "border-red-500 bg-red-950/40 ring-2 ring-red-500 shadow-lg"
+                    : "border-red-900/40 bg-[#0D0E11] hover:border-red-600/60"
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <span className="h-6 w-6 rounded-lg bg-[#FF0000] border-2 border-red-400 shadow-inner" />
+                  <div className="text-left">
+                    <span className="font-bold text-sm text-red-200 block">Quitar Rojo</span>
+                    <span className="font-mono text-[11px] text-red-300/80">Tono #FF0000</span>
+                  </div>
+                </div>
+                <span className="font-mono text-xs px-2.5 py-1 rounded bg-red-900/50 text-red-200 font-bold">1 Clic</span>
+              </button>
+
+              {/* Botón Quitar Blanco */}
+              <button
+                type="button"
+                onClick={() => setSelectedHex("#ffffff")}
+                className={`flex items-center justify-between p-4 rounded-xl border transition-all active:scale-95 ${
+                  selectedHex.toLowerCase() === "#ffffff"
+                    ? "border-[#00A3FF] bg-[#16181D] ring-2 ring-[#00A3FF] shadow-lg"
+                    : "border-[#20232A] bg-[#0D0E11] hover:border-gray-500"
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <span className="h-6 w-6 rounded-lg bg-white border-2 border-gray-300 shadow-inner" />
+                  <div className="text-left">
+                    <span className="font-bold text-sm text-[#F3F4F6] block">Quitar Blanco</span>
+                    <span className="font-mono text-[11px] text-[#8E95A5]">Tono #FFFFFF</span>
+                  </div>
+                </div>
+                <span className="font-mono text-xs px-2.5 py-1 rounded bg-[#20232A] text-white font-bold">1 Clic</span>
+              </button>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-2 border-t border-[#20232A]">
+            {/* Gotero y Selector Libre */}
             <div className="space-y-2">
               <label className="block text-xs font-mono text-[#8E95A5] uppercase tracking-wider">
-                Color a Retirar:
+                O Elegir con Gotero / Paleta:
               </label>
               <div className="flex items-center gap-3">
                 <input
                   type="color"
                   value={selectedHex.startsWith("#") ? selectedHex : `#${selectedHex}`}
                   onChange={(e) => setSelectedHex(e.target.value)}
-                  className="h-11 w-14 cursor-pointer rounded-xl border border-[#20232A] bg-[#0D0E11] p-1"
+                  className="h-11 w-14 cursor-pointer rounded-xl border border-[#20232A] bg-[#0D0E11] p-1 shadow-sm"
                   title="Abrir paleta de color"
                 />
                 <input
@@ -98,7 +166,7 @@ export default function RemoveColorPage() {
                     type="button"
                     onClick={handlePickColor}
                     className="inline-flex items-center gap-2 rounded-xl border border-[#00A3FF]/40 bg-[#00A3FF]/15 px-4 py-2.5 text-xs font-bold text-[#00A3FF] hover:bg-[#00A3FF]/25 transition-all shadow-sm active:scale-95"
-                    title="Toma un color de cualquier parte de la pantalla"
+                    title="Toma un color de cualquier parte de tu pantalla"
                   >
                     <Pipette className="h-4 w-4" />
                     <span>Gotero</span>
@@ -113,7 +181,7 @@ export default function RemoveColorPage() {
             {/* Tolerancia */}
             <div className="space-y-2">
               <div className="flex justify-between items-center text-xs font-mono">
-                <span className="text-[#8E95A5]">Tolerancia Cromática:</span>
+                <span className="text-[#8E95A5]">Tolerancia de Color:</span>
                 <span className="text-sm font-bold text-[#00A3FF] bg-[#0D0E11] px-2.5 py-1 rounded border border-[#20232A]">
                   {customParams.tolerance || 30}%
                 </span>
@@ -127,14 +195,14 @@ export default function RemoveColorPage() {
                 className="w-full h-2 rounded-lg bg-[#0D0E11] accent-[#00A3FF] cursor-pointer mt-2"
               />
               <span className="text-[11px] text-[#8E95A5]/80 block">
-                Radio de supresión euclidiana para sombras del mismo color.
+                Sube la tolerancia si quedan sombras o variaciones del color.
               </span>
             </div>
 
             {/* Suavizado */}
             <div className="space-y-2">
               <div className="flex justify-between items-center text-xs font-mono">
-                <span className="text-[#8E95A5]">Transición de Borde:</span>
+                <span className="text-[#8E95A5]">Suavizado de Borde:</span>
                 <span className="text-sm font-bold text-[#00A3FF] bg-[#0D0E11] px-2.5 py-1 rounded border border-[#20232A]">
                   {customParams.smoothness || 10}%
                 </span>
@@ -148,18 +216,23 @@ export default function RemoveColorPage() {
                 className="w-full h-2 rounded-lg bg-[#0D0E11] accent-[#00A3FF] cursor-pointer mt-2"
               />
               <span className="text-[11px] text-[#8E95A5]/80 block">
-                Atenúa el escalonado para bordes curvos nítidos.
+                Atenúa los bordes para que no se vean pixelados o duros.
               </span>
             </div>
           </div>
 
-          {/* Muestras Rápidas con Botones Grandes */}
+          {/* Muestras Adicionales */}
           <div className="pt-3 border-t border-[#20232A] space-y-2">
             <span className="text-xs font-mono text-[#8E95A5] uppercase tracking-wider block">
-              Muestras Rápidas de Taller:
+              Otros Tonos de Taller:
             </span>
             <div className="flex flex-wrap gap-2.5">
-              {presetColors.map((p) => (
+              {[
+                { name: "Verde Croma", hex: "#00ff00" },
+                { name: "Azul Croma", hex: "#0000ff" },
+                { name: "Magenta Croma", hex: "#ff00ff" },
+                { name: "Gris Medio", hex: "#808080" },
+              ].map((p) => (
                 <button
                   key={p.hex}
                   type="button"

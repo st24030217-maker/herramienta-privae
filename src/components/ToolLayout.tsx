@@ -48,8 +48,43 @@ export function ToolLayout({
   const [customParams, setCustomParams] = useState<Record<string, any>>({});
   const [imgDimensions, setImgDimensions] = useState<{ width: number; height: number } | null>(null);
   const [isDragging, setIsDragging] = useState(false);
+  const [zoomResult, setZoomResult] = useState<number>(1);
+  const [viewBg, setViewBg] = useState<"grid" | "black" | "white">("grid");
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const resultBoxRef = useRef<HTMLDivElement>(null);
+
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      if (resultBoxRef.current?.requestFullscreen) {
+        resultBoxRef.current.requestFullscreen().catch(() => {
+          setIsFullscreen(!isFullscreen);
+        });
+      } else {
+        setIsFullscreen(!isFullscreen);
+      }
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen().catch(() => {});
+      }
+      setIsFullscreen(false);
+    }
+  };
+
+  useEffect(() => {
+    const handleFsChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+    document.addEventListener("fullscreenchange", handleFsChange);
+    return () => document.removeEventListener("fullscreenchange", handleFsChange);
+  }, []);
+
+  const handleWheelZoom = (e: React.WheelEvent) => {
+    if (!resultUrl) return;
+    const delta = e.deltaY < 0 ? 0.15 : -0.15;
+    setZoomResult((z) => Math.min(4, Math.max(0.5, parseFloat((z + delta).toFixed(2)))));
+  };
 
   const handleFileChange = (selectedFile: File) => {
     if (!selectedFile.type.startsWith("image/")) {
@@ -352,21 +387,110 @@ export function ToolLayout({
         </div>
 
         {/* ================= SECCIÓN 2: RESULTADO ================= */}
-        <div className="flex flex-col justify-between rounded-2xl border border-[#20232A] bg-[#16181D] p-6 shadow-sm">
+        <div 
+          ref={resultBoxRef}
+          className={`flex flex-col justify-between rounded-2xl border border-[#20232A] bg-[#16181D] p-6 shadow-sm transition-all ${
+            isFullscreen ? "fixed inset-0 z-50 rounded-none p-6 bg-[#0D0E11] max-w-none w-screen h-screen overflow-hidden" : ""
+          }`}
+        >
           <div>
-            <div className="mb-4 flex items-center justify-between border-b border-[#20232A] pb-3">
+            <div className="mb-4 flex flex-wrap items-center justify-between gap-2 border-b border-[#20232A] pb-3">
               <span className="font-mono text-xs font-bold text-[#F3F4F6] uppercase tracking-wider flex items-center gap-2">
                 <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#20232A] text-[10px] text-emerald-400">2</span>
                 <span>Resultado Calibrado (DTF 300 DPI)</span>
               </span>
+
+              {/* Controles de Inspección Táctiles: Fondo, Zoom y Pantalla Completa */}
               {resultUrl && (
-                <span className="flex items-center gap-1.5 font-mono text-xs font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-2.5 py-1 rounded-full">
-                  <CheckCircle2 className="h-3.5 w-3.5" /> Calibrado
-                </span>
+                <div className="flex items-center gap-1.5 bg-[#0D0E11] border border-[#20232A] p-1 rounded-xl">
+                  {/* Selector de Fondo de Contraste */}
+                  <div className="flex items-center gap-1 pr-1.5 border-r border-[#20232A]">
+                    <button
+                      type="button"
+                      onClick={() => setViewBg("grid")}
+                      className={`h-7 w-7 rounded-lg text-xs flex items-center justify-center transition-all ${
+                        viewBg === "grid" ? "bg-[#20232A] ring-1 ring-[#00A3FF]" : "hover:bg-[#16181D]"
+                      }`}
+                      title="Fondo Cuadrícula Transparente"
+                    >
+                      🏁
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setViewBg("black")}
+                      className={`h-7 w-7 rounded-lg text-xs flex items-center justify-center transition-all border ${
+                        viewBg === "black" ? "border-[#00A3FF] bg-black ring-1 ring-[#00A3FF]" : "border-[#333] bg-black"
+                      }`}
+                      title="Fondo Negro (Ver halos blancos y bordes lechosos)"
+                    >
+                      <span className="h-3 w-3 rounded-full bg-black border border-gray-600 inline-block" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setViewBg("white")}
+                      className={`h-7 w-7 rounded-lg text-xs flex items-center justify-center transition-all border ${
+                        viewBg === "white" ? "border-[#00A3FF] bg-white ring-1 ring-[#00A3FF]" : "border-[#ccc] bg-white"
+                      }`}
+                      title="Fondo Blanco (Ver detalles oscuros)"
+                    >
+                      <span className="h-3 w-3 rounded-full bg-white border border-gray-400 inline-block" />
+                    </button>
+                  </div>
+
+                  {/* Controles de Zoom */}
+                  <div className="flex items-center gap-1 pr-1.5 border-r border-[#20232A]">
+                    <button
+                      type="button"
+                      onClick={() => setZoomResult((z) => Math.max(0.5, parseFloat((z - 0.25).toFixed(2))))}
+                      className="h-7 w-7 rounded-lg bg-[#16181D] hover:bg-[#20232A] text-[#8E95A5] hover:text-white flex items-center justify-center transition-colors active:scale-95"
+                      title="Alejar"
+                    >
+                      -
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setZoomResult(1)}
+                      className="px-2 py-0.5 text-[11px] font-mono font-bold text-[#00A3FF] bg-[#16181D] rounded-md hover:bg-[#20232A]"
+                      title="Resetear zoom al 100%"
+                    >
+                      {Math.round(zoomResult * 100)}%
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setZoomResult((z) => Math.min(4, parseFloat((z + 0.25).toFixed(2))))}
+                      className="h-7 w-7 rounded-lg bg-[#16181D] hover:bg-[#20232A] text-[#8E95A5] hover:text-white flex items-center justify-center transition-colors active:scale-95"
+                      title="Acercar"
+                    >
+                      +
+                    </button>
+                  </div>
+
+                  {/* Botón Pantalla Completa */}
+                  <button
+                    type="button"
+                    onClick={toggleFullscreen}
+                    className="h-7 w-7 rounded-lg bg-[#16181D] hover:bg-[#20232A] text-[#8E95A5] hover:text-white flex items-center justify-center transition-colors active:scale-95"
+                    title={isFullscreen ? "Salir de pantalla completa" : "Pantalla completa"}
+                  >
+                    <Maximize2 className="h-3.5 w-3.5 text-[#00A3FF]" />
+                  </button>
+                </div>
               )}
             </div>
 
-            <div className="relative flex min-h-[380px] items-center justify-center rounded-xl bg-transparency-grid p-4 overflow-hidden border border-[#20232A]">
+            {/* Contenedor del Visor con soporte de Rueda de Mouse */}
+            <div 
+              onWheel={handleWheelZoom}
+              className={`relative flex items-center justify-center rounded-xl p-4 overflow-hidden border border-[#20232A] transition-colors select-none ${
+                isFullscreen ? "h-[calc(100vh-140px)]" : "min-h-[380px] max-h-[500px]"
+              } ${
+                viewBg === "black" 
+                  ? "bg-black" 
+                  : viewBg === "white" 
+                  ? "bg-white" 
+                  : "bg-transparency-grid"
+              }`}
+            >
               {loading ? (
                 <div className="flex flex-col items-center gap-3 text-center p-6">
                   <Loader2 className="h-10 w-10 animate-spin text-[#00A3FF]" />
@@ -378,12 +502,19 @@ export function ToolLayout({
                   </span>
                 </div>
               ) : resultUrl ? (
-                /* eslint-disable-next-line @next/next/no-img-element */
-                <img
-                  src={resultUrl}
-                  alt="Resultado Procesado"
-                  className="max-h-[380px] max-w-full object-contain rounded"
-                />
+                <div className="w-full h-full flex items-center justify-center overflow-auto custom-scrollbar cursor-grab active:cursor-grabbing">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={resultUrl}
+                    alt="Resultado Procesado"
+                    style={{
+                      transform: `scale(${zoomResult})`,
+                      transformOrigin: "center center",
+                      transition: "transform 0.15s ease-out",
+                    }}
+                    className="max-h-[380px] max-w-full object-contain rounded pointer-events-none"
+                  />
+                </div>
               ) : (
                 <div className="text-center text-[#8E95A5]/60 p-6">
                   <Sparkles className="mx-auto h-10 w-10 mb-3 opacity-20 text-[#8E95A5]" />
@@ -399,7 +530,7 @@ export function ToolLayout({
             <div className="mt-5 pt-4 border-t border-[#20232A] flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
               <span className="font-mono text-xs text-[#8E95A5] flex items-center gap-1.5">
                 <CheckCircle2 className="h-4 w-4 text-emerald-400" />
-                <span>PNG Transparente Listo para Impresión</span>
+                <span>PNG Transparente Listo para Impresión (Rueda del mouse: Zoom)</span>
               </span>
 
               {/* Botón Grande de Descarga */}

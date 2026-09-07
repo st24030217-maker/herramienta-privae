@@ -86,11 +86,11 @@ export function Navbar() {
 
   const navLinks = [
     { href: "/tools/scanner", label: "Escáner DTF", icon: ScanSearch },
-    { href: "/tools/remove-bg", label: "Remover Fondo", icon: Scissors },
-    { href: "/tools/enhance", label: "Mejorar Calidad", icon: Sparkles },
-    { href: "/tools/remove-color", label: "Eliminar Color", icon: Pipette },
-    { href: "/tools/clean-alpha", label: "Quitar Semitransparencias", icon: Layers },
-    { href: "/tools/dtf-builder", label: "Armador DTF (58cm)", icon: LayoutGrid, highlight: true },
+    { href: "/tools/remove-bg", label: "Quitar Fondo (Depurar)", icon: Scissors },
+    { href: "/tools/enhance", label: "+Mejorar Calidad", icon: Sparkles },
+    { href: "/tools/remove-color", label: "Quitar Color", icon: Pipette },
+    { href: "/tools/clean-alpha", label: "Depurar Semitransparencias", icon: Layers },
+    { href: "/tools/dtf-builder", label: "Armador de Pliegos (58cm)", icon: LayoutGrid, highlight: true },
   ];
 
   return (

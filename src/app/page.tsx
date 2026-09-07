@@ -14,39 +14,39 @@ export default function HomePage() {
   const prepTools = [
     {
       id: "remove-bg",
-      name: "Limpieza de Fondo",
-      spec: "Canal Alfa RGBA",
-      desc: "Aísla el diseño y siluetas principales con recorte nítido y preservación de transparencias reales.",
+      name: "Quitar Fondo (Depurar)",
+      spec: "Transparencia 300 DPI",
+      desc: "Aísla el diseño y siluetas con recorte limpio y preservación de transparencias reales para DTF.",
       href: "/tools/remove-bg",
       icon: Scissors,
-      action: "Depurar fondo",
+      action: "Quitar fondo",
     },
     {
       id: "enhance",
-      name: "Interpolación y Nitidez",
-      spec: "Salida 300 DPI",
-      desc: "Superresolución con algoritmo Lanczos3 y máscara de enfoque para archivos de baja resolución.",
+      name: "+Mejorar Calidad",
+      spec: "Ultra Resolución 300 DPI",
+      desc: "Multiplica la resolución a 2X y 4X con nitidez y máscara de enfoque sin alterar geometrías.",
       href: "/tools/enhance",
       icon: Sparkles,
-      action: "Escalar archivo",
+      action: "+Mejorar calidad",
     },
     {
       id: "remove-color",
-      name: "Extracción Cromática",
-      spec: "Gotero Interactivo",
-      desc: "Cuentagotas interactivo para eliminar fondos o colores específicos con control de tolerancia y suavizado.",
+      name: "Quitar Color (Tono Específico)",
+      spec: "Gotero & Negro / Rojo",
+      desc: "Retira un color exacto o tonos difíciles (negro, rojo, blanco) con tolerancia y suavizado de borde.",
       href: "/tools/remove-color",
       icon: Pipette,
-      action: "Seleccionar tono",
+      action: "Quitar color",
     },
     {
       id: "clean-alpha",
-      name: "Depuración de Semitransparencias",
-      spec: "Control de Tinta Blanca",
-      desc: "Purga halos translúcidos para evitar que la impresora DTF genere depósitos irregulares de tinta blanca.",
+      name: "Depurar Semitransparencias",
+      spec: "Control Cama Blanca DTF",
+      desc: "Purga halos translúcidos para evitar depósitos lechosos o sucios de tinta blanca en la tela.",
       href: "/tools/clean-alpha",
       icon: Layers,
-      action: "Corregir alfa",
+      action: "Comparar y depurar",
     },
   ];
 
@@ -155,7 +155,7 @@ export default function HomePage() {
               </div>
 
               <h2 className="text-xl sm:text-2xl font-bold text-[#F3F4F6] tracking-tight">
-                Armador de Archivos y Pliegos DTF
+                Armador de Pliegos DTF (58 cm)
               </h2>
               <p className="mt-2 text-sm text-[#8E95A5] max-w-2xl leading-relaxed">
                 Distribuye múltiples diseños en un lienzo calibrado con cotas en centímetros reales. Incluye soporte de Drag & Drop directo, presets textiles (Pectoral, A4, A3, Espalda) y exportación en PNG a 300 DPI reales.
