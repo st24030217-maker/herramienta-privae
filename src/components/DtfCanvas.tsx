@@ -597,18 +597,66 @@ export function DtfCanvas() {
                 </div>
               </div>
 
-              <div className="flex items-center justify-between pt-2">
-                <span className="text-xs font-mono text-[#8E95A5]">Rotación:</span>
-                <button
-                  onClick={() =>
-                    updateSelectedDesign({
-                      rotation: (selectedDesign.rotation + 90) % 360,
-                    })
-                  }
-                  className="flex items-center gap-1.5 rounded border border-[#20232A] bg-[#0D0E11] px-3 py-1.5 text-xs text-[#F3F4F6] hover:bg-[#20232A] transition-colors font-mono"
-                >
-                  <RotateCw className="h-3.5 w-3.5 text-[#00A3FF]" /> Girar 90° ({selectedDesign.rotation}°)
-                </button>
+              {/* Acciones Rápidas de Posicionamiento */}
+              <div className="pt-2 border-t border-[#20232A] space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-mono text-[#8E95A5]">Alineación:</span>
+                  <div className="flex items-center gap-1">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        updateSelectedDesign({
+                          xCm: parseFloat(((canvasWidthCm - selectedDesign.widthCm) / 2).toFixed(2)),
+                        })
+                      }
+                      className="rounded border border-[#20232A] bg-[#0D0E11] px-2 py-1 text-[10px] font-mono text-[#F3F4F6] hover:border-[#00A3FF] hover:text-[#00A3FF]"
+                      title="Centrar en el ancho de 58 cm"
+                    >
+                      Centrar
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => updateSelectedDesign({ xCm: 1 })}
+                      className="rounded border border-[#20232A] bg-[#0D0E11] px-2 py-1 text-[10px] font-mono text-[#F3F4F6] hover:border-[#00A3FF] hover:text-[#00A3FF]"
+                      title="Alinear al margen izquierdo (1 cm)"
+                    >
+                      Izq (1cm)
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => updateSelectedDesign({ yCm: 1 })}
+                      className="rounded border border-[#20232A] bg-[#0D0E11] px-2 py-1 text-[10px] font-mono text-[#F3F4F6] hover:border-[#00A3FF] hover:text-[#00A3FF]"
+                      title="Alinear al borde superior"
+                    >
+                      Arriba
+                    </button>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between pt-1">
+                  <span className="text-xs font-mono text-[#8E95A5]">Rotación:</span>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => handleDuplicate(selectedDesign.id)}
+                      className="flex items-center gap-1 rounded border border-[#20232A] bg-[#0D0E11] px-2.5 py-1 text-[11px] text-[#F3F4F6] hover:bg-[#20232A] font-mono"
+                      title="Duplicar arte"
+                    >
+                      <Copy className="h-3 w-3" /> Duplicar
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        updateSelectedDesign({
+                          rotation: (selectedDesign.rotation + 90) % 360,
+                        })
+                      }
+                      className="flex items-center gap-1 rounded border border-[#20232A] bg-[#0D0E11] px-2.5 py-1 text-[11px] text-[#F3F4F6] hover:bg-[#20232A] font-mono"
+                    >
+                      <RotateCw className="h-3 w-3 text-[#00A3FF]" /> Girar 90°
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           )}

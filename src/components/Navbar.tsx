@@ -16,8 +16,7 @@ import {
   ChevronDown,
   Menu,
   X,
-  ScanSearch,
-  Calculator
+  ScanSearch
 } from "lucide-react";
 import { SubscriptionBanner } from "./SubscriptionBanner";
 
@@ -91,7 +90,6 @@ export function Navbar() {
     { href: "/tools/enhance", label: "Mejorar Calidad", icon: Sparkles },
     { href: "/tools/remove-color", label: "Eliminar Color", icon: Pipette },
     { href: "/tools/clean-alpha", label: "Quitar Semitransparencias", icon: Layers },
-    { href: "/tools/pricing-calculator", label: "Calculadora Costos", icon: Calculator },
     { href: "/tools/dtf-builder", label: "Armador DTF (58cm)", icon: LayoutGrid, highlight: true },
   ];
 

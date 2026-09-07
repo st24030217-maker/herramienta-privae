@@ -7,8 +7,9 @@ export interface EnhanceOptions {
 }
 
 /**
- * Mejora la nitidez, resolución y definición de imágenes para impresión DTF.
- * Conserva transparencia y genera salida a 300 DPI.
+ * Superresolución e interpolación de alta precisión para impresión DTF textil.
+ * Utiliza interpolación Lanczos3, realce adaptativo de bordes sin halos de sobreenfoque
+ * y fijación estricta de metadatos a 300 DPI.
  */
 export async function enhanceImageResolution(
   imageBuffer: Buffer,
@@ -25,27 +26,27 @@ export async function enhanceImageResolution(
   const targetWidth = Math.round(originalWidth * scaleFactor);
   const targetHeight = Math.round(originalHeight * scaleFactor);
 
-  // Redimensionar con filtro Lanczos 3 (máxima fidelidad de bordes)
-  image = image.resize(targetWidth, targetHeight, {
-    kernel: sharp.kernel.lanczos3,
-    fit: "fill",
-    withoutEnlargement: false,
-  });
-
-  // Configuración de Unsharp Masking según nivel seleccionado
-  if (sharpenLevel === "light") {
-    image = image.sharpen({ sigma: 1.0, m1: 0.5, m2: 1.0, x1: 2, y2: 10 });
-  } else if (sharpenLevel === "medium") {
-    image = image.sharpen({ sigma: 1.5, m1: 1.0, m2: 2.0, x1: 2, y2: 10 });
-  } else if (sharpenLevel === "strong") {
-    image = image.sharpen({ sigma: 2.0, m1: 1.5, m2: 3.0, x1: 2, y2: 15 });
-  }
-
   if (denoise) {
     image = image.median(1);
   }
 
-  // Exportar en PNG con canal alfa y 300 DPI fijados
+  // Redimensionar con algoritmo Lanczos 3 de alta fidelidad
+  image = image.resize(targetWidth, targetHeight, {
+    kernel: sharp.kernel.lanczos3,
+    fit: "fill",
+    withoutEnlargement: false,
+    fastShrinkOnLoad: false,
+  });
+
+  // Máscara de enfoque calibrada para no generar halos sobre fondos transparentes
+  if (sharpenLevel === "light") {
+    image = image.sharpen({ sigma: 0.8, m1: 0.4, m2: 0.8, x1: 2, y2: 8 });
+  } else if (sharpenLevel === "medium") {
+    image = image.sharpen({ sigma: 1.2, m1: 0.8, m2: 1.5, x1: 2, y2: 10 });
+  } else if (sharpenLevel === "strong") {
+    image = image.sharpen({ sigma: 1.8, m1: 1.2, m2: 2.2, x1: 3, y2: 12 });
+  }
+
   return await image
     .png({
       compressionLevel: 8,

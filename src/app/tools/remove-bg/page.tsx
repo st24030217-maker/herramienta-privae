@@ -10,7 +10,24 @@ export default function RemoveBgPage() {
       badge="Transparencia Alfa 300 DPI"
       apiEndpoint="/api/process/remove-bg"
       renderControls={(_, setCustomParam, customParams) => (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-xs">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-xs">
+          {/* Tipo de Fondo Objetivo */}
+          <div>
+            <label className="block text-[#8E95A5] mb-1.5 font-mono">
+              Fondo a Suprimir:
+            </label>
+            <select
+              value={customParams.bgType || "auto"}
+              onChange={(e) => setCustomParam("bgType", e.target.value)}
+              className="w-full rounded border border-[#20232A] bg-[#0D0E11] px-3 py-2 font-mono text-[#F3F4F6] focus:border-[#00A3FF] focus:outline-none"
+            >
+              <option value="auto">Automático (Muestreo Perimetral)</option>
+              <option value="white">Fondo Blanco Puro / Claro</option>
+              <option value="black">Fondo Negro Puro / Oscuro</option>
+            </select>
+          </div>
+
+          {/* Sensibilidad */}
           <div>
             <div className="flex justify-between text-[#F3F4F6] mb-1.5 font-mono">
               <span className="text-[#8E95A5]">Sensibilidad de Recorte:</span>
@@ -24,7 +41,12 @@ export default function RemoveBgPage() {
               onChange={(e) => setCustomParam("sensitivity", e.target.value)}
               className="w-full accent-[#00A3FF] cursor-pointer"
             />
+            <span className="text-[10px] text-[#8E95A5]/60 font-mono">
+              Aumenta para limpiar fondos con texturas o sombras.
+            </span>
           </div>
+
+          {/* Suavizado */}
           <div>
             <div className="flex justify-between text-[#F3F4F6] mb-1.5 font-mono">
               <span className="text-[#8E95A5]">Suavizado de Bordes (Feather):</span>
@@ -38,6 +60,9 @@ export default function RemoveBgPage() {
               onChange={(e) => setCustomParam("featherRadius", e.target.value)}
               className="w-full accent-[#00A3FF] cursor-pointer"
             />
+            <span className="text-[10px] text-[#8E95A5]/60 font-mono">
+              Difumina el contorno para integración textil natural.
+            </span>
           </div>
         </div>
       )}

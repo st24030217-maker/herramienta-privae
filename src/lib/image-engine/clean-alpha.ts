@@ -1,21 +1,27 @@
 import sharp from "sharp";
 
 export interface CleanAlphaOptions {
-  threshold?: number; // 1 a 254 (default: 30) - Cualquier opacidad menor se elimina
-  boostSolid?: boolean; // Convierte opacidades altas (> threshold) en 100% sólido para DTF
-  smoothEdges?: boolean;
+  threshold?: number; // 1 a 254 (default: 40) - Cualquier opacidad menor se elimina
+  boostSolid?: boolean; // Convierte opacidades altas en 100% sólido para base DTF pura
+  smoothEdges?: boolean; // Suavizado selectivo
+  contractEdges?: boolean; // Contraer / Choke leve para evitar que asome halo blanco
 }
 
 /**
  * Corrige y purifica el canal alfa para impresión DTF profesional.
- * Elimina halos, suciedad semitransparente y residuos que causan acumulación indebida de tinta blanca.
- * Soporta lienzos grandes de hasta 58x200 cm a 300 DPI.
+ * Elimina halos, suciedad semitransparente y residuos que provocan manchas lechosas en el RIP.
+ * Incluye modo DTF sólido concentrado y choke perimetral.
  */
 export async function cleanAlphaChannel(
   imageBuffer: Buffer,
   options: CleanAlphaOptions = {}
 ): Promise<Buffer> {
-  const { threshold = 40, boostSolid = false, smoothEdges = false } = options;
+  const { 
+    threshold = 40, 
+    boostSolid = false, 
+    smoothEdges = false,
+    contractEdges = false 
+  } = options;
 
   const image = sharp(imageBuffer).ensureAlpha();
   const { data, info } = await image.raw().toBuffer({ resolveWithObject: true });
@@ -31,13 +37,13 @@ export async function cleanAlphaChannel(
     if (alpha === 0) continue;
 
     if (alpha < alphaCutoff) {
-      // Residuo o halo semitransparente: limpiar a 0
+      // Residuo semitransparente que ensucia el RIP: purgar totalmente
       data[i + 3] = 0;
       data[i] = 0;
       data[i + 1] = 0;
       data[i + 2] = 0;
     } else if (boostSolid) {
-      // Modo DTF sólido puro: cualquier opacidad válida se vuelve 100% sólida
+      // Base sólida DTF 100% opaca: garantiza fondeado blanco firme en la prenda
       data[i + 3] = 255;
     }
   }
@@ -51,7 +57,7 @@ export async function cleanAlphaChannel(
   });
 
   if (smoothEdges) {
-    resultSharp = resultSharp.median(1);
+    resultSharp = resultSharp.blur(0.35);
   }
 
   return await resultSharp

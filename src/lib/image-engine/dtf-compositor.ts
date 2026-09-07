@@ -22,17 +22,17 @@ export function cmToPixels(cm: number): number {
 }
 
 /**
- * Compone el lienzo final para impresión DTF a 300 DPI con dimensiones físicas exactas:
+ * Compone el pliego maestro para impresión DTF a 300 DPI exactos:
  * - 58 cm x 100 cm => 6850 x 11811 px
  * - 58 cm x 200 cm => 6850 x 23622 px
+ * Aplica rotación previa y redimensionamiento Lanczos3 para evitar distorsión de cotas.
  */
 export async function composeDTFCanvas(options: ComposeDTFOptions): Promise<Buffer> {
   const { format, items } = options;
 
-  const canvasWidthPx = cmToPixels(58); // 6850 px
+  const canvasWidthPx = cmToPixels(58); // 6850 px exactos
   const canvasHeightPx = format === "58x100" ? cmToPixels(100) : cmToPixels(200); // 11811 px o 23622 px
 
-  // Preparar todas las capas redimensionadas y posicionadas
   const compositeLayers: sharp.OverlayOptions[] = [];
 
   for (const item of items) {
@@ -41,21 +41,24 @@ export async function composeDTFCanvas(options: ComposeDTFOptions): Promise<Buff
     const leftPx = Math.max(0, cmToPixels(item.xCm));
     const topPx = Math.max(0, cmToPixels(item.yCm));
 
-    // Validar que no se salga completamente del lienzo
+    // Descartar si queda completamente fuera del lienzo
     if (leftPx >= canvasWidthPx || topPx >= canvasHeightPx) {
       continue;
     }
 
-    let processedItem = sharp(item.imageBuffer).ensureAlpha().resize(itemWidthPx, itemHeightPx, {
-      fit: "fill",
-      kernel: sharp.kernel.lanczos3,
-    });
+    let processedItem = sharp(item.imageBuffer).ensureAlpha();
 
+    // Rotar primero para que la caja delimitadora respete el ancho/alto solicitado
     if (item.rotation && item.rotation !== 0) {
       processedItem = processedItem.rotate(item.rotation, {
         background: { r: 0, g: 0, b: 0, alpha: 0 },
       });
     }
+
+    processedItem = processedItem.resize(itemWidthPx, itemHeightPx, {
+      fit: "fill",
+      kernel: sharp.kernel.lanczos3,
+    });
 
     const itemBuffer = await processedItem.toBuffer();
 

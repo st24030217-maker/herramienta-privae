@@ -24,6 +24,9 @@ export async function POST(req: NextRequest) {
     const file = formData.get("file") as File | null;
     const sensitivity = parseInt(formData.get("sensitivity") as string || "35");
     const featherRadius = parseInt(formData.get("featherRadius") as string || "2");
+    const rawBgType = formData.get("bgType") as string || "auto";
+    const bgType: "auto" | "white" | "black" = 
+      rawBgType === "white" || rawBgType === "black" ? rawBgType : "auto";
 
     if (!file) {
       return NextResponse.json({ error: "No se proporcionó ningún archivo" }, { status: 400 });
@@ -38,6 +41,7 @@ export async function POST(req: NextRequest) {
     const processedBuffer = await removeBackground(buffer, {
       sensitivity,
       featherRadius,
+      bgType,
     });
 
     if (user) {

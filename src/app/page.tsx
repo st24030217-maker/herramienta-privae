@@ -6,10 +6,8 @@ import {
   Layers, 
   LayoutGrid, 
   ScanSearch,
-  Calculator,
   ArrowRight,
-  ShieldCheck,
-  Receipt
+  ShieldCheck
 } from "lucide-react";
 
 export default function HomePage() {
@@ -90,74 +88,52 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* SECCIÓN 1: HERRAMIENTAS INTELIGENTES DE TALLER (Escáner & Calculadora) */}
+      {/* SECCIÓN 1: AUDITORÍA FORENSE DTF (Escáner & Diagnóstico) */}
       <section>
         <div className="mb-4 flex items-center justify-between border-b border-[#20232A] pb-2">
           <h3 className="font-mono text-xs uppercase tracking-wider text-[#00A3FF] font-semibold flex items-center gap-2">
-            <span>Diagnóstico Forense y Gestión de Precios</span>
+            <span>Auditoría de Archivos y Diagnóstico Forense</span>
           </h3>
           <span className="font-mono text-xs text-[#8E95A5]/60">
-            Nuevas utilidades de alta precisión
+            Prevención de errores de impresión en bobina
           </span>
         </div>
 
-        <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-          {/* Tarjeta Escáner DTF */}
-          <div className="rounded-xl border border-[#20232A] bg-[#16181D] p-6 hover:border-[#00A3FF]/40 transition-all flex flex-col justify-between">
-            <div>
-              <div className="flex items-center justify-between mb-3">
+        {/* Tarjeta Escáner DTF a Ancho Completo */}
+        <div className="rounded-xl border border-[#20232A] bg-[#16181D] p-6 lg:p-7 hover:border-[#00A3FF]/40 transition-all">
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+            <div className="flex-1">
+              <div className="flex items-center gap-3 mb-2">
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-[#00A3FF]/30 bg-[#00A3FF]/10 text-[#00A3FF]">
                   <ScanSearch className="h-5 w-5" />
                 </div>
-                <span className="font-mono text-xs text-emerald-400 border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 rounded">
-                  SCORE 0-100%
-                </span>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-xl font-bold text-white tracking-tight">
+                      Escáner y Auditor de Calidad DTF
+                    </h3>
+                    <span className="font-mono text-xs text-emerald-400 border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 rounded">
+                      SCORE 0-100%
+                    </span>
+                  </div>
+                  <span className="font-mono text-xs text-[#8E95A5]">
+                    Inspección de canal alfa • Detección de halos de tinta blanca • Medidas a 300 DPI
+                  </span>
+                </div>
               </div>
-              <h3 className="text-lg font-bold text-white tracking-tight">
-                Escáner y Auditor DTF
-              </h3>
-              <p className="mt-2 text-xs text-[#8E95A5] leading-relaxed">
-                Examina tu diseño antes de desperdiciar metros de bobina. Detecta semitransparencias que manchan con tinta blanca, comprueba canal alfa y calcula el tamaño máximo a 300 DPI.
+
+              <p className="mt-3 text-xs text-[#8E95A5] max-w-2xl leading-relaxed">
+                Examina tu diseño antes de imprimir. El escáner detecta píxeles semitransparentes que causan acumulación irregular de tinta blanca en el software RIP, verifica si el fondo es 100% transparente y calcula las dimensiones físicas máximas recomendadas sin pérdida de resolución.
               </p>
             </div>
 
-            <div className="mt-6 pt-4 border-t border-[#20232A]">
+            <div className="flex flex-col sm:flex-row lg:flex-col gap-3 shrink-0">
               <Link
                 href="/tools/scanner"
-                className="inline-flex items-center gap-2 text-xs font-bold text-[#00A3FF] hover:underline font-mono"
+                className="inline-flex items-center justify-center gap-2 rounded bg-[#00A3FF] px-6 py-3 text-xs font-bold text-white hover:bg-[#00A3FF]/90 transition-colors shadow-lg font-sans text-center"
               >
+                <ScanSearch className="h-4 w-4" />
                 <span>Escanear archivo ahora</span>
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-            </div>
-          </div>
-
-          {/* Tarjeta Calculadora de Precios */}
-          <div className="rounded-xl border border-[#20232A] bg-[#16181D] p-6 hover:border-[#00A3FF]/40 transition-all flex flex-col justify-between">
-            <div>
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-emerald-500/30 bg-emerald-500/10 text-emerald-400">
-                  <Calculator className="h-5 w-5" />
-                </div>
-                <span className="font-mono text-xs text-[#00A3FF] border border-[#00A3FF]/30 bg-[#00A3FF]/10 px-2 py-0.5 rounded">
-                  COTIZADOR WHATSAPP
-                </span>
-              </div>
-              <h3 className="text-lg font-bold text-white tracking-tight">
-                Calculadora de Costos y Precios DTF
-              </h3>
-              <p className="mt-2 text-xs text-[#8E95A5] leading-relaxed">
-                Calcula al instante el costo de impresión por centímetro, prendas, mermas y márgenes de ganancia. Genera cotizaciones profesionales listas para enviar al cliente por WhatsApp.
-              </p>
-            </div>
-
-            <div className="mt-6 pt-4 border-t border-[#20232A]">
-              <Link
-                href="/tools/pricing-calculator"
-                className="inline-flex items-center gap-2 text-xs font-bold text-emerald-400 hover:underline font-mono"
-              >
-                <span>Calcular costos de producción</span>
-                <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
           </div>
