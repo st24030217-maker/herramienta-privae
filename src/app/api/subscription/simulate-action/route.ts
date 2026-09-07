@@ -11,6 +11,20 @@ export async function POST(req: NextRequest) {
 
     const { action } = await req.json();
 
+    const VALID_ACTIONS = [
+      "SUBSCRIBE_MONTHLY",
+      "TRIGGER_GRACE_PERIOD",
+      "CANCEL_SUBSCRIPTION",
+      "RESET_TRIAL",
+    ];
+
+    if (!action || !VALID_ACTIONS.includes(action)) {
+      return NextResponse.json(
+        { error: "Acción de membresía no reconocida." },
+        { status: 400 }
+      );
+    }
+
     let updateData: any = {};
     const now = new Date();
 

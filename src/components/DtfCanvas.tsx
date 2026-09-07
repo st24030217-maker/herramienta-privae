@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
+import Link from "next/link";
 import { 
   Plus, 
   Trash2, 
@@ -11,7 +12,11 @@ import {
   ZoomIn, 
   ZoomOut, 
   Loader2,
-  CheckCircle2
+  CheckCircle2,
+  X,
+  LogIn,
+  Crown,
+  UploadCloud
 } from "lucide-react";
 
 export interface CanvasDesign {
@@ -35,7 +40,9 @@ export function DtfCanvas() {
   const [zoom, setZoom] = useState<number>(1);
   const [exporting, setExporting] = useState<boolean>(false);
   const [exportError, setExportError] = useState<string | null>(null);
+  const [exportErrorStatus, setExportErrorStatus] = useState<number | null>(null);
   const [exportSuccess, setExportSuccess] = useState<boolean>(false);
+  const [isCanvasDragging, setIsCanvasDragging] = useState<boolean>(false);
 
   const canvasContainerRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -49,12 +56,37 @@ export function DtfCanvas() {
 
   const selectedDesign = designs.find((d) => d.id === selectedId);
 
+  // Atajo de teclado: Borrar elemento con Delete/Backspace
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const activeTag = (document.activeElement?.tagName || "").toLowerCase();
+      if (activeTag === "input" || activeTag === "textarea" || activeTag === "select") {
+        return;
+      }
+      if ((e.key === "Delete" || e.key === "Backspace") && selectedId) {
+        setDesigns((prev) => prev.filter((d) => d.id !== selectedId));
+        setSelectedId(null);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [selectedId]);
+
+  // Auto-ocultar notificación de éxito tras 6 segundos
+  useEffect(() => {
+    if (exportSuccess) {
+      const timer = setTimeout(() => setExportSuccess(false), 6000);
+      return () => clearTimeout(timer);
+    }
+  }, [exportSuccess]);
+
   const handleAddFiles = (files: FileList | null) => {
     if (!files) return;
 
-    Array.from(files).forEach((file) => {
-      if (!file.type.startsWith("image/")) return;
+    const validFiles = Array.from(files).filter((f) => f.type.startsWith("image/"));
+    if (validFiles.length === 0) return;
 
+    validFiles.forEach((file, index) => {
       const url = URL.createObjectURL(file);
       const img = new Image();
       img.onload = () => {
@@ -62,25 +94,56 @@ export function DtfCanvas() {
         const initWidthCm = Math.min(25, canvasWidthCm - 4);
         const initHeightCm = parseFloat((initWidthCm / aspect).toFixed(2));
 
-        const newDesign: CanvasDesign = {
-          id: "design_" + Math.random().toString(36).substring(2, 9),
-          file,
-          previewUrl: url,
-          originalWidthPx: img.width,
-          originalHeightPx: img.height,
-          xCm: 2,
-          yCm: 2 + designs.length * 5,
-          widthCm: initWidthCm,
-          heightCm: initHeightCm,
-          rotation: 0,
-          aspectRatio: aspect,
-        };
+        // Escalonamiento predecible para evitar que se encimen
+        setDesigns((prev) => {
+          const currentCount = prev.length;
+          const yPosition = Math.min(
+            canvasHeightCm - initHeightCm - 2,
+            2 + ((currentCount + index) * 6) % (canvasHeightCm - 30)
+          );
+          const xPosition = Math.min(
+            canvasWidthCm - initWidthCm,
+            2 + ((currentCount + index) * 3) % (canvasWidthCm - 28)
+          );
 
-        setDesigns((prev) => [...prev, newDesign]);
-        setSelectedId(newDesign.id);
+          const newDesign: CanvasDesign = {
+            id: "design_" + Math.random().toString(36).substring(2, 9),
+            file,
+            previewUrl: url,
+            originalWidthPx: img.width,
+            originalHeightPx: img.height,
+            xCm: parseFloat(xPosition.toFixed(2)),
+            yCm: parseFloat(Math.max(2, yPosition).toFixed(2)),
+            widthCm: initWidthCm,
+            heightCm: initHeightCm,
+            rotation: 0,
+            aspectRatio: aspect,
+          };
+
+          setSelectedId(newDesign.id);
+          return [...prev, newDesign];
+        });
       };
       img.src = url;
     });
+  };
+
+  const handleCanvasDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsCanvasDragging(true);
+  };
+
+  const handleCanvasDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsCanvasDragging(false);
+  };
+
+  const handleCanvasDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsCanvasDragging(false);
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      handleAddFiles(e.dataTransfer.files);
+    }
   };
 
   const updateSelectedDesign = (updates: Partial<CanvasDesign>) => {
@@ -147,6 +210,7 @@ export function DtfCanvas() {
     if (designs.length === 0) return;
     setExporting(true);
     setExportError(null);
+    setExportErrorStatus(null);
     setExportSuccess(false);
 
     try {
@@ -174,6 +238,7 @@ export function DtfCanvas() {
       });
 
       if (!res.ok) {
+        setExportErrorStatus(res.status);
         const err = await res.json().catch(() => ({}));
         throw new Error(err.error || "Error al componer el archivo DTF.");
       }
@@ -241,7 +306,7 @@ export function DtfCanvas() {
           <button
             onClick={handleExport}
             disabled={designs.length === 0 || exporting}
-            className="inline-flex items-center gap-2 rounded bg-[#00A3FF] px-4 py-2 text-xs font-bold text-white hover:bg-[#00A3FF]/90 transition-colors disabled:opacity-30"
+            className="inline-flex items-center gap-2 rounded bg-[#00A3FF] px-4 py-2 text-xs font-bold text-white hover:bg-[#00A3FF]/90 transition-colors disabled:opacity-30 shadow-lg"
           >
             {exporting ? (
               <>
@@ -256,15 +321,55 @@ export function DtfCanvas() {
         </div>
       </div>
 
+      {/* Alerta de Error con acción directa */}
       {exportError && (
-        <div className="mb-4 rounded border border-red-500/30 bg-red-500/10 p-3 text-xs text-red-200">
-          {exportError}
+        <div className="mb-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 rounded border border-red-500/30 bg-red-500/10 p-3 text-xs text-red-200">
+          <div className="flex items-center gap-2">
+            <AlertTriangle className="h-4 w-4 text-red-400 shrink-0" />
+            <span>{exportError}</span>
+          </div>
+          <div className="flex items-center gap-3 shrink-0">
+            {exportErrorStatus === 401 && (
+              <Link
+                href="/auth/login"
+                className="inline-flex items-center gap-1 rounded bg-[#F3F4F6] px-2.5 py-1 text-xs font-bold text-black hover:bg-white"
+              >
+                <LogIn className="h-3.5 w-3.5" /> Iniciar Sesión
+              </Link>
+            )}
+            {exportErrorStatus === 403 && (
+              <Link
+                href="/account"
+                className="inline-flex items-center gap-1 rounded bg-[#00A3FF] px-2.5 py-1 text-xs font-bold text-white hover:bg-[#00A3FF]/90"
+              >
+                <Crown className="h-3.5 w-3.5" /> Suscribirse
+              </Link>
+            )}
+            <button
+              onClick={() => setExportError(null)}
+              className="text-red-300 hover:text-white"
+              aria-label="Cerrar error"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </div>
         </div>
       )}
 
+      {/* Alerta de Éxito con botón cerrar */}
       {exportSuccess && (
-        <div className="mb-4 rounded border border-[#00A3FF]/30 bg-[#00A3FF]/10 p-3 text-xs text-[#00A3FF] flex items-center gap-2 font-mono">
-          <CheckCircle2 className="h-4 w-4" /> Pliego DTF exportado con éxito a 300 DPI reales.
+        <div className="mb-4 rounded border border-[#00A3FF]/30 bg-[#00A3FF]/10 p-3 text-xs text-[#00A3FF] flex items-center justify-between gap-2 font-mono">
+          <div className="flex items-center gap-2">
+            <CheckCircle2 className="h-4 w-4 shrink-0" />
+            <span>Pliego DTF exportado con éxito a 300 DPI reales. ¡Tu descarga ha comenzado!</span>
+          </div>
+          <button
+            onClick={() => setExportSuccess(false)}
+            className="text-[#00A3FF] hover:text-white"
+            aria-label="Cerrar notificación"
+          >
+            <X className="h-4 w-4" />
+          </button>
         </div>
       )}
 
@@ -273,8 +378,31 @@ export function DtfCanvas() {
         {/* SIDEBAR DE CONTROL (4 Columnas) */}
         <div className="space-y-5 lg:col-span-4">
           <div className="rounded-lg border border-[#20232A] bg-[#16181D] p-5">
-            <h3 className="text-xs font-mono font-semibold uppercase tracking-wider text-[#8E95A5] mb-3 flex items-center justify-between">
-              <span>Diseños en Pliego ({designs.length})</span>
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-xs font-mono font-semibold uppercase tracking-wider text-[#8E95A5]">
+                Diseños ({designs.length})
+              </span>
+              <div className="flex items-center gap-2">
+                {designs.length > 0 && (
+                  <button
+                    onClick={() => {
+                      if (confirm("¿Deseas vaciar todo el pliego de diseño?")) {
+                        setDesigns([]);
+                        setSelectedId(null);
+                      }
+                    }}
+                    className="text-[11px] text-[#8E95A5] hover:text-red-400 font-mono transition-colors"
+                  >
+                    Vaciar pliego
+                  </button>
+                )}
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  className="flex items-center gap-1 text-xs text-[#00A3FF] hover:underline font-semibold"
+                >
+                  <Plus className="h-3.5 w-3.5" /> Cargar diseños
+                </button>
+              </div>
               <input
                 ref={fileInputRef}
                 type="file"
@@ -283,13 +411,7 @@ export function DtfCanvas() {
                 className="hidden"
                 onChange={(e) => handleAddFiles(e.target.files)}
               />
-              <button
-                onClick={() => fileInputRef.current?.click()}
-                className="flex items-center gap-1 text-xs text-[#00A3FF] hover:underline font-semibold"
-              >
-                <Plus className="h-3.5 w-3.5" /> Cargar diseños
-              </button>
-            </h3>
+            </div>
 
             {designs.length === 0 ? (
               <div
@@ -301,11 +423,11 @@ export function DtfCanvas() {
                   Haz clic para cargar archivos PNG
                 </span>
                 <span className="font-mono text-[10px] text-[#8E95A5] mt-1">
-                  Múltiples diseños soportados a 300 DPI
+                  O arrástralos directo al lienzo de la derecha
                 </span>
               </div>
             ) : (
-              <div className="space-y-2 max-h-48 overflow-y-auto custom-scrollbar pr-1">
+              <div className="space-y-2 max-h-52 overflow-y-auto custom-scrollbar pr-1">
                 {designs.map((d) => (
                   <div
                     key={d.id}
@@ -326,7 +448,7 @@ export function DtfCanvas() {
                       <div className="truncate font-mono">
                         <p className="truncate text-xs text-[#F3F4F6]">{d.file.name}</p>
                         <p className="text-[10px] text-[#8E95A5]">
-                          {d.widthCm} × {d.heightCm} cm
+                          {d.widthCm} × {d.heightCm} cm • {calculateEffectiveDpi(d)} DPI
                         </p>
                       </div>
                     </div>
@@ -347,7 +469,7 @@ export function DtfCanvas() {
                           e.stopPropagation();
                           handleDelete(d.id);
                         }}
-                        title="Eliminar"
+                        title="Eliminar (Supr)"
                         className="p-1 hover:text-red-400"
                       >
                         <Trash2 className="h-3.5 w-3.5" />
@@ -371,15 +493,36 @@ export function DtfCanvas() {
                 </span>
               </div>
 
-              {calculateEffectiveDpi(selectedDesign) < 250 && (
-                <div className="flex items-center gap-2 rounded border border-amber-500/30 bg-amber-500/10 p-2.5 text-xs text-amber-200">
-                  <AlertTriangle className="h-4 w-4 shrink-0 text-amber-400" />
-                  <span className="font-mono text-[11px]">
-                    <strong>Aviso:</strong> Resolución efectiva de{" "}
-                    {calculateEffectiveDpi(selectedDesign)} DPI (Óptimo: 300 DPI).
-                  </span>
+              {/* Presets Textiles Rápidos */}
+              <div>
+                <span className="block text-[10px] font-mono text-[#8E95A5] uppercase tracking-wider mb-1.5">
+                  Tamaños Estándar Textiles:
+                </span>
+                <div className="flex flex-wrap gap-1.5">
+                  {[
+                    { label: "Pectoral (10cm)", w: 10 },
+                    { label: "Pecho (20cm)", w: 20 },
+                    { label: "A4 (21cm)", w: 21 },
+                    { label: "A3 (28cm)", w: 28 },
+                    { label: "Espalda (32cm)", w: 32 },
+                    { label: "Manga (8cm)", w: 8 },
+                    { label: "Gorra (6cm)", w: 6 },
+                  ].map((preset) => (
+                    <button
+                      key={preset.label}
+                      type="button"
+                      onClick={() => {
+                        const targetW = Math.min(canvasWidthCm, preset.w);
+                        const targetH = parseFloat((targetW / selectedDesign.aspectRatio).toFixed(2));
+                        updateSelectedDesign({ widthCm: targetW, heightCm: targetH });
+                      }}
+                      className="rounded border border-[#20232A] bg-[#0D0E11] px-2 py-0.5 text-[10px] font-mono text-[#8E95A5] hover:border-[#00A3FF] hover:text-[#00A3FF] transition-colors"
+                    >
+                      {preset.label}
+                    </button>
+                  ))}
                 </div>
-              )}
+              </div>
 
               <div className="grid grid-cols-2 gap-3 text-xs">
                 <div>
@@ -455,7 +598,7 @@ export function DtfCanvas() {
               </div>
 
               <div className="flex items-center justify-between pt-2">
-                <span className="text-xs font-mono text-[#8E95A5]">Rotación de arte:</span>
+                <span className="text-xs font-mono text-[#8E95A5]">Rotación:</span>
                 <button
                   onClick={() =>
                     updateSelectedDesign({
@@ -471,13 +614,16 @@ export function DtfCanvas() {
           )}
         </div>
 
-        {/* LIENZO INTERACTIVO */}
+        {/* LIENZO INTERACTIVO CON SOPORTE DRAG & DROP */}
         <div className="lg:col-span-8 flex flex-col">
           <div className="mb-2 flex items-center justify-between bg-[#16181D] border border-[#20232A] px-4 py-2 rounded-t-lg text-xs text-[#8E95A5]">
             <div className="flex items-center gap-2">
               <span className="font-semibold text-[#F3F4F6]">Lienzo de Montaje:</span>
               <span className="text-[#00A3FF] font-mono">
                 {canvasWidthCm} cm × {canvasHeightCm} cm
+              </span>
+              <span className="hidden sm:inline-block text-[#8E95A5]/60 text-[11px]">
+                (Arrastra imágenes aquí o pulsa Supr para eliminar)
               </span>
             </div>
 
@@ -504,8 +650,23 @@ export function DtfCanvas() {
 
           <div
             ref={canvasContainerRef}
-            className="relative flex-1 min-h-[600px] max-h-[750px] overflow-auto rounded-b-lg border border-[#20232A] bg-[#0D0E11] p-8 custom-scrollbar flex justify-center items-start"
+            onDragOver={handleCanvasDragOver}
+            onDragLeave={handleCanvasDragLeave}
+            onDrop={handleCanvasDrop}
+            className={`relative flex-1 min-h-[600px] max-h-[750px] overflow-auto rounded-b-lg border bg-[#0D0E11] p-8 custom-scrollbar flex justify-center items-start transition-colors ${
+              isCanvasDragging
+                ? "border-[#00A3FF] bg-[#00A3FF]/5"
+                : "border-[#20232A]"
+            }`}
           >
+            {isCanvasDragging && (
+              <div className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-[#0D0E11]/80 backdrop-blur-sm pointer-events-none">
+                <UploadCloud className="h-12 w-12 text-[#00A3FF] animate-bounce mb-2" />
+                <p className="text-base font-bold text-white">Suelta tus diseños en el pliego</p>
+                <p className="font-mono text-xs text-[#8E95A5]">Se colocarán a escala real automáticamente</p>
+              </div>
+            )}
+
             <div
               style={{
                 width: `${visualWidthPx}px`,
@@ -552,7 +713,7 @@ export function DtfCanvas() {
 
                     {isSelected && (
                       <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 bg-[#0D0E11] border border-[#00A3FF]/50 text-[10px] text-[#00A3FF] font-semibold px-2 py-0.5 rounded whitespace-nowrap z-20 font-mono">
-                        {d.widthCm} × {d.heightCm} cm
+                        {d.widthCm} × {d.heightCm} cm ({calculateEffectiveDpi(d)} DPI)
                       </div>
                     )}
                   </div>

@@ -7,17 +7,26 @@ import { fileTooLarge } from "@/lib/upload";
 export async function POST(req: NextRequest) {
   try {
     const user = await getCurrentUser();
-    if (user && !user.subscription.isAccessGranted) {
+    if (!user) {
       return NextResponse.json(
-        { error: "Tu período de prueba ha terminado. Suscríbete para continuar." },
+        { error: "Debes iniciar sesión para utilizar las herramientas de preparación DTF." },
+        { status: 401 }
+      );
+    }
+    if (!user.subscription.isAccessGranted) {
+      return NextResponse.json(
+        { error: "Tu período de prueba ha terminado. Activa tu suscripción para continuar." },
         { status: 403 }
       );
     }
 
     const formData = await req.formData();
     const file = formData.get("file") as File | null;
-    const scaleFactor = parseInt(formData.get("scaleFactor") as string || "2") as 2 | 4;
-    const sharpenLevel = (formData.get("sharpenLevel") as string || "medium") as "light" | "medium" | "strong";
+    const rawScale = parseInt(formData.get("scaleFactor") as string || "2");
+    const scaleFactor: 2 | 4 = rawScale === 4 ? 4 : 2;
+    const rawSharpen = (formData.get("sharpenLevel") as string || "medium");
+    const sharpenLevel: "light" | "medium" | "strong" = 
+      rawSharpen === "light" || rawSharpen === "strong" ? rawSharpen : "medium";
     const denoise = formData.get("denoise") === "true";
 
     if (!file) {

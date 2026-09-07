@@ -28,7 +28,7 @@ export default function AccountPage() {
   const [user, setUser] = useState<UserAccountData | null>(null);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
-  const [message, setMessage] = useState<string | null>(null);
+  const [feedback, setFeedback] = useState<{ text: string; type: "success" | "error" } | null>(null);
 
   const fetchUserData = () => {
     fetch("/api/auth/me")
@@ -47,19 +47,21 @@ export default function AccountPage() {
 
   const handleSimulateSubscription = async (action: string) => {
     setActionLoading(true);
-    setMessage(null);
+    setFeedback(null);
     try {
       const res = await fetch("/api/subscription/simulate-action", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ action }),
       });
-      if (res.ok) {
-        setMessage("¡Operación completada con éxito!");
-        fetchUserData();
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        throw new Error(data.error || "Error al actualizar la suscripción.");
       }
-    } catch {
-      setMessage("Error al realizar la acción.");
+      setFeedback({ text: "¡Operación completada con éxito!", type: "success" });
+      fetchUserData();
+    } catch (err: any) {
+      setFeedback({ text: err.message || "Error al realizar la acción.", type: "error" });
     } finally {
       setActionLoading(false);
     }
@@ -95,10 +97,28 @@ export default function AccountPage() {
         </p>
       </div>
 
-      {message && (
-        <div className="mb-6 flex items-center gap-2 rounded-lg bg-neutral-900 border border-neutral-700 p-3 text-xs text-white">
-          <CheckCircle2 className="h-4 w-4 shrink-0 text-white" />
-          <span>{message}</span>
+      {feedback && (
+        <div
+          className={`mb-6 flex items-center justify-between gap-2 rounded-lg p-3 text-xs border ${
+            feedback.type === "success"
+              ? "bg-[#00A3FF]/10 border-[#00A3FF]/30 text-[#00A3FF]"
+              : "bg-red-500/10 border-red-500/30 text-red-200"
+          }`}
+        >
+          <div className="flex items-center gap-2">
+            {feedback.type === "success" ? (
+              <CheckCircle2 className="h-4 w-4 shrink-0 text-[#00A3FF]" />
+            ) : (
+              <AlertTriangle className="h-4 w-4 shrink-0 text-red-400" />
+            )}
+            <span>{feedback.text}</span>
+          </div>
+          <button
+            onClick={() => setFeedback(null)}
+            className="hover:opacity-70 text-xs px-1"
+          >
+            ✕
+          </button>
         </div>
       )}
 

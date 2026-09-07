@@ -7,9 +7,15 @@ import { fileTooLarge } from "@/lib/upload";
 export async function POST(req: NextRequest) {
   try {
     const user = await getCurrentUser();
-    if (user && !user.subscription.isAccessGranted) {
+    if (!user) {
       return NextResponse.json(
-        { error: "Tu período de prueba ha terminado. Suscríbete para continuar." },
+        { error: "Debes iniciar sesión para utilizar las herramientas de preparación DTF." },
+        { status: 401 }
+      );
+    }
+    if (!user.subscription.isAccessGranted) {
+      return NextResponse.json(
+        { error: "Tu período de prueba ha terminado. Activa tu suscripción para continuar." },
         { status: 403 }
       );
     }

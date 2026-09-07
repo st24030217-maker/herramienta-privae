@@ -7,16 +7,23 @@ import { fileTooLarge } from "@/lib/upload";
 export async function POST(req: NextRequest) {
   try {
     const user = await getCurrentUser();
-    if (user && !user.subscription.isAccessGranted) {
+    if (!user) {
       return NextResponse.json(
-        { error: "Tu período de prueba ha terminado. Suscríbete para continuar." },
+        { error: "Debes iniciar sesión para utilizar las herramientas de preparación DTF." },
+        { status: 401 }
+      );
+    }
+    if (!user.subscription.isAccessGranted) {
+      return NextResponse.json(
+        { error: "Tu período de prueba ha terminado. Activa tu suscripción para continuar." },
         { status: 403 }
       );
     }
 
     const formData = await req.formData();
     const file = formData.get("file") as File | null;
-    const threshold = parseInt(formData.get("threshold") as string || "40");
+    const rawThreshold = parseInt(formData.get("threshold") as string || "40");
+    const threshold = Math.min(254, Math.max(1, isNaN(rawThreshold) ? 40 : rawThreshold));
     const boostSolid = formData.get("boostSolid") === "true";
     const smoothEdges = formData.get("smoothEdges") === "true";
 

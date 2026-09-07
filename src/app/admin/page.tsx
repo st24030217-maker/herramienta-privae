@@ -65,16 +65,21 @@ export default function AdminPage() {
 
   const handleUpdateStatus = async (userId: string, newStatus: string, addDays?: number) => {
     setActionLoading(true);
+    setFeedback(null);
     try {
       const res = await fetch("/api/admin/users", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userId, newStatus, addDays }),
       });
-      if (res.ok) {
-        setFeedback("Estado del usuario actualizado correctamente.");
-        loadData();
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        throw new Error(data.error || "No se pudo actualizar el estado.");
       }
+      setFeedback("Estado del usuario actualizado correctamente.");
+      loadData();
+    } catch (err: any) {
+      setFeedback(err.message || "Error al actualizar estado.");
     } finally {
       setActionLoading(false);
     }

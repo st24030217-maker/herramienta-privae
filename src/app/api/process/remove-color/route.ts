@@ -7,21 +7,26 @@ import { fileTooLarge } from "@/lib/upload";
 export async function POST(req: NextRequest) {
   try {
     const user = await getCurrentUser();
-    // Validar acceso (si es demo o tiene sesión)
-    if (user && !user.subscription.isAccessGranted) {
+    if (!user) {
       return NextResponse.json(
-        { error: "Tu período de prueba ha terminado. Suscríbete para continuar." },
+        { error: "Debes iniciar sesión para utilizar las herramientas de preparación DTF." },
+        { status: 401 }
+      );
+    }
+    if (!user.subscription.isAccessGranted) {
+      return NextResponse.json(
+        { error: "Tu período de prueba ha terminado. Activa tu suscripción para continuar." },
         { status: 403 }
       );
     }
 
     const formData = await req.formData();
     const file = formData.get("file") as File | null;
-    const r = parseInt(formData.get("r") as string || "255");
-    const g = parseInt(formData.get("g") as string || "255");
-    const b = parseInt(formData.get("b") as string || "255");
-    const tolerance = parseInt(formData.get("tolerance") as string || "30");
-    const smoothness = parseInt(formData.get("smoothness") as string || "10");
+    const r = Math.min(255, Math.max(0, parseInt(formData.get("r") as string || "255") || 0));
+    const g = Math.min(255, Math.max(0, parseInt(formData.get("g") as string || "255") || 0));
+    const b = Math.min(255, Math.max(0, parseInt(formData.get("b") as string || "255") || 0));
+    const tolerance = Math.min(100, Math.max(1, parseInt(formData.get("tolerance") as string || "30") || 30));
+    const smoothness = Math.min(50, Math.max(0, parseInt(formData.get("smoothness") as string || "10") || 10));
 
     if (!file) {
       return NextResponse.json({ error: "No se proporcionó ningún archivo" }, { status: 400 });

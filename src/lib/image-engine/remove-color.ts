@@ -13,7 +13,6 @@ export async function removeColorFromImage(
 ): Promise<Buffer> {
   // Asegurar que la imagen esté en RGBA
   const image = sharp(imageBuffer).ensureAlpha();
-  const metadata = await image.metadata();
 
   const { data, info } = await image.raw().toBuffer({ resolveWithObject: true });
   const width = info.width;

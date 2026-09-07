@@ -57,7 +57,7 @@ export async function verifySessionToken(token: string): Promise<string | null> 
 
 export async function getCurrentUser(): Promise<UserSession | null> {
   try {
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const token = cookieStore.get(TOKEN_COOKIE)?.value;
 
     if (!token) return null;

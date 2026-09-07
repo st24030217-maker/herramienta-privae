@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef } from "react";
+import Link from "next/link";
 import { 
   UploadCloud, 
   Download, 
@@ -9,7 +10,10 @@ import {
   AlertCircle, 
   Loader2, 
   FileImage,
-  Sparkles
+  Sparkles,
+  X,
+  LogIn,
+  Crown
 } from "lucide-react";
 
 interface ToolLayoutProps {
@@ -38,17 +42,21 @@ export function ToolLayout({
   const [resultUrl, setResultUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [errorStatus, setErrorStatus] = useState<number | null>(null);
   const [customParams, setCustomParams] = useState<Record<string, any>>({});
   const [imgDimensions, setImgDimensions] = useState<{ width: number; height: number } | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = (selectedFile: File) => {
     if (!selectedFile.type.startsWith("image/")) {
       setError("Por favor sube un archivo de imagen válido (PNG, JPG, WEBP, etc.)");
+      setErrorStatus(null);
       return;
     }
     setError(null);
+    setErrorStatus(null);
     setResultUrl(null);
     setFile(selectedFile);
 
@@ -62,8 +70,19 @@ export function ToolLayout({
     img.src = url;
   };
 
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+  };
+
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
+    setIsDragging(false);
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       handleFileChange(e.dataTransfer.files[0]);
     }
@@ -77,6 +96,7 @@ export function ToolLayout({
     if (!file) return;
     setLoading(true);
     setError(null);
+    setErrorStatus(null);
 
     try {
       const formData = new FormData();
@@ -96,6 +116,7 @@ export function ToolLayout({
       });
 
       if (!res.ok) {
+        setErrorStatus(res.status);
         const data = await res.json().catch(() => ({}));
         throw new Error(data.error || "Ocurrió un error al procesar la imagen.");
       }
@@ -125,8 +146,11 @@ export function ToolLayout({
     setOriginalPreview(null);
     setResultUrl(null);
     setError(null);
+    setErrorStatus(null);
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
+
+  const fileSizeMb = file ? (file.size / (1024 * 1024)).toFixed(2) : null;
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
@@ -164,11 +188,38 @@ export function ToolLayout({
         </div>
       )}
 
-      {/* Mensaje de Error */}
+      {/* Mensaje de Error con acción directa */}
       {error && (
-        <div className="mb-6 flex items-center gap-3 rounded-lg border border-red-500/30 bg-red-500/10 p-4 text-xs sm:text-sm text-red-200">
-          <AlertCircle className="h-5 w-5 text-red-400 shrink-0" />
-          <span>{error}</span>
+        <div className="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 rounded-lg border border-red-500/30 bg-red-500/10 p-4 text-xs sm:text-sm text-red-200">
+          <div className="flex items-center gap-3">
+            <AlertCircle className="h-5 w-5 text-red-400 shrink-0" />
+            <span>{error}</span>
+          </div>
+          <div className="flex items-center gap-3 shrink-0">
+            {errorStatus === 401 && (
+              <Link
+                href="/auth/login"
+                className="inline-flex items-center gap-1 rounded bg-[#F3F4F6] px-3 py-1 text-xs font-bold text-black hover:bg-white transition-colors"
+              >
+                <LogIn className="h-3.5 w-3.5" /> Iniciar Sesión
+              </Link>
+            )}
+            {errorStatus === 403 && (
+              <Link
+                href="/account"
+                className="inline-flex items-center gap-1 rounded bg-[#00A3FF] px-3 py-1 text-xs font-bold text-white hover:bg-[#00A3FF]/90 transition-colors"
+              >
+                <Crown className="h-3.5 w-3.5" /> Activar Plan
+              </Link>
+            )}
+            <button
+              onClick={() => setError(null)}
+              className="p-1 text-red-300 hover:text-white"
+              aria-label="Cerrar alerta"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </div>
         </div>
       )}
 
@@ -182,7 +233,7 @@ export function ToolLayout({
             </span>
             {imgDimensions && (
               <span className="font-mono text-xs text-[#8E95A5]">
-                {imgDimensions.width} × {imgDimensions.height} px
+                {imgDimensions.width} × {imgDimensions.height} px {fileSizeMb && `• ${fileSizeMb} MB`}
               </span>
             )}
           </div>
@@ -190,10 +241,15 @@ export function ToolLayout({
           {!originalPreview ? (
             /* Dropzone de Carga */
             <div
-              onDragOver={(e) => e.preventDefault()}
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
               onDrop={handleDrop}
               onClick={() => fileInputRef.current?.click()}
-              className="flex flex-1 min-h-[340px] cursor-pointer flex-col items-center justify-center rounded border-2 border-dashed border-[#20232A] bg-[#0D0E11] p-8 text-center transition-colors hover:border-[#00A3FF]/60 hover:bg-[#12141A]"
+              className={`flex flex-1 min-h-[340px] cursor-pointer flex-col items-center justify-center rounded border-2 border-dashed p-8 text-center transition-all ${
+                isDragging
+                  ? "border-[#00A3FF] bg-[#00A3FF]/10 scale-[0.99]"
+                  : "border-[#20232A] bg-[#0D0E11] hover:border-[#00A3FF]/60 hover:bg-[#12141A]"
+              }`}
             >
               <input
                 ref={fileInputRef}
@@ -228,6 +284,7 @@ export function ToolLayout({
                 <div className="flex items-center gap-2 truncate text-xs text-[#8E95A5]">
                   <FileImage className="h-4 w-4 text-[#F3F4F6] shrink-0" />
                   <span className="truncate font-mono">{file?.name}</span>
+                  {fileSizeMb && <span className="font-mono text-[#8E95A5]/60">({fileSizeMb} MB)</span>}
                 </div>
 
                 <button
@@ -298,7 +355,7 @@ export function ToolLayout({
               </span>
               <button
                 onClick={handleDownload}
-                className="inline-flex items-center gap-2 rounded bg-[#00A3FF] px-5 py-2.5 text-xs font-bold text-white hover:bg-[#00A3FF]/90 transition-colors"
+                className="inline-flex items-center gap-2 rounded bg-[#00A3FF] px-5 py-2.5 text-xs font-bold text-white hover:bg-[#00A3FF]/90 transition-colors shadow-lg"
               >
                 <Download className="h-4 w-4" /> Descargar PNG para DTF
               </button>

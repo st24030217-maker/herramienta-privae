@@ -5,7 +5,11 @@ import {
   Pipette, 
   Layers, 
   LayoutGrid, 
-  Sliders
+  ScanSearch,
+  Calculator,
+  ArrowRight,
+  ShieldCheck,
+  Receipt
 } from "lucide-react";
 
 export default function HomePage() {
@@ -31,8 +35,8 @@ export default function HomePage() {
     {
       id: "remove-color",
       name: "Extracción Cromática",
-      spec: "Muestreo Euclidiano",
-      desc: "Cuentagotas interactivo para eliminar colores de fondo específicos con control de tolerancia.",
+      spec: "Gotero Interactivo",
+      desc: "Cuentagotas interactivo para eliminar fondos o colores específicos con control de tolerancia y suavizado.",
       href: "/tools/remove-color",
       icon: Pipette,
       action: "Seleccionar tono",
@@ -49,25 +53,25 @@ export default function HomePage() {
   ];
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+    <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8 space-y-12">
       {/* Barra de Parámetros de Taller */}
-      <section className="mb-10 border-b border-[#20232A] pb-8">
+      <section className="border-b border-[#20232A] pb-8">
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
           <div>
             <div className="flex items-center gap-2 mb-2 font-mono text-xs text-[#00A3FF]">
               <span className="inline-block h-2 w-2 rounded-full bg-[#00A3FF]"></span>
-              <span>MESA DE PREIMPRESIÓN ACTIVA</span>
+              <span>TALLER DIGITAL DTF ACTIVO</span>
             </div>
             <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#F3F4F6]">
-              Consola de Preparación DTF
+              Consola de Preparación Textil DTF
             </h1>
             <p className="mt-2 text-sm text-[#8E95A5] max-w-2xl leading-relaxed">
-              Herramientas de taller para calibrar transparencias, densidad de tinta blanca y armar pliegos continuos de impresión textil a 300 DPI reales.
+              Suite integral para auditar archivos, calibrar transparencias, cotizar precios y armar pliegos continuos de impresión textil a 300 DPI reales.
             </p>
           </div>
 
           {/* Ficha de Calibración Técnica */}
-          <div className="flex flex-wrap items-center gap-4 font-mono text-xs text-[#8E95A5] bg-[#16181D] border border-[#20232A] px-4 py-2.5 rounded">
+          <div className="flex flex-wrap items-center gap-4 font-mono text-xs text-[#8E95A5] bg-[#16181D] border border-[#20232A] px-4 py-2.5 rounded-lg shadow-inner">
             <div>
               <span className="text-[#8E95A5]/60 block text-[10px]">ANCHO BOBINA</span>
               <span className="text-[#F3F4F6] font-semibold">58.0 cm</span>
@@ -79,21 +83,95 @@ export default function HomePage() {
             </div>
             <div className="h-6 w-px bg-[#20232A]" />
             <div>
-              <span className="text-[#8E95A5]/60 block text-[10px]">CANAL COLOR</span>
-              <span className="text-[#F3F4F6] font-semibold">RGBA + White</span>
+              <span className="text-[#8E95A5]/60 block text-[10px]">AUDITORÍA</span>
+              <span className="text-[#00A3FF] font-semibold">Score DTF en Vivo</span>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ESTACIÓN PRINCIPAL: Armador de Pliegos DTF */}
-      <section className="mb-12">
-        <div className="rounded-lg border border-[#20232A] bg-[#16181D] p-6 lg:p-8">
+      {/* SECCIÓN 1: HERRAMIENTAS INTELIGENTES DE TALLER (Escáner & Calculadora) */}
+      <section>
+        <div className="mb-4 flex items-center justify-between border-b border-[#20232A] pb-2">
+          <h3 className="font-mono text-xs uppercase tracking-wider text-[#00A3FF] font-semibold flex items-center gap-2">
+            <span>Diagnóstico Forense y Gestión de Precios</span>
+          </h3>
+          <span className="font-mono text-xs text-[#8E95A5]/60">
+            Nuevas utilidades de alta precisión
+          </span>
+        </div>
+
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+          {/* Tarjeta Escáner DTF */}
+          <div className="rounded-xl border border-[#20232A] bg-[#16181D] p-6 hover:border-[#00A3FF]/40 transition-all flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-[#00A3FF]/30 bg-[#00A3FF]/10 text-[#00A3FF]">
+                  <ScanSearch className="h-5 w-5" />
+                </div>
+                <span className="font-mono text-xs text-emerald-400 border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 rounded">
+                  SCORE 0-100%
+                </span>
+              </div>
+              <h3 className="text-lg font-bold text-white tracking-tight">
+                Escáner y Auditor DTF
+              </h3>
+              <p className="mt-2 text-xs text-[#8E95A5] leading-relaxed">
+                Examina tu diseño antes de desperdiciar metros de bobina. Detecta semitransparencias que manchan con tinta blanca, comprueba canal alfa y calcula el tamaño máximo a 300 DPI.
+              </p>
+            </div>
+
+            <div className="mt-6 pt-4 border-t border-[#20232A]">
+              <Link
+                href="/tools/scanner"
+                className="inline-flex items-center gap-2 text-xs font-bold text-[#00A3FF] hover:underline font-mono"
+              >
+                <span>Escanear archivo ahora</span>
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+          </div>
+
+          {/* Tarjeta Calculadora de Precios */}
+          <div className="rounded-xl border border-[#20232A] bg-[#16181D] p-6 hover:border-[#00A3FF]/40 transition-all flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-emerald-500/30 bg-emerald-500/10 text-emerald-400">
+                  <Calculator className="h-5 w-5" />
+                </div>
+                <span className="font-mono text-xs text-[#00A3FF] border border-[#00A3FF]/30 bg-[#00A3FF]/10 px-2 py-0.5 rounded">
+                  COTIZADOR WHATSAPP
+                </span>
+              </div>
+              <h3 className="text-lg font-bold text-white tracking-tight">
+                Calculadora de Costos y Precios DTF
+              </h3>
+              <p className="mt-2 text-xs text-[#8E95A5] leading-relaxed">
+                Calcula al instante el costo de impresión por centímetro, prendas, mermas y márgenes de ganancia. Genera cotizaciones profesionales listas para enviar al cliente por WhatsApp.
+              </p>
+            </div>
+
+            <div className="mt-6 pt-4 border-t border-[#20232A]">
+              <Link
+                href="/tools/pricing-calculator"
+                className="inline-flex items-center gap-2 text-xs font-bold text-emerald-400 hover:underline font-mono"
+              >
+                <span>Calcular costos de producción</span>
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* SECCIÓN 2: ESTACIÓN CENTRAL: Armador de Pliegos DTF */}
+      <section>
+        <div className="rounded-xl border border-[#20232A] bg-[#16181D] p-6 lg:p-8">
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
             <div className="flex-1">
               <div className="flex items-center gap-2.5 mb-2">
                 <span className="font-mono text-xs text-[#00A3FF] border border-[#00A3FF]/30 px-2 py-0.5 rounded bg-[#00A3FF]/10 font-semibold">
-                  ESTACIÓN CENTRAL
+                  ESTACIÓN CENTRAL DE PRODUCCIÓN
                 </span>
                 <span className="font-mono text-xs text-[#8E95A5]">
                   580 × 1000 mm / 580 × 2000 mm
@@ -104,7 +182,7 @@ export default function HomePage() {
                 Armador de Archivos y Pliegos DTF
               </h2>
               <p className="mt-2 text-sm text-[#8E95A5] max-w-2xl leading-relaxed">
-                Distribuye múltiples diseños en un lienzo calibrado a escala real. Mide dimensiones en centímetros, verifica advertencias de resolución baja (&lt; 250 DPI) y exporta el PNG maestro a 300 DPI.
+                Distribuye múltiples diseños en un lienzo calibrado con cotas en centímetros reales. Incluye soporte de Drag & Drop directo, presets textiles (Pectoral, A4, A3, Espalda) y exportación en PNG a 300 DPI reales.
               </p>
 
               <div className="mt-4 flex flex-wrap gap-2 text-xs font-mono text-[#8E95A5]">
@@ -112,10 +190,10 @@ export default function HomePage() {
                   Formatos: 58×100 cm y 58×200 cm
                 </span>
                 <span className="rounded bg-[#0D0E11] border border-[#20232A] px-2.5 py-1">
-                  Cálculo de resolución efectiva en vivo
+                  Arrastre directo al lienzo
                 </span>
                 <span className="rounded bg-[#0D0E11] border border-[#20232A] px-2.5 py-1">
-                  Salida hasta 6,850 × 23,622 px
+                  Presets textiles estándar (Pectoral, A4, A3)
                 </span>
               </div>
             </div>
@@ -123,7 +201,7 @@ export default function HomePage() {
             <div className="flex flex-col sm:flex-row lg:flex-col gap-3 shrink-0">
               <Link
                 href="/tools/dtf-builder"
-                className="inline-flex items-center justify-center gap-2 rounded bg-[#F3F4F6] px-5 py-2.5 text-xs font-bold text-[#0D0E11] hover:bg-white transition-colors text-center"
+                className="inline-flex items-center justify-center gap-2 rounded bg-[#F3F4F6] px-5 py-3 text-xs font-bold text-[#0D0E11] hover:bg-white transition-colors text-center shadow-lg"
               >
                 <LayoutGrid className="h-4 w-4" />
                 <span>Armar pliego de 58 cm</span>
@@ -133,14 +211,14 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* MÓDULOS DE CALIBRACIÓN Y PRE-PRENSA */}
+      {/* SECCIÓN 3: MÓDULOS DE CALIBRACIÓN Y PRE-PRENSA */}
       <section>
         <div className="mb-4 flex items-center justify-between border-b border-[#20232A] pb-2">
           <h3 className="font-mono text-xs uppercase tracking-wider text-[#8E95A5]">
-            Módulos de Calibración y Pre-Prensa
+            Módulos Individuales de Pre-Prensa
           </h3>
           <span className="font-mono text-xs text-[#8E95A5]/60">
-            4 utilidades individuales
+            4 utilidades especializadas
           </span>
         </div>
 

@@ -3,8 +3,6 @@ import { prisma } from "@/lib/prisma";
 import { verifyPassword, createSessionToken } from "@/lib/auth";
 import { rateLimit } from "@/lib/rate-limit";
 
-const MAX_UPLOAD_BYTES = 25 * 1024 * 1024; // 25 MB
-
 export async function POST(req: NextRequest) {
   try {
     const clientIp =
