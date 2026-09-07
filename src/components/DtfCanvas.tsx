@@ -278,14 +278,14 @@ export function DtfCanvas() {
           </p>
         </div>
 
-        {/* Controles de Formato y Exportación */}
-        <div className="flex items-center gap-3">
-          <div className="flex rounded bg-[#0D0E11] p-1 border border-[#20232A] text-xs font-mono font-medium">
+        {/* Controles de Formato y Exportación Grandes */}
+        <div className="flex flex-wrap items-center gap-3">
+          <div className="flex rounded-xl bg-[#0D0E11] p-1.5 border border-[#20232A] text-xs font-mono font-medium shadow-inner">
             <button
               onClick={() => setFormat("58x100")}
-              className={`px-3 py-1.5 rounded transition-colors ${
+              className={`px-4 py-2 rounded-lg transition-all ${
                 format === "58x100"
-                  ? "bg-[#16181D] text-[#F3F4F6] border border-[#20232A] font-semibold"
+                  ? "bg-[#16181D] text-white border border-[#20232A] font-bold shadow-sm"
                   : "text-[#8E95A5] hover:text-[#F3F4F6]"
               }`}
             >
@@ -293,9 +293,9 @@ export function DtfCanvas() {
             </button>
             <button
               onClick={() => setFormat("58x200")}
-              className={`px-3 py-1.5 rounded transition-colors ${
+              className={`px-4 py-2 rounded-lg transition-all ${
                 format === "58x200"
-                  ? "bg-[#16181D] text-[#F3F4F6] border border-[#20232A] font-semibold"
+                  ? "bg-[#16181D] text-white border border-[#20232A] font-bold shadow-sm"
                   : "text-[#8E95A5] hover:text-[#F3F4F6]"
               }`}
             >
@@ -306,15 +306,17 @@ export function DtfCanvas() {
           <button
             onClick={handleExport}
             disabled={designs.length === 0 || exporting}
-            className="inline-flex items-center gap-2 rounded bg-[#00A3FF] px-4 py-2 text-xs font-bold text-white hover:bg-[#00A3FF]/90 transition-colors disabled:opacity-30 shadow-lg"
+            className="inline-flex items-center gap-2.5 rounded-xl bg-[#00A3FF] hover:bg-[#00A3FF]/90 px-6 py-3 text-sm font-bold text-white transition-all shadow-lg active:scale-95 disabled:opacity-30 font-sans"
           >
             {exporting ? (
               <>
-                <Loader2 className="h-4 w-4 animate-spin text-white" /> Generando maestro 300 DPI...
+                <Loader2 className="h-5 w-5 animate-spin text-white" />
+                <span>Generando 300 DPI...</span>
               </>
             ) : (
               <>
-                <Download className="h-4 w-4" /> Exportar Pliego DTF
+                <Download className="h-5 w-5" />
+                <span>Exportar Pliego DTF</span>
               </>
             )}
           </button>
@@ -377,10 +379,10 @@ export function DtfCanvas() {
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
         {/* SIDEBAR DE CONTROL (4 Columnas) */}
         <div className="space-y-5 lg:col-span-4">
-          <div className="rounded-lg border border-[#20232A] bg-[#16181D] p-5">
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-xs font-mono font-semibold uppercase tracking-wider text-[#8E95A5]">
-                Diseños ({designs.length})
+          <div className="rounded-2xl border border-[#20232A] bg-[#16181D] p-5 shadow-sm">
+            <div className="flex items-center justify-between mb-4">
+              <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#8E95A5]">
+                Diseños en el Pliego ({designs.length})
               </span>
               <div className="flex items-center gap-2">
                 {designs.length > 0 && (
@@ -391,16 +393,17 @@ export function DtfCanvas() {
                         setSelectedId(null);
                       }
                     }}
-                    className="text-[11px] text-[#8E95A5] hover:text-red-400 font-mono transition-colors"
+                    className="text-xs text-[#8E95A5] hover:text-red-400 font-mono transition-colors px-2 py-1 rounded"
                   >
                     Vaciar pliego
                   </button>
                 )}
                 <button
                   onClick={() => fileInputRef.current?.click()}
-                  className="flex items-center gap-1 text-xs text-[#00A3FF] hover:underline font-semibold"
+                  className="inline-flex items-center gap-1.5 rounded-xl border border-[#00A3FF]/40 bg-[#00A3FF]/15 px-3.5 py-2 text-xs font-bold text-[#00A3FF] hover:bg-[#00A3FF]/25 transition-all shadow-sm active:scale-95"
                 >
-                  <Plus className="h-3.5 w-3.5" /> Cargar diseños
+                  <Plus className="h-4 w-4" />
+                  <span>Cargar artes</span>
                 </button>
               </div>
               <input
@@ -416,14 +419,16 @@ export function DtfCanvas() {
             {designs.length === 0 ? (
               <div
                 onClick={() => fileInputRef.current?.click()}
-                className="flex cursor-pointer flex-col items-center justify-center rounded border border-dashed border-[#20232A] bg-[#0D0E11] p-6 text-center hover:border-[#00A3FF]/60 transition-colors"
+                className="flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-[#20232A] bg-[#0D0E11] p-8 text-center hover:border-[#00A3FF]/60 hover:bg-[#12141A] transition-all"
               >
-                <Plus className="h-6 w-6 text-[#8E95A5] mb-1" />
-                <span className="text-xs font-semibold text-[#F3F4F6]">
-                  Haz clic para cargar archivos PNG
+                <div className="mb-2 rounded-xl bg-[#16181D] p-3 text-[#00A3FF] border border-[#20232A]">
+                  <Plus className="h-6 w-6" />
+                </div>
+                <span className="text-sm font-bold text-[#F3F4F6]">
+                  Haz clic para cargar imágenes
                 </span>
-                <span className="font-mono text-[10px] text-[#8E95A5] mt-1">
-                  O arrástralos directo al lienzo de la derecha
+                <span className="font-mono text-xs text-[#8E95A5] mt-1">
+                  O arrástralas directamente al lienzo de 58cm
                 </span>
               </div>
             ) : (
@@ -493,17 +498,17 @@ export function DtfCanvas() {
                 </span>
               </div>
 
-              {/* Presets Textiles Rápidos */}
-              <div>
-                <span className="block text-[10px] font-mono text-[#8E95A5] uppercase tracking-wider mb-1.5">
-                  Tamaños Estándar Textiles:
+              {/* Presets Textiles Rápidos y Accesibles */}
+              <div className="space-y-2">
+                <span className="block text-xs font-mono text-[#8E95A5] uppercase tracking-wider">
+                  Medidas Estándar Textiles:
                 </span>
-                <div className="flex flex-wrap gap-1.5">
+                <div className="flex flex-wrap gap-2">
                   {[
                     { label: "Pectoral (10cm)", w: 10 },
                     { label: "Pecho (20cm)", w: 20 },
-                    { label: "A4 (21cm)", w: 21 },
-                    { label: "A3 (28cm)", w: 28 },
+                    { label: "Frente A4 (21cm)", w: 21 },
+                    { label: "Frente A3 (28cm)", w: 28 },
                     { label: "Espalda (32cm)", w: 32 },
                     { label: "Manga (8cm)", w: 8 },
                     { label: "Gorra (6cm)", w: 6 },
@@ -516,7 +521,7 @@ export function DtfCanvas() {
                         const targetH = parseFloat((targetW / selectedDesign.aspectRatio).toFixed(2));
                         updateSelectedDesign({ widthCm: targetW, heightCm: targetH });
                       }}
-                      className="rounded border border-[#20232A] bg-[#0D0E11] px-2 py-0.5 text-[10px] font-mono text-[#8E95A5] hover:border-[#00A3FF] hover:text-[#00A3FF] transition-colors"
+                      className="rounded-xl border border-[#20232A] bg-[#0D0E11] px-3 py-1.5 text-xs font-semibold text-[#8E95A5] hover:border-[#00A3FF] hover:text-[#00A3FF] hover:bg-[#00A3FF]/10 transition-all active:scale-95"
                     >
                       {preset.label}
                     </button>
@@ -524,9 +529,10 @@ export function DtfCanvas() {
                 </div>
               </div>
 
+              {/* Inputs de Dimensiones Grandes */}
               <div className="grid grid-cols-2 gap-3 text-xs">
                 <div>
-                  <label className="block text-[11px] text-[#8E95A5] mb-1 font-mono">
+                  <label className="block text-xs text-[#8E95A5] mb-1 font-mono">
                     Ancho (cm):
                   </label>
                   <input
@@ -540,12 +546,12 @@ export function DtfCanvas() {
                       const h = parseFloat((w / selectedDesign.aspectRatio).toFixed(2));
                       updateSelectedDesign({ widthCm: w, heightCm: h });
                     }}
-                    className="w-full rounded border border-[#20232A] bg-[#0D0E11] px-2.5 py-1.5 text-[#F3F4F6] font-mono focus:border-[#00A3FF] focus:outline-none"
+                    className="w-full rounded-xl border border-[#20232A] bg-[#0D0E11] px-3 py-2 text-sm text-[#F3F4F6] font-mono focus:border-[#00A3FF] focus:outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[11px] text-[#8E95A5] mb-1 font-mono">
+                  <label className="block text-xs text-[#8E95A5] mb-1 font-mono">
                     Alto (cm):
                   </label>
                   <input
@@ -558,12 +564,12 @@ export function DtfCanvas() {
                       const w = parseFloat((h * selectedDesign.aspectRatio).toFixed(2));
                       updateSelectedDesign({ widthCm: w, heightCm: h });
                     }}
-                    className="w-full rounded border border-[#20232A] bg-[#0D0E11] px-2.5 py-1.5 text-[#F3F4F6] font-mono focus:border-[#00A3FF] focus:outline-none"
+                    className="w-full rounded-xl border border-[#20232A] bg-[#0D0E11] px-3 py-2 text-sm text-[#F3F4F6] font-mono focus:border-[#00A3FF] focus:outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[11px] text-[#8E95A5] mb-1 font-mono">
+                  <label className="block text-xs text-[#8E95A5] mb-1 font-mono">
                     Posición X (cm):
                   </label>
                   <input
@@ -575,12 +581,12 @@ export function DtfCanvas() {
                     onChange={(e) =>
                       updateSelectedDesign({ xCm: parseFloat(e.target.value) || 0 })
                     }
-                    className="w-full rounded border border-[#20232A] bg-[#0D0E11] px-2.5 py-1.5 text-[#F3F4F6] font-mono focus:border-[#00A3FF] focus:outline-none"
+                    className="w-full rounded-xl border border-[#20232A] bg-[#0D0E11] px-3 py-2 text-sm text-[#F3F4F6] font-mono focus:border-[#00A3FF] focus:outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[11px] text-[#8E95A5] mb-1 font-mono">
+                  <label className="block text-xs text-[#8E95A5] mb-1 font-mono">
                     Posición Y (cm):
                   </label>
                   <input
@@ -592,16 +598,18 @@ export function DtfCanvas() {
                     onChange={(e) =>
                       updateSelectedDesign({ yCm: parseFloat(e.target.value) || 0 })
                     }
-                    className="w-full rounded border border-[#20232A] bg-[#0D0E11] px-2.5 py-1.5 text-[#F3F4F6] font-mono focus:border-[#00A3FF] focus:outline-none"
+                    className="w-full rounded-xl border border-[#20232A] bg-[#0D0E11] px-3 py-2 text-sm text-[#F3F4F6] font-mono focus:border-[#00A3FF] focus:outline-none"
                   />
                 </div>
               </div>
 
               {/* Acciones Rápidas de Posicionamiento */}
-              <div className="pt-2 border-t border-[#20232A] space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-mono text-[#8E95A5]">Alineación:</span>
-                  <div className="flex items-center gap-1">
+              <div className="pt-3 border-t border-[#20232A] space-y-3">
+                <div className="space-y-1.5">
+                  <span className="text-xs font-mono text-[#8E95A5] uppercase tracking-wider block">
+                    Alineación Rápida:
+                  </span>
+                  <div className="grid grid-cols-3 gap-2">
                     <button
                       type="button"
                       onClick={() =>
@@ -609,40 +617,41 @@ export function DtfCanvas() {
                           xCm: parseFloat(((canvasWidthCm - selectedDesign.widthCm) / 2).toFixed(2)),
                         })
                       }
-                      className="rounded border border-[#20232A] bg-[#0D0E11] px-2 py-1 text-[10px] font-mono text-[#F3F4F6] hover:border-[#00A3FF] hover:text-[#00A3FF]"
+                      className="rounded-xl border border-[#20232A] bg-[#0D0E11] px-2.5 py-2 text-xs font-mono text-[#F3F4F6] hover:border-[#00A3FF] hover:text-[#00A3FF] hover:bg-[#00A3FF]/10 transition-all text-center"
                       title="Centrar en el ancho de 58 cm"
                     >
-                      Centrar
+                      Centrar X
                     </button>
                     <button
                       type="button"
                       onClick={() => updateSelectedDesign({ xCm: 1 })}
-                      className="rounded border border-[#20232A] bg-[#0D0E11] px-2 py-1 text-[10px] font-mono text-[#F3F4F6] hover:border-[#00A3FF] hover:text-[#00A3FF]"
+                      className="rounded-xl border border-[#20232A] bg-[#0D0E11] px-2.5 py-2 text-xs font-mono text-[#F3F4F6] hover:border-[#00A3FF] hover:text-[#00A3FF] hover:bg-[#00A3FF]/10 transition-all text-center"
                       title="Alinear al margen izquierdo (1 cm)"
                     >
-                      Izq (1cm)
+                      Margen 1cm
                     </button>
                     <button
                       type="button"
                       onClick={() => updateSelectedDesign({ yCm: 1 })}
-                      className="rounded border border-[#20232A] bg-[#0D0E11] px-2 py-1 text-[10px] font-mono text-[#F3F4F6] hover:border-[#00A3FF] hover:text-[#00A3FF]"
+                      className="rounded-xl border border-[#20232A] bg-[#0D0E11] px-2.5 py-2 text-xs font-mono text-[#F3F4F6] hover:border-[#00A3FF] hover:text-[#00A3FF] hover:bg-[#00A3FF]/10 transition-all text-center"
                       title="Alinear al borde superior"
                     >
-                      Arriba
+                      Pegar Arriba
                     </button>
                   </div>
                 </div>
 
                 <div className="flex items-center justify-between pt-1">
-                  <span className="text-xs font-mono text-[#8E95A5]">Rotación:</span>
+                  <span className="text-xs font-mono text-[#8E95A5]">Acciones:</span>
                   <div className="flex items-center gap-2">
                     <button
                       type="button"
                       onClick={() => handleDuplicate(selectedDesign.id)}
-                      className="flex items-center gap-1 rounded border border-[#20232A] bg-[#0D0E11] px-2.5 py-1 text-[11px] text-[#F3F4F6] hover:bg-[#20232A] font-mono"
+                      className="flex items-center gap-1.5 rounded-xl border border-[#20232A] bg-[#0D0E11] px-3.5 py-2 text-xs text-[#F3F4F6] hover:bg-[#20232A] font-semibold transition-all active:scale-95"
                       title="Duplicar arte"
                     >
-                      <Copy className="h-3 w-3" /> Duplicar
+                      <Copy className="h-4 w-4 text-[#00A3FF]" />
+                      <span>Duplicar</span>
                     </button>
                     <button
                       type="button"
@@ -651,9 +660,10 @@ export function DtfCanvas() {
                           rotation: (selectedDesign.rotation + 90) % 360,
                         })
                       }
-                      className="flex items-center gap-1 rounded border border-[#20232A] bg-[#0D0E11] px-2.5 py-1 text-[11px] text-[#F3F4F6] hover:bg-[#20232A] font-mono"
+                      className="flex items-center gap-1.5 rounded-xl border border-[#20232A] bg-[#0D0E11] px-3.5 py-2 text-xs text-[#F3F4F6] hover:bg-[#20232A] font-semibold transition-all active:scale-95"
                     >
-                      <RotateCw className="h-3 w-3 text-[#00A3FF]" /> Girar 90°
+                      <RotateCw className="h-4 w-4 text-[#00A3FF]" />
+                      <span>Girar 90°</span>
                     </button>
                   </div>
                 </div>
@@ -678,20 +688,20 @@ export function DtfCanvas() {
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setZoom((z) => Math.max(0.4, z - 0.1))}
-                className="p-1 text-[#8E95A5] hover:text-[#F3F4F6] rounded bg-[#0D0E11] border border-[#20232A]"
-                title="Alejar"
+                className="h-8 w-8 flex items-center justify-center text-[#8E95A5] hover:text-white rounded-lg bg-[#0D0E11] border border-[#20232A] hover:border-[#8E95A5]/60 transition-all active:scale-95"
+                title="Alejar zoom"
               >
-                <ZoomOut className="h-3.5 w-3.5" />
+                <ZoomOut className="h-4 w-4" />
               </button>
-              <span className="font-mono text-[11px] w-12 text-center text-[#F3F4F6]">
+              <span className="font-mono text-xs font-bold w-14 text-center text-[#F3F4F6] bg-[#0D0E11] py-1 rounded-md border border-[#20232A]">
                 {Math.round(zoom * 100)}%
               </span>
               <button
                 onClick={() => setZoom((z) => Math.min(2.5, z + 0.1))}
-                className="p-1 text-[#8E95A5] hover:text-[#F3F4F6] rounded bg-[#0D0E11] border border-[#20232A]"
-                title="Acercar"
+                className="h-8 w-8 flex items-center justify-center text-[#8E95A5] hover:text-white rounded-lg bg-[#0D0E11] border border-[#20232A] hover:border-[#8E95A5]/60 transition-all active:scale-95"
+                title="Acercar zoom"
               >
-                <ZoomIn className="h-3.5 w-3.5" />
+                <ZoomIn className="h-4 w-4" />
               </button>
             </div>
           </div>

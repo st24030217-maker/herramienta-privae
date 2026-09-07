@@ -130,7 +130,7 @@ export default function HomePage() {
             <div className="flex flex-col sm:flex-row lg:flex-col gap-3 shrink-0">
               <Link
                 href="/tools/scanner"
-                className="inline-flex items-center justify-center gap-2 rounded bg-[#00A3FF] px-6 py-3 text-xs font-bold text-white hover:bg-[#00A3FF]/90 transition-colors shadow-lg font-sans text-center"
+                className="inline-flex items-center justify-center gap-2.5 rounded-xl bg-[#00A3FF] px-7 py-3.5 text-sm font-bold text-white hover:bg-[#00A3FF]/90 active:scale-95 transition-all shadow-lg font-sans text-center"
               >
                 <ScanSearch className="h-4 w-4" />
                 <span>Escanear archivo ahora</span>
@@ -177,7 +177,7 @@ export default function HomePage() {
             <div className="flex flex-col sm:flex-row lg:flex-col gap-3 shrink-0">
               <Link
                 href="/tools/dtf-builder"
-                className="inline-flex items-center justify-center gap-2 rounded bg-[#F3F4F6] px-5 py-3 text-xs font-bold text-[#0D0E11] hover:bg-white transition-colors text-center shadow-lg"
+                className="inline-flex items-center justify-center gap-2.5 rounded-xl bg-[#F3F4F6] px-7 py-3.5 text-sm font-bold text-[#0D0E11] hover:bg-white active:scale-95 transition-all text-center shadow-lg"
               >
                 <LayoutGrid className="h-4 w-4" />
                 <span>Armar pliego de 58 cm</span>
@@ -204,11 +204,11 @@ export default function HomePage() {
             return (
               <div
                 key={tool.id}
-                className="flex flex-col justify-between rounded-lg border border-[#20232A] bg-[#16181D] p-5 transition-colors hover:border-[#8E95A5]/40"
+                className="flex flex-col justify-between rounded-xl border border-[#20232A] bg-[#16181D] p-5 transition-all hover:border-[#00A3FF]/40 shadow-sm"
               >
                 <div>
                   <div className="flex items-center justify-between mb-3">
-                    <div className="flex h-8 w-8 items-center justify-center rounded border border-[#20232A] bg-[#0D0E11] text-[#F3F4F6]">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-[#20232A] bg-[#0D0E11] text-[#F3F4F6]">
                       <Icon className="h-4 w-4 text-[#00A3FF]" />
                     </div>
                     <span className="font-mono text-[11px] text-[#8E95A5]">
@@ -227,9 +227,10 @@ export default function HomePage() {
                 <div className="mt-5 pt-3 border-t border-[#20232A]">
                   <Link
                     href={tool.href}
-                    className="inline-flex w-full items-center justify-center gap-1.5 rounded border border-[#20232A] bg-[#0D0E11] py-1.5 text-xs font-semibold text-[#F3F4F6] hover:bg-[#20232A] hover:border-[#8E95A5]/40 transition-colors"
+                    className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[#20232A] bg-[#0D0E11] py-2.5 px-4 text-xs font-bold text-[#F3F4F6] hover:bg-[#20232A] hover:border-[#00A3FF]/40 active:scale-95 transition-all"
                   >
                     <span>{tool.action}</span>
+                    <ArrowRight className="h-3.5 w-3.5 text-[#00A3FF]" />
                   </Link>
                 </div>
               </div>

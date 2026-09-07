@@ -277,7 +277,7 @@ export default function DtfScannerPage() {
                     </div>
 
                     <div className="flex items-center justify-center shrink-0">
-                      <div className={`flex h-20 w-20 items-center justify-center rounded-full border-4 font-mono font-extrabold text-2xl ${
+                      <div className={`flex h-24 w-24 items-center justify-center rounded-2xl border-4 font-mono font-black text-3xl shadow-lg ${
                         analysis.status === "ready"
                           ? "border-emerald-500 text-emerald-300 bg-emerald-500/10"
                           : analysis.status === "warning"
@@ -290,12 +290,12 @@ export default function DtfScannerPage() {
                   </div>
 
                   {/* Barra de Distribución de Píxeles */}
-                  <div className="mt-5 pt-4 border-t border-[#20232A]">
-                    <div className="flex justify-between font-mono text-[11px] mb-1.5 text-[#8E95A5]">
+                  <div className="mt-6 pt-5 border-t border-[#20232A]">
+                    <div className="flex justify-between font-mono text-xs mb-2 text-[#8E95A5]">
                       <span>Composición del Arte:</span>
                       <span>{analysis.transparentPercent}% Transparente • {analysis.solidPercent}% Sólido • {analysis.semiPercent}% Semitransparente</span>
                     </div>
-                    <div className="flex h-3 w-full overflow-hidden rounded bg-[#0D0E11] border border-[#20232A]">
+                    <div className="flex h-3.5 w-full overflow-hidden rounded-lg bg-[#0D0E11] border border-[#20232A]">
                       <div
                         style={{ width: `${analysis.transparentPercent}%` }}
                         className="bg-[#20232A]"
@@ -316,34 +316,34 @@ export default function DtfScannerPage() {
                 </div>
 
                 {/* Lista de Hallazgos y Acciones Recomendadas */}
-                <div className="rounded-xl border border-[#20232A] bg-[#16181D] p-5 space-y-4">
-                  <h3 className="font-mono text-xs uppercase tracking-wider text-[#8E95A5]">
-                    Diagnóstico Detallado ({analysis.issues.length} observaciones)
+                <div className="rounded-2xl border border-[#20232A] bg-[#16181D] p-6 space-y-5 shadow-sm">
+                  <h3 className="font-mono text-xs uppercase tracking-wider text-[#8E95A5] font-bold">
+                    Diagnóstico Forense ({analysis.issues.length} observaciones)
                   </h3>
 
                   {analysis.issues.length === 0 ? (
-                    <div className="flex items-center gap-3 rounded-lg border border-emerald-500/30 bg-emerald-500/10 p-4 text-xs text-emerald-200">
-                      <CheckCircle2 className="h-5 w-5 text-emerald-400 shrink-0" />
+                    <div className="flex items-center gap-4 rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-5 text-sm text-emerald-200">
+                      <CheckCircle2 className="h-6 w-6 text-emerald-400 shrink-0" />
                       <div>
-                        <p className="font-bold">¡Tu archivo está perfectamente calibrado!</p>
-                        <p className="text-[11px] text-emerald-300/80">Puedes enviarlo directamente al Armador de Pliegos DTF de 58cm.</p>
+                        <p className="font-bold text-base text-white">¡Tu archivo está perfectamente calibrado!</p>
+                        <p className="text-xs text-emerald-300/80 mt-0.5">Puedes enviarlo directamente al Armador de Pliegos DTF de 58cm.</p>
                       </div>
                     </div>
                   ) : (
-                    <div className="space-y-3">
+                    <div className="space-y-3.5">
                       {analysis.issues.map((issue) => (
                         <div
                           key={issue.id}
-                          className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-lg border border-[#20232A] bg-[#0D0E11] p-4 text-xs"
+                          className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-xl border border-[#20232A] bg-[#0D0E11] p-5 text-xs hover:border-[#8E95A5]/40 transition-all"
                         >
-                          <div className="space-y-1">
+                          <div className="space-y-1.5">
                             <div className="flex items-center gap-2">
-                              <span className={`inline-block h-2 w-2 rounded-full ${
+                              <span className={`inline-block h-2.5 w-2.5 rounded-full ${
                                 issue.severity === "high" ? "bg-red-400" : issue.severity === "medium" ? "bg-amber-400" : "bg-[#00A3FF]"
                               }`} />
-                              <h4 className="font-bold text-[#F3F4F6]">{issue.title}</h4>
+                              <h4 className="font-bold text-sm text-[#F3F4F6]">{issue.title}</h4>
                             </div>
-                            <p className="text-[11px] text-[#8E95A5] leading-relaxed max-w-xl">
+                            <p className="text-xs text-[#8E95A5] leading-relaxed max-w-xl">
                               {issue.desc}
                             </p>
                           </div>
@@ -351,10 +351,10 @@ export default function DtfScannerPage() {
                           {issue.toolHref && (
                             <Link
                               href={issue.toolHref}
-                              className="inline-flex items-center gap-1.5 rounded bg-[#20232A] px-3 py-1.5 font-mono text-xs font-semibold text-[#00A3FF] hover:bg-[#00A3FF] hover:text-white transition-colors shrink-0"
+                              className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#00A3FF]/15 border border-[#00A3FF]/40 px-4 py-2.5 font-mono text-xs font-bold text-[#00A3FF] hover:bg-[#00A3FF] hover:text-white transition-all shrink-0 shadow-sm active:scale-95"
                             >
                               <span>{issue.toolAction}</span>
-                              <ArrowRight className="h-3.5 w-3.5" />
+                              <ArrowRight className="h-4 w-4" />
                             </Link>
                           )}
                         </div>
@@ -363,12 +363,13 @@ export default function DtfScannerPage() {
                   )}
 
                   {/* Botón Central: Montar en Pliego DTF */}
-                  <div className="pt-2 flex justify-end">
+                  <div className="pt-3 border-t border-[#20232A] flex justify-end">
                     <Link
                       href="/tools/dtf-builder"
-                      className="inline-flex items-center gap-2 rounded bg-[#00A3FF] px-5 py-2.5 text-xs font-bold text-white hover:bg-[#00A3FF]/90 transition-colors shadow-lg"
+                      className="inline-flex items-center gap-2.5 rounded-xl bg-[#00A3FF] hover:bg-[#00A3FF]/90 px-7 py-3 text-sm font-bold text-white transition-all shadow-lg active:scale-95 font-sans"
                     >
-                      <Layers className="h-4 w-4" /> Ir a Armar en Pliego de 58 cm
+                      <Layers className="h-5 w-5" />
+                      <span>Ir a Armar en Pliego de 58 cm</span>
                     </Link>
                   </div>
                 </div>

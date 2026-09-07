@@ -96,19 +96,19 @@ export function Navbar() {
   return (
     <>
       <header className="sticky top-0 z-50 w-full border-b border-[#20232A] bg-[#16181D]/95 backdrop-blur-md">
-        <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           {/* Marca Técnica Industrial y Botón Menú Móvil */}
-          <div className="flex items-center gap-4 sm:gap-8">
+          <div className="flex items-center gap-4 sm:gap-6">
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="flex md:hidden p-1.5 rounded border border-[#20232A] bg-[#0D0E11] text-[#8E95A5] hover:text-[#F3F4F6]"
+              className="flex md:hidden p-2 rounded-xl border border-[#20232A] bg-[#0D0E11] text-[#8E95A5] hover:text-[#F3F4F6] active:scale-95 transition-transform"
               aria-label="Abrir menú"
             >
               {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>
 
             <Link href="/" className="flex items-center gap-2.5 group">
-              <div className="flex h-7 w-7 items-center justify-center rounded border border-[#20232A] bg-[#0D0E11] text-[#F3F4F6] font-mono font-bold text-sm">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#20232A] bg-[#0D0E11] text-[#F3F4F6] font-mono font-black text-base shadow-sm group-hover:border-[#00A3FF]/50 transition-colors">
                 P
               </div>
               <div className="flex flex-col">
@@ -122,7 +122,7 @@ export function Navbar() {
             </Link>
 
             {/* Menú de Herramientas de Taller (Desktop) */}
-            <nav className="hidden md:flex items-center gap-1">
+            <nav className="hidden lg:flex items-center gap-1.5">
               {navLinks.map((item) => {
                 const Icon = item.icon;
                 const isActive = pathname === item.href;
@@ -130,12 +130,12 @@ export function Navbar() {
                   <Link
                     key={item.href}
                     href={item.href}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 text-xs rounded transition-colors ${
+                    className={`flex items-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-xl transition-all active:scale-95 ${
                       isActive
-                        ? "bg-[#0D0E11] text-[#F3F4F6] font-semibold border border-[#00A3FF]/40"
+                        ? "bg-[#0D0E11] text-[#00A3FF] border border-[#00A3FF]/40 shadow-sm"
                         : item.highlight
-                        ? "text-[#F3F4F6] bg-[#20232A]/60 border border-[#20232A] hover:bg-[#20232A]"
-                        : "text-[#8E95A5] hover:text-[#F3F4F6] hover:bg-[#20232A]/40"
+                        ? "text-[#F3F4F6] bg-[#20232A] border border-[#20232A] hover:border-[#00A3FF]/40 hover:bg-[#20232A]/80"
+                        : "text-[#8E95A5] hover:text-[#F3F4F6] hover:bg-[#20232A]/50"
                     }`}
                   >
                     <Icon className="h-3.5 w-3.5 shrink-0" />
@@ -152,19 +152,19 @@ export function Navbar() {
               <div className="flex items-center gap-2 sm:gap-3">
                 {/* Badges Técnicos de Acceso */}
                 {userData.role === "ADMIN" ? (
-                  <span className="hidden sm:inline-flex items-center gap-1 rounded border border-[#20232A] bg-[#0D0E11] text-[#F3F4F6] px-2 py-0.5 font-mono text-[11px] font-semibold">
+                  <span className="hidden sm:inline-flex items-center gap-1 rounded-lg border border-[#20232A] bg-[#0D0E11] text-[#F3F4F6] px-2.5 py-1 font-mono text-[11px] font-semibold">
                     <Crown className="h-3 w-3 text-[#00A3FF]" /> ADMIN
                   </span>
                 ) : userData.subscription.status === "ACTIVE" ? (
-                  <span className="hidden sm:inline-flex items-center gap-1 rounded border border-[#00A3FF]/30 bg-[#00A3FF]/10 text-[#00A3FF] px-2 py-0.5 font-mono text-[11px] font-semibold">
+                  <span className="hidden sm:inline-flex items-center gap-1 rounded-lg border border-[#00A3FF]/30 bg-[#00A3FF]/10 text-[#00A3FF] px-2.5 py-1 font-mono text-[11px] font-semibold">
                     <Crown className="h-3 w-3" /> PREMIUM
                   </span>
                 ) : userData.subscription.status === "GRACE_PERIOD" ? (
-                  <span className="hidden sm:inline-flex items-center gap-1 rounded border border-amber-500/30 bg-amber-500/10 text-amber-300 px-2 py-0.5 font-mono text-[11px]">
+                  <span className="hidden sm:inline-flex items-center gap-1 rounded-lg border border-amber-500/30 bg-amber-500/10 text-amber-300 px-2.5 py-1 font-mono text-[11px]">
                     <ShieldAlert className="h-3 w-3" /> GRACIA {userData.subscription.daysRemaining}D
                   </span>
                 ) : userData.subscription.status === "TRIAL" ? (
-                  <span className={`hidden sm:inline-flex items-center gap-1 rounded border px-2 py-0.5 font-mono text-[11px] ${
+                  <span className={`hidden sm:inline-flex items-center gap-1 rounded-lg border px-2.5 py-1 font-mono text-[11px] ${
                     userData.subscription.isAccessGranted
                       ? "border-[#20232A] bg-[#0D0E11] text-[#F3F4F6]"
                       : "border-[#20232A] bg-[#0D0E11] text-[#8E95A5] line-through"
@@ -174,7 +174,7 @@ export function Navbar() {
                       : "PRUEBA VENCIDA"}
                   </span>
                 ) : (
-                  <span className="hidden sm:inline-flex items-center gap-1 rounded border border-[#20232A] bg-[#0D0E11] text-[#8E95A5] px-2 py-0.5 font-mono text-[11px]">
+                  <span className="hidden sm:inline-flex items-center gap-1 rounded-lg border border-[#20232A] bg-[#0D0E11] text-[#8E95A5] px-2.5 py-1 font-mono text-[11px]">
                     SUSPENDIDO
                   </span>
                 )}
@@ -183,18 +183,18 @@ export function Navbar() {
                 <div className="relative" ref={dropdownRef}>
                   <button
                     onClick={() => setMenuOpen(!menuOpen)}
-                    className="flex items-center gap-2 rounded border border-[#20232A] bg-[#0D0E11] px-2.5 py-1.5 text-xs text-[#F3F4F6] hover:border-[#8E95A5]/40 transition-colors"
+                    className="flex items-center gap-2 rounded-xl border border-[#20232A] bg-[#0D0E11] px-3.5 py-2 text-xs font-semibold text-[#F3F4F6] hover:border-[#8E95A5]/40 active:scale-95 transition-all shadow-sm"
                   >
-                    <User className="h-3.5 w-3.5 text-[#8E95A5]" />
-                    <span className="max-w-[100px] sm:max-w-[130px] truncate">
+                    <User className="h-4 w-4 text-[#00A3FF]" />
+                    <span className="max-w-[100px] sm:max-w-[140px] truncate">
                       {userData.name || userData.email}
                     </span>
-                    <ChevronDown className={`h-3 w-3 text-[#8E95A5] transition-transform ${menuOpen ? "rotate-180" : ""}`} />
+                    <ChevronDown className={`h-3.5 w-3.5 text-[#8E95A5] transition-transform ${menuOpen ? "rotate-180" : ""}`} />
                   </button>
 
                   {menuOpen && (
-                    <div className="absolute right-0 mt-2 w-52 rounded border border-[#20232A] bg-[#16181D] py-1.5 shadow-2xl z-50">
-                      <div className="px-4 py-2 border-b border-[#20232A] sm:hidden">
+                    <div className="absolute right-0 mt-2 w-56 rounded-2xl border border-[#20232A] bg-[#16181D] py-2 shadow-2xl z-50 animate-in fade-in slide-in-from-top-2 duration-150">
+                      <div className="px-4 py-2.5 border-b border-[#20232A] sm:hidden">
                         <p className="text-[11px] font-mono text-[#8E95A5]">Estado:</p>
                         <p className="text-xs font-semibold text-[#00A3FF]">
                           {userData.role === "ADMIN" ? "Administrador" : userData.subscription.status === "ACTIVE" ? "Plan Premium" : `Prueba: ${userData.subscription.daysRemaining} días`}
@@ -204,18 +204,18 @@ export function Navbar() {
                       <Link
                         href="/account"
                         onClick={() => setMenuOpen(false)}
-                        className="flex items-center gap-2 px-4 py-2 text-xs text-[#F3F4F6] hover:bg-[#20232A] transition-colors"
+                        className="flex items-center gap-2.5 px-4 py-2.5 text-xs text-[#F3F4F6] hover:bg-[#20232A] transition-colors"
                       >
-                        <User className="h-3.5 w-3.5 text-[#8E95A5]" /> Mi Cuenta & Suscripción
+                        <User className="h-4 w-4 text-[#8E95A5]" /> Mi Cuenta & Suscripción
                       </Link>
 
                       {userData.role === "ADMIN" && (
                         <Link
                           href="/admin"
                           onClick={() => setMenuOpen(false)}
-                          className="flex items-center gap-2 px-4 py-2 text-xs text-[#00A3FF] font-medium hover:bg-[#20232A] transition-colors"
+                          className="flex items-center gap-2.5 px-4 py-2.5 text-xs text-[#00A3FF] font-semibold hover:bg-[#20232A] transition-colors"
                         >
-                          <Crown className="h-3.5 w-3.5" /> Panel Administrador
+                          <Crown className="h-4 w-4" /> Panel Administrador
                         </Link>
                       )}
 
@@ -226,25 +226,25 @@ export function Navbar() {
                           setMenuOpen(false);
                           handleLogout();
                         }}
-                        className="flex w-full items-center gap-2 px-4 py-2 text-xs text-[#8E95A5] hover:text-red-400 hover:bg-[#20232A] transition-colors"
+                        className="flex w-full items-center gap-2.5 px-4 py-2.5 text-xs text-[#8E95A5] hover:text-red-400 hover:bg-[#20232A] transition-colors"
                       >
-                        <LogOut className="h-3.5 w-3.5" /> Cerrar Sesión
+                        <LogOut className="h-4 w-4" /> Cerrar Sesión
                       </button>
                     </div>
                   )}
                 </div>
               </div>
             ) : !loading ? (
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2.5">
                 <Link
                   href="/auth/login"
-                  className="px-3 py-1.5 text-xs font-medium text-[#8E95A5] hover:text-[#F3F4F6]"
+                  className="px-3.5 py-2 text-xs font-semibold text-[#8E95A5] hover:text-[#F3F4F6] transition-colors"
                 >
                   Ingresar
                 </Link>
                 <Link
                   href="/auth/register"
-                  className="rounded border border-[#F3F4F6] bg-[#F3F4F6] px-3 py-1.5 text-xs font-bold text-[#0D0E11] hover:bg-white transition-colors"
+                  className="rounded-xl border border-[#F3F4F6] bg-[#F3F4F6] px-4 py-2 text-xs font-bold text-[#0D0E11] hover:bg-white active:scale-95 transition-all shadow-sm"
                 >
                   Prueba 5 días
                 </Link>
@@ -255,9 +255,9 @@ export function Navbar() {
 
         {/* Menú Móvil Desplegable */}
         {mobileMenuOpen && (
-          <div className="border-t border-[#20232A] bg-[#12141A] px-4 py-3 md:hidden space-y-1">
+          <div className="border-t border-[#20232A] bg-[#12141A] px-4 py-4 md:hidden space-y-1.5 shadow-xl">
             <p className="font-mono text-[10px] uppercase tracking-wider text-[#8E95A5] mb-2 px-2">
-              Herramientas DTF
+              Herramientas DTF de Taller
             </p>
             {navLinks.map((item) => {
               const Icon = item.icon;
@@ -267,9 +267,9 @@ export function Navbar() {
                   key={item.href}
                   href={item.href}
                   onClick={() => setMobileMenuOpen(false)}
-                  className={`flex items-center gap-2.5 px-3 py-2 text-xs rounded transition-colors ${
+                  className={`flex items-center gap-3 px-4 py-3 text-xs font-semibold rounded-xl transition-all ${
                     isActive
-                      ? "bg-[#0D0E11] text-[#00A3FF] font-semibold border border-[#00A3FF]/40"
+                      ? "bg-[#0D0E11] text-[#00A3FF] border border-[#00A3FF]/40"
                       : "text-[#F3F4F6] hover:bg-[#16181D]"
                   }`}
                 >

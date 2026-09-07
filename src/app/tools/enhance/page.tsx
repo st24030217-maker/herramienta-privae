@@ -1,6 +1,7 @@
 "use client";
 
 import { ToolLayout } from "@/components/ToolLayout";
+import { Sparkles, SlidersHorizontal } from "lucide-react";
 
 export default function EnhancePage() {
   return (
@@ -10,47 +11,95 @@ export default function EnhancePage() {
       badge="Lanczos3 a 300 DPI"
       apiEndpoint="/api/process/enhance"
       renderControls={(_, setCustomParam, customParams) => (
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 text-xs">
-          <div>
-            <label className="block text-[#8E95A5] mb-1.5 font-mono">
-              Factor de Escala:
-            </label>
-            <select
-              value={customParams.scaleFactor || 2}
-              onChange={(e) => setCustomParam("scaleFactor", e.target.value)}
-              className="w-full rounded border border-[#20232A] bg-[#0D0E11] px-3 py-2 font-mono text-[#F3F4F6] focus:border-[#00A3FF] focus:outline-none"
-            >
-              <option value="2">2X (Duplicar Resolución)</option>
-              <option value="4">4X (Ultra Alta Definición)</option>
-            </select>
-          </div>
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            {/* Factor de Escala con Botones Grandes */}
+            <div className="space-y-2">
+              <label className="block text-xs font-mono text-[#8E95A5] uppercase tracking-wider">
+                1. Factor de Escala:
+              </label>
+              <div className="grid grid-cols-2 gap-2">
+                {[
+                  { val: "2", label: "2X", desc: "Duplicar Píxeles" },
+                  { val: "4", label: "4X", desc: "Ultra Resolución" },
+                ].map((scale) => {
+                  const isSelected = String(customParams.scaleFactor || "2") === scale.val;
+                  return (
+                    <button
+                      key={scale.val}
+                      type="button"
+                      onClick={() => setCustomParam("scaleFactor", scale.val)}
+                      className={`p-3 rounded-xl border text-center transition-all ${
+                        isSelected
+                          ? "border-[#00A3FF] bg-[#00A3FF]/15 text-white shadow-sm ring-1 ring-[#00A3FF]"
+                          : "border-[#20232A] bg-[#0D0E11] text-[#8E95A5] hover:border-[#8E95A5]/40 hover:text-white"
+                      }`}
+                    >
+                      <span className="text-base font-extrabold text-[#F3F4F6] block">{scale.label}</span>
+                      <span className="text-[10px] font-mono text-[#8E95A5] block">{scale.desc}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
 
-          <div>
-            <label className="block text-[#8E95A5] mb-1.5 font-mono">
-              Máscara de Enfoque:
-            </label>
-            <select
-              value={customParams.sharpenLevel || "medium"}
-              onChange={(e) => setCustomParam("sharpenLevel", e.target.value)}
-              className="w-full rounded border border-[#20232A] bg-[#0D0E11] px-3 py-2 font-mono text-[#F3F4F6] focus:border-[#00A3FF] focus:outline-none"
-            >
-              <option value="light">Suave (Contornos naturales)</option>
-              <option value="medium">Medio (Calibrado DTF estándar)</option>
-              <option value="strong">Intenso (Textos y trazos duros)</option>
-            </select>
-          </div>
+            {/* Máscara de Enfoque con Botones Grandes */}
+            <div className="space-y-2">
+              <label className="block text-xs font-mono text-[#8E95A5] uppercase tracking-wider">
+                2. Máscara de Enfoque:
+              </label>
+              <div className="grid grid-cols-3 gap-2">
+                {[
+                  { val: "light", label: "Suave" },
+                  { val: "medium", label: "Estándar" },
+                  { val: "strong", label: "Intenso" },
+                ].map((lvl) => {
+                  const isSelected = (customParams.sharpenLevel || "medium") === lvl.val;
+                  return (
+                    <button
+                      key={lvl.val}
+                      type="button"
+                      onClick={() => setCustomParam("sharpenLevel", lvl.val)}
+                      className={`p-3 rounded-xl border text-center transition-all ${
+                        isSelected
+                          ? "border-[#00A3FF] bg-[#00A3FF]/15 text-white shadow-sm ring-1 ring-[#00A3FF]"
+                          : "border-[#20232A] bg-[#0D0E11] text-[#8E95A5] hover:border-[#8E95A5]/40 hover:text-white"
+                      }`}
+                    >
+                      <span className="text-xs font-bold text-[#F3F4F6] block">{lvl.label}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
 
-          <div className="flex items-center gap-2.5 pt-6">
-            <input
-              type="checkbox"
-              id="denoise"
-              checked={customParams.denoise === "true"}
-              onChange={(e) => setCustomParam("denoise", e.target.checked ? "true" : "false")}
-              className="h-4 w-4 rounded border-[#20232A] bg-[#0D0E11] text-[#00A3FF] focus:ring-[#00A3FF]"
-            />
-            <label htmlFor="denoise" className="text-[#8E95A5] cursor-pointer font-mono">
-              Filtro de reducción de ruido
-            </label>
+            {/* Reducción de Ruido - Tarjeta Táctil */}
+            <div className="flex flex-col justify-end">
+              <label
+                htmlFor="denoise"
+                className={`flex items-start gap-3 p-3.5 rounded-xl border cursor-pointer transition-all ${
+                  customParams.denoise === "true"
+                    ? "border-[#00A3FF] bg-[#00A3FF]/10 text-white shadow-sm"
+                    : "border-[#20232A] bg-[#0D0E11] text-[#8E95A5] hover:border-[#8E95A5]/40"
+                }`}
+              >
+                <input
+                  type="checkbox"
+                  id="denoise"
+                  checked={customParams.denoise === "true"}
+                  onChange={(e) => setCustomParam("denoise", e.target.checked ? "true" : "false")}
+                  className="h-5 w-5 rounded border-[#20232A] text-[#00A3FF] focus:ring-[#00A3FF] mt-0.5"
+                />
+                <div className="space-y-0.5">
+                  <span className="text-xs font-bold text-[#F3F4F6] block">
+                    Filtro de Ruido y Granulado
+                  </span>
+                  <span className="text-[11px] text-[#8E95A5] block">
+                    Limpia artefactos de compresión JPEG antes de escalar.
+                  </span>
+                </div>
+              </label>
+            </div>
           </div>
         </div>
       )}

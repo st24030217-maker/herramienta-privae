@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { 
   UploadCloud, 
@@ -13,7 +13,9 @@ import {
   Sparkles,
   X,
   LogIn,
-  Crown
+  Crown,
+  Maximize2,
+  FolderOpen
 } from "lucide-react";
 
 interface ToolLayoutProps {
@@ -69,6 +71,25 @@ export function ToolLayout({
     };
     img.src = url;
   };
+
+  // Soporte para pegar con Ctrl + V desde el portapapeles
+  useEffect(() => {
+    const handlePaste = (e: ClipboardEvent) => {
+      const items = e.clipboardData?.items;
+      if (!items) return;
+      for (let i = 0; i < items.length; i++) {
+        if (items[i].type.startsWith("image/")) {
+          const pastedFile = items[i].getAsFile();
+          if (pastedFile) {
+            handleFileChange(pastedFile);
+            break;
+          }
+        }
+      }
+    };
+    window.addEventListener("paste", handlePaste);
+    return () => window.removeEventListener("paste", handlePaste);
+  }, []);
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
@@ -153,29 +174,31 @@ export function ToolLayout({
   const fileSizeMb = file ? (file.size / (1024 * 1024)).toFixed(2) : null;
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-6">
       {/* Encabezado Técnico de Herramienta */}
-      <div className="mb-8 border-b border-[#20232A] pb-6">
+      <div className="rounded-2xl border border-[#20232A] bg-[#16181D]/90 p-6 sm:p-8 backdrop-blur-sm">
         <div className="flex flex-wrap items-center justify-between gap-4">
-          <div>
-            <div className="flex items-center gap-3">
-              <h1 className="text-2xl sm:text-3xl font-bold text-[#F3F4F6] tracking-tight">
+          <div className="space-y-2">
+            <div className="flex flex-wrap items-center gap-3">
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-[#F3F4F6] tracking-tight">
                 {title}
               </h1>
-              <span className="font-mono text-xs text-[#00A3FF] border border-[#00A3FF]/30 bg-[#00A3FF]/10 px-2 py-0.5 rounded">
+              <span className="font-mono text-xs font-bold text-[#00A3FF] border border-[#00A3FF]/40 bg-[#00A3FF]/15 px-3 py-1 rounded-full">
                 {badge}
               </span>
             </div>
-            <p className="mt-2 text-xs sm:text-sm text-[#8E95A5] max-w-3xl leading-relaxed">
+            <p className="text-sm text-[#8E95A5] max-w-3xl leading-relaxed">
               {description}
             </p>
           </div>
+
           {file && (
             <button
               onClick={handleReset}
-              className="flex items-center gap-1.5 text-xs text-[#8E95A5] hover:text-[#F3F4F6] bg-[#16181D] border border-[#20232A] hover:border-[#8E95A5]/40 px-3 py-1.5 rounded transition-colors"
+              className="flex items-center gap-2 rounded-xl border border-[#20232A] bg-[#0D0E11] px-4 py-2.5 text-xs font-semibold text-[#F3F4F6] hover:border-[#8E95A5]/60 hover:bg-[#1A1C23] transition-all shadow-sm"
             >
-              <RefreshCw className="h-3.5 w-3.5" /> Reemplazar archivo
+              <RefreshCw className="h-4 w-4 text-[#8E95A5]" />
+              <span>Cambiar imagen</span>
             </button>
           )}
         </div>
@@ -183,41 +206,44 @@ export function ToolLayout({
 
       {/* Controles de Parámetros Específicos */}
       {renderControls && (
-        <div className="mb-6 rounded-lg border border-[#20232A] bg-[#16181D] p-5">
+        <div className="rounded-2xl border border-[#20232A] bg-[#16181D] p-6 sm:p-7 shadow-sm">
+          <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-[#8E95A5] mb-4 flex items-center gap-2">
+            <span>Ajustes de Calibración</span>
+          </h3>
           {renderControls(originalPreview, setCustomParam, customParams)}
         </div>
       )}
 
-      {/* Mensaje de Error con acción directa */}
+      {/* Mensaje de Error con acción directa y botones grandes */}
       {error && (
-        <div className="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 rounded-lg border border-red-500/30 bg-red-500/10 p-4 text-xs sm:text-sm text-red-200">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 rounded-xl border border-red-500/40 bg-red-500/10 p-5 text-sm text-red-200 shadow-md">
           <div className="flex items-center gap-3">
-            <AlertCircle className="h-5 w-5 text-red-400 shrink-0" />
-            <span>{error}</span>
+            <AlertCircle className="h-6 w-6 text-red-400 shrink-0" />
+            <span className="font-medium">{error}</span>
           </div>
           <div className="flex items-center gap-3 shrink-0">
             {errorStatus === 401 && (
               <Link
                 href="/auth/login"
-                className="inline-flex items-center gap-1 rounded bg-[#F3F4F6] px-3 py-1 text-xs font-bold text-black hover:bg-white transition-colors"
+                className="inline-flex items-center gap-2 rounded-xl bg-[#F3F4F6] px-5 py-2.5 text-xs font-bold text-black hover:bg-white transition-all shadow"
               >
-                <LogIn className="h-3.5 w-3.5" /> Iniciar Sesión
+                <LogIn className="h-4 w-4" /> Iniciar Sesión
               </Link>
             )}
             {errorStatus === 403 && (
               <Link
                 href="/account"
-                className="inline-flex items-center gap-1 rounded bg-[#00A3FF] px-3 py-1 text-xs font-bold text-white hover:bg-[#00A3FF]/90 transition-colors"
+                className="inline-flex items-center gap-2 rounded-xl bg-[#00A3FF] px-5 py-2.5 text-xs font-bold text-white hover:bg-[#00A3FF]/90 transition-all shadow"
               >
-                <Crown className="h-3.5 w-3.5" /> Activar Plan
+                <Crown className="h-4 w-4" /> Activar Membresía
               </Link>
             )}
             <button
               onClick={() => setError(null)}
-              className="p-1 text-red-300 hover:text-white"
+              className="p-1.5 text-red-300 hover:text-white rounded-lg hover:bg-red-500/20 transition-colors"
               aria-label="Cerrar alerta"
             >
-              <X className="h-4 w-4" />
+              <X className="h-5 w-5" />
             </button>
           </div>
         </div>
@@ -226,52 +252,65 @@ export function ToolLayout({
       {/* Grid Técnico: ENTRADA Y RESULTADO */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         {/* ================= SECCIÓN 1: ENTRADA ================= */}
-        <div className="flex flex-col rounded-lg border border-[#20232A] bg-[#16181D] p-6">
-          <div className="mb-4 flex items-center justify-between border-b border-[#20232A] pb-3">
-            <span className="font-mono text-xs text-[#8E95A5] uppercase tracking-wider">
-              Entrada (Arte Original)
-            </span>
-            {imgDimensions && (
-              <span className="font-mono text-xs text-[#8E95A5]">
-                {imgDimensions.width} × {imgDimensions.height} px {fileSizeMb && `• ${fileSizeMb} MB`}
+        <div className="flex flex-col justify-between rounded-2xl border border-[#20232A] bg-[#16181D] p-6 shadow-sm">
+          <div>
+            <div className="mb-4 flex items-center justify-between border-b border-[#20232A] pb-3">
+              <span className="font-mono text-xs font-bold text-[#F3F4F6] uppercase tracking-wider flex items-center gap-2">
+                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#20232A] text-[10px] text-[#00A3FF]">1</span>
+                <span>Arte Original</span>
               </span>
-            )}
-          </div>
-
-          {!originalPreview ? (
-            /* Dropzone de Carga */
-            <div
-              onDragOver={handleDragOver}
-              onDragLeave={handleDragLeave}
-              onDrop={handleDrop}
-              onClick={() => fileInputRef.current?.click()}
-              className={`flex flex-1 min-h-[340px] cursor-pointer flex-col items-center justify-center rounded border-2 border-dashed p-8 text-center transition-all ${
-                isDragging
-                  ? "border-[#00A3FF] bg-[#00A3FF]/10 scale-[0.99]"
-                  : "border-[#20232A] bg-[#0D0E11] hover:border-[#00A3FF]/60 hover:bg-[#12141A]"
-              }`}
-            >
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/*"
-                className="hidden"
-                onChange={(e) => e.target.files?.[0] && handleFileChange(e.target.files[0])}
-              />
-              <div className="mb-3 rounded border border-[#20232A] bg-[#16181D] p-3 text-[#8E95A5]">
-                <UploadCloud className="h-7 w-7 text-[#00A3FF]" />
-              </div>
-              <h3 className="text-sm font-semibold text-[#F3F4F6]">
-                Arrastra tu diseño o haz clic para examinar
-              </h3>
-              <p className="mt-1 font-mono text-[11px] text-[#8E95A5]">
-                Formatos PNG, JPG, WEBP. Salida certificada a 300 DPI.
-              </p>
+              {imgDimensions && (
+                <span className="font-mono text-xs text-[#8E95A5] bg-[#0D0E11] px-2.5 py-1 rounded-md border border-[#20232A]">
+                  {imgDimensions.width} × {imgDimensions.height} px {fileSizeMb && `• ${fileSizeMb} MB`}
+                </span>
+              )}
             </div>
-          ) : (
-            /* Vista Previa Original */
-            <div className="flex flex-1 flex-col justify-between">
-              <div className="relative flex min-h-[340px] items-center justify-center rounded bg-transparency-grid p-4 overflow-hidden border border-[#20232A]">
+
+            {!originalPreview ? (
+              /* Dropzone de Carga Amplia y Táctil */
+              <div
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+                onClick={() => fileInputRef.current?.click()}
+                className={`flex min-h-[380px] cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed p-8 text-center transition-all duration-200 ${
+                  isDragging
+                    ? "border-[#00A3FF] bg-[#00A3FF]/10 scale-[0.99]"
+                    : "border-[#20232A] bg-[#0D0E11] hover:border-[#00A3FF]/60 hover:bg-[#12141A]"
+                }`}
+              >
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={(e) => e.target.files?.[0] && handleFileChange(e.target.files[0])}
+                />
+                <div className="mb-4 rounded-2xl border border-[#20232A] bg-[#16181D] p-4 text-[#00A3FF] shadow-inner">
+                  <UploadCloud className="h-10 w-10" />
+                </div>
+                <h3 className="text-base font-bold text-[#F3F4F6]">
+                  Arrastra tu diseño aquí
+                </h3>
+                <p className="mt-1 text-xs text-[#8E95A5]">
+                  O puedes pegar con <kbd className="rounded bg-[#20232A] px-1.5 py-0.5 font-mono text-[10px] text-[#F3F4F6]">Ctrl + V</kbd>
+                </p>
+
+                <button
+                  type="button"
+                  className="mt-5 inline-flex items-center gap-2 rounded-xl bg-[#20232A] hover:bg-[#2c313a] px-5 py-2.5 text-xs font-bold text-white transition-colors"
+                >
+                  <FolderOpen className="h-4 w-4 text-[#00A3FF]" />
+                  <span>Examinar en mi equipo</span>
+                </button>
+
+                <p className="mt-4 font-mono text-[11px] text-[#8E95A5]/60">
+                  Admite PNG, JPG, WEBP • Salida certificada a 300 DPI
+                </p>
+              </div>
+            ) : (
+              /* Vista Previa Original */
+              <div className="relative flex min-h-[380px] items-center justify-center rounded-xl bg-transparency-grid p-4 overflow-hidden border border-[#20232A]">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={originalPreview}
@@ -279,85 +318,97 @@ export function ToolLayout({
                   className="max-h-[380px] max-w-full object-contain rounded"
                 />
               </div>
+            )}
+          </div>
 
-              <div className="mt-4 flex items-center justify-between gap-3">
-                <div className="flex items-center gap-2 truncate text-xs text-[#8E95A5]">
-                  <FileImage className="h-4 w-4 text-[#F3F4F6] shrink-0" />
-                  <span className="truncate font-mono">{file?.name}</span>
-                  {fileSizeMb && <span className="font-mono text-[#8E95A5]/60">({fileSizeMb} MB)</span>}
-                </div>
-
-                <button
-                  onClick={handleProcess}
-                  disabled={loading}
-                  className="inline-flex items-center gap-2 rounded bg-[#F3F4F6] px-5 py-2.5 text-xs font-bold text-[#0D0E11] hover:bg-white transition-colors disabled:opacity-50"
-                >
-                  {loading ? (
-                    <>
-                      <Loader2 className="h-4 w-4 animate-spin text-[#0D0E11]" /> Procesando a 300 DPI...
-                    </>
-                  ) : (
-                    <>
-                      <Sparkles className="h-4 w-4 text-[#00A3FF]" /> Procesar arte
-                    </>
-                  )}
-                </button>
+          {originalPreview && (
+            <div className="mt-5 pt-4 border-t border-[#20232A] flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+              <div className="flex items-center gap-2 truncate text-xs text-[#8E95A5] font-mono">
+                <FileImage className="h-4 w-4 text-[#00A3FF] shrink-0" />
+                <span className="truncate font-semibold text-[#F3F4F6]">{file?.name}</span>
+                {fileSizeMb && <span>({fileSizeMb} MB)</span>}
               </div>
+
+              {/* Botón Grande de Procesar */}
+              <button
+                onClick={handleProcess}
+                disabled={loading}
+                className="inline-flex items-center justify-center gap-2.5 rounded-xl bg-[#F3F4F6] hover:bg-white px-7 py-3 text-sm font-bold text-[#0D0E11] transition-all shadow-md disabled:opacity-50 active:scale-[0.98]"
+              >
+                {loading ? (
+                  <>
+                    <Loader2 className="h-5 w-5 animate-spin text-[#0D0E11]" />
+                    <span>Procesando a 300 DPI...</span>
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="h-5 w-5 text-[#00A3FF]" />
+                    <span>Procesar arte</span>
+                  </>
+                )}
+              </button>
             </div>
           )}
         </div>
 
         {/* ================= SECCIÓN 2: RESULTADO ================= */}
-        <div className="flex flex-col rounded-lg border border-[#20232A] bg-[#16181D] p-6">
-          <div className="mb-4 flex items-center justify-between border-b border-[#20232A] pb-3">
-            <span className="font-mono text-xs text-[#8E95A5] uppercase tracking-wider">
-              Salida Calibrada (DTF 300 DPI)
-            </span>
-            {resultUrl && (
-              <span className="flex items-center gap-1 font-mono text-xs font-semibold text-[#00A3FF]">
-                <CheckCircle2 className="h-3.5 w-3.5" /> Calibrado para impresión
+        <div className="flex flex-col justify-between rounded-2xl border border-[#20232A] bg-[#16181D] p-6 shadow-sm">
+          <div>
+            <div className="mb-4 flex items-center justify-between border-b border-[#20232A] pb-3">
+              <span className="font-mono text-xs font-bold text-[#F3F4F6] uppercase tracking-wider flex items-center gap-2">
+                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#20232A] text-[10px] text-emerald-400">2</span>
+                <span>Resultado Calibrado (DTF 300 DPI)</span>
               </span>
-            )}
-          </div>
-
-          <div className="relative flex flex-1 min-h-[340px] items-center justify-center rounded bg-transparency-grid p-4 overflow-hidden border border-[#20232A]">
-            {loading ? (
-              <div className="flex flex-col items-center gap-3 text-center">
-                <Loader2 className="h-8 w-8 animate-spin text-[#00A3FF]" />
-                <p className="text-sm font-semibold text-[#F3F4F6]">
-                  Procesando píxeles en alta fidelidad...
-                </p>
-                <span className="font-mono text-xs text-[#8E95A5]">
-                  Calibrando canal alfa RGBA y densidad 300 DPI
+              {resultUrl && (
+                <span className="flex items-center gap-1.5 font-mono text-xs font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-2.5 py-1 rounded-full">
+                  <CheckCircle2 className="h-3.5 w-3.5" /> Calibrado
                 </span>
-              </div>
-            ) : resultUrl ? (
-              /* eslint-disable-next-line @next/next/no-img-element */
-              <img
-                src={resultUrl}
-                alt="Resultado Procesado"
-                className="max-h-[380px] max-w-full object-contain rounded"
-              />
-            ) : (
-              <div className="text-center text-[#8E95A5]/60">
-                <Sparkles className="mx-auto h-8 w-8 mb-2 opacity-20 text-[#8E95A5]" />
-                <p className="font-mono text-xs">
-                  Carga un archivo y procesa para generar el PNG a 300 DPI.
-                </p>
-              </div>
-            )}
+              )}
+            </div>
+
+            <div className="relative flex min-h-[380px] items-center justify-center rounded-xl bg-transparency-grid p-4 overflow-hidden border border-[#20232A]">
+              {loading ? (
+                <div className="flex flex-col items-center gap-3 text-center p-6">
+                  <Loader2 className="h-10 w-10 animate-spin text-[#00A3FF]" />
+                  <p className="text-base font-bold text-[#F3F4F6]">
+                    Procesando píxeles en alta fidelidad...
+                  </p>
+                  <span className="font-mono text-xs text-[#8E95A5]">
+                    Calibrando canal alfa RGBA y densidad 300 DPI
+                  </span>
+                </div>
+              ) : resultUrl ? (
+                /* eslint-disable-next-line @next/next/no-img-element */
+                <img
+                  src={resultUrl}
+                  alt="Resultado Procesado"
+                  className="max-h-[380px] max-w-full object-contain rounded"
+                />
+              ) : (
+                <div className="text-center text-[#8E95A5]/60 p-6">
+                  <Sparkles className="mx-auto h-10 w-10 mb-3 opacity-20 text-[#8E95A5]" />
+                  <p className="font-mono text-xs">
+                    Carga un diseño y pulsa <strong>Procesar arte</strong> para generar el PNG a 300 DPI.
+                  </p>
+                </div>
+              )}
+            </div>
           </div>
 
           {resultUrl && (
-            <div className="mt-4 flex items-center justify-between gap-3">
-              <span className="font-mono text-xs text-[#8E95A5]">
-                PNG Transparente • 300 DPI
+            <div className="mt-5 pt-4 border-t border-[#20232A] flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+              <span className="font-mono text-xs text-[#8E95A5] flex items-center gap-1.5">
+                <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+                <span>PNG Transparente Listo para Impresión</span>
               </span>
+
+              {/* Botón Grande de Descarga */}
               <button
                 onClick={handleDownload}
-                className="inline-flex items-center gap-2 rounded bg-[#00A3FF] px-5 py-2.5 text-xs font-bold text-white hover:bg-[#00A3FF]/90 transition-colors shadow-lg"
+                className="inline-flex items-center justify-center gap-2.5 rounded-xl bg-[#00A3FF] hover:bg-[#00A3FF]/90 px-7 py-3 text-sm font-bold text-white transition-all shadow-lg active:scale-[0.98]"
               >
-                <Download className="h-4 w-4" /> Descargar PNG para DTF
+                <Download className="h-5 w-5" />
+                <span>Descargar PNG para DTF</span>
               </button>
             </div>
           )}
