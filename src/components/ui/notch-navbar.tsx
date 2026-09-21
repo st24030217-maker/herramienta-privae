@@ -23,7 +23,6 @@ export interface NotchNavbarProps extends React.HTMLAttributes<HTMLElement> {
   mobileContent?: (onClose: () => void) => React.ReactNode;
   bgClassName?: string;
   strokeColor?: string;
-  secondaryStrokeColor?: string;
 }
 
 export function NotchNavbar({
@@ -34,9 +33,8 @@ export function NotchNavbar({
   leftWing,
   rightWing,
   mobileContent,
-  bgClassName = "bg-black/90 backdrop-blur-md",
-  strokeColor = "#20232A",
-  secondaryStrokeColor = "rgba(0, 163, 255, 0.2)",
+  bgClassName = "bg-[#0A0B0E]/95 backdrop-blur-md",
+  strokeColor = "#22242A",
   ...props
 }: NotchNavbarProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -54,7 +52,6 @@ export function NotchNavbar({
         <div className={cn("flex-1 h-10 z-20 relative min-w-0 flex items-center px-4", bgClassName)}>
           <svg className="absolute inset-0 w-full h-full pointer-events-none" preserveAspectRatio="none">
             <line x1="0" y1="39.5" x2="100%" y2="39.5" stroke={strokeColor} strokeWidth={1} />
-            <line x1="0" y1="37.5" x2="100%" y2="37.5" stroke={secondaryStrokeColor} strokeWidth={0.5} />
           </svg>
           <div className="relative z-10 w-full">{leftWing}</div>
         </div>
@@ -74,12 +71,6 @@ export function NotchNavbar({
                 stroke={strokeColor}
                 strokeWidth={1}
               />
-              <path
-                d="M0 37.5 C25 37.5 25 61.5 50 61.5"
-                fill="none"
-                stroke={secondaryStrokeColor}
-                strokeWidth={0.5}
-              />
             </svg>
           </div>
 
@@ -88,14 +79,13 @@ export function NotchNavbar({
             <div className={cn("absolute inset-0", bgClassName)}>
               <svg className="absolute inset-0 w-full h-full pointer-events-none" preserveAspectRatio="none">
                 <line x1="0" y1="63.5" x2="100%" y2="63.5" stroke={strokeColor} strokeWidth={1} />
-                <line x1="0" y1="61.5" x2="100%" y2="61.5" stroke={secondaryStrokeColor} strokeWidth={0.5} />
               </svg>
             </div>
 
             {/* Inner Content Layer */}
-            <div className="relative w-full h-full flex items-center justify-between pb-1 px-3 md:px-6 gap-2 sm:gap-4">
+            <div className="relative w-full h-full flex items-center justify-between pb-1 px-3 md:px-5 gap-2 sm:gap-3">
               {/* Desktop Left Nav */}
-              <nav className="hidden lg:flex items-center gap-1.5 shrink-0 mt-2">
+              <nav className="hidden lg:flex items-center gap-1 shrink-0 mt-2">
                 {leftItems.map((item) => {
                   const Icon = item.icon;
                   return (
@@ -103,15 +93,15 @@ export function NotchNavbar({
                       key={item.href}
                       href={item.href}
                       className={cn(
-                        "group flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-semibold rounded-lg transition-all active:scale-95 whitespace-nowrap",
+                        "group flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-md transition-colors whitespace-nowrap",
                         item.isActive
-                          ? "bg-[#00A3FF]/15 text-[#00A3FF] border border-[#00A3FF]/40 shadow-[0_0_10px_rgba(0,163,255,0.2)]"
+                          ? "bg-white/10 text-white"
                           : item.highlight
-                          ? "text-white bg-[#20232A] border border-[#20232A] hover:border-[#00A3FF]/40"
-                          : "text-[#8E95A5] hover:text-[#F3F4F6] hover:bg-white/5"
+                          ? "bg-neutral-800 text-white hover:bg-neutral-700"
+                          : "text-neutral-400 hover:text-white hover:bg-white/5"
                       )}
                     >
-                      {Icon && <Icon className="w-3.5 h-3.5 shrink-0 opacity-80 group-hover:opacity-100" />}
+                      {Icon && <Icon className="w-3.5 h-3.5 shrink-0 opacity-70 group-hover:opacity-100" />}
                       <span>{item.label}</span>
                     </Link>
                   );
@@ -120,26 +110,26 @@ export function NotchNavbar({
 
               {/* Mobile Menu Button (Left) */}
               <button
-                className="lg:hidden mt-2 p-1.5 text-[#8E95A5] hover:text-[#F3F4F6] rounded-lg hover:bg-white/5 transition-colors"
+                className="lg:hidden mt-2 p-1.5 text-neutral-400 hover:text-white rounded-md hover:bg-white/5 transition-colors"
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 aria-label="Alternar menú móvil"
               >
-                {isMobileMenuOpen ? <X className="w-5 h-5 text-[#00A3FF]" /> : <Menu className="w-5 h-5" />}
+                {isMobileMenuOpen ? <X className="w-4 h-4 text-white" /> : <Menu className="w-4 h-4" />}
               </button>
 
               {/* Center Logo Slot */}
-              <div className="flex justify-center shrink-0 mx-1 sm:mx-3 mt-2">
+              <div className="flex justify-center shrink-0 mx-1 sm:mx-2 mt-2">
                 {logo || (
                   <Link href="/" className="flex items-center gap-2 group">
-                    <span className="font-bold text-sm tracking-wider text-[#F3F4F6]">
-                      PRIVAE <span className="text-[#00A3FF]">DTF</span>
+                    <span className="font-semibold text-xs tracking-wider text-white">
+                      PRIVAE DTF
                     </span>
                   </Link>
                 )}
               </div>
 
               {/* Desktop Right Nav */}
-              <nav className="hidden lg:flex items-center gap-1.5 shrink-0 mt-2">
+              <nav className="hidden lg:flex items-center gap-1 shrink-0 mt-2">
                 {rightItems.map((item) => {
                   const Icon = item.icon;
                   return (
@@ -147,15 +137,15 @@ export function NotchNavbar({
                       key={item.href}
                       href={item.href}
                       className={cn(
-                        "group flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-semibold rounded-lg transition-all active:scale-95 whitespace-nowrap",
+                        "group flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-md transition-colors whitespace-nowrap",
                         item.isActive
-                          ? "bg-[#00A3FF]/15 text-[#00A3FF] border border-[#00A3FF]/40 shadow-[0_0_10px_rgba(0,163,255,0.2)]"
+                          ? "bg-white/10 text-white"
                           : item.highlight
-                          ? "text-white bg-[#00A3FF]/20 text-[#00A3FF] border border-[#00A3FF]/40 hover:bg-[#00A3FF]/30 shadow-[0_0_12px_rgba(0,163,255,0.25)]"
-                          : "text-[#8E95A5] hover:text-[#F3F4F6] hover:bg-white/5"
+                          ? "bg-white text-black font-semibold hover:bg-neutral-200"
+                          : "text-neutral-400 hover:text-white hover:bg-white/5"
                       )}
                     >
-                      {Icon && <Icon className="w-3.5 h-3.5 shrink-0 opacity-80 group-hover:opacity-100" />}
+                      {Icon && <Icon className="w-3.5 h-3.5 shrink-0 opacity-70 group-hover:opacity-100" />}
                       <span>{item.label}</span>
                     </Link>
                   );
@@ -163,9 +153,9 @@ export function NotchNavbar({
               </nav>
 
               {/* Mobile Right Spacer / Indicator */}
-              <div className="lg:hidden flex items-center gap-1.5 mt-2">
-                <span className="h-1.5 w-1.5 rounded-full bg-[#00A3FF]"></span>
-                <span className="font-mono text-[10px] text-[#8E95A5]">300 DPI</span>
+              <div className="lg:hidden flex items-center gap-1 mt-2">
+                <span className="h-1.5 w-1.5 rounded-full bg-neutral-500"></span>
+                <span className="font-mono text-[10px] text-neutral-400">300 DPI</span>
               </div>
             </div>
           </div>
@@ -183,12 +173,6 @@ export function NotchNavbar({
                 stroke={strokeColor}
                 strokeWidth={1}
               />
-              <path
-                d="M0 61.5 C25 61.5 25 37.5 50 37.5"
-                fill="none"
-                stroke={secondaryStrokeColor}
-                strokeWidth={0.5}
-              />
             </svg>
           </div>
         </div>
@@ -197,7 +181,6 @@ export function NotchNavbar({
         <div className={cn("flex-1 h-10 z-20 relative min-w-0 -ml-px flex items-center justify-end px-4", bgClassName)}>
           <svg className="absolute inset-0 w-full h-full pointer-events-none" preserveAspectRatio="none">
             <line x1="0" y1="39.5" x2="100%" y2="39.5" stroke={strokeColor} strokeWidth={1} />
-            <line x1="0" y1="37.5" x2="100%" y2="37.5" stroke={secondaryStrokeColor} strokeWidth={0.5} />
           </svg>
           <div className="relative z-10">{rightWing}</div>
         </div>
@@ -207,16 +190,16 @@ export function NotchNavbar({
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -10 }}
+            initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.18, ease: "easeOut" }}
-            className="fixed inset-x-0 top-16 z-40 bg-black/95 backdrop-blur-xl border-b border-[#20232A] p-4 lg:hidden shadow-2xl"
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.15, ease: "easeOut" }}
+            className="fixed inset-x-0 top-16 z-40 bg-[#0A0B0E]/95 backdrop-blur-xl border-b border-[#22242A] p-4 lg:hidden"
           >
             {mobileContent ? (
               mobileContent(() => setIsMobileMenuOpen(false))
             ) : (
-              <nav className="flex flex-col gap-2">
+              <nav className="flex flex-col gap-1.5">
                 {[...leftItems, ...rightItems].map((item) => {
                   const Icon = item.icon;
                   return (
@@ -224,14 +207,14 @@ export function NotchNavbar({
                       key={item.href}
                       href={item.href}
                       className={cn(
-                        "flex items-center gap-3 p-3 rounded-xl text-sm font-semibold transition-colors",
+                        "flex items-center gap-2.5 p-2.5 rounded-lg text-xs font-medium transition-colors",
                         item.isActive
-                          ? "bg-[#0D0E11] text-[#00A3FF] border border-[#00A3FF]/40"
-                          : "text-[#F3F4F6] hover:bg-white/5"
+                          ? "bg-white/10 text-white"
+                          : "text-neutral-300 hover:bg-white/5"
                       )}
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
-                      {Icon && <Icon className="w-4 h-4 text-[#00A3FF]" />}
+                      {Icon && <Icon className="w-4 h-4 text-neutral-400" />}
                       <span>{item.label}</span>
                     </Link>
                   );

@@ -24,8 +24,8 @@ export default function RootLayout({
             gradientTo="#000000"
             lineColor="#ffffff"
             lightColor="#ffffff"
-            linesOpacity={0.06}
-            lightsOpacity={0.8}
+            linesOpacity={0.025}
+            lightsOpacity={0.15}
           />
         </div>
         <Navbar />
