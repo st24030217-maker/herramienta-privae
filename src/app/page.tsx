@@ -10,6 +10,7 @@ import {
   ShieldCheck
 } from "lucide-react";
 import { CornerButton } from "@/components/ui/corner-button";
+import { GlareCard } from "@/components/ui/glare-card";
 
 export default function HomePage() {
   const prepTools = [
@@ -100,8 +101,8 @@ export default function HomePage() {
           </span>
         </div>
 
-        {/* Tarjeta Escáner DTF a Ancho Completo */}
-        <div className="rounded-xl border border-[#20232A] bg-[#16181D] p-6 lg:p-7 hover:border-[#00A3FF]/40 transition-all">
+        {/* Tarjeta Escáner DTF a Ancho Completo con GlareCard */}
+        <GlareCard glareColor="cyan" className="p-6 lg:p-7">
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
             <div className="flex-1">
               <div className="flex items-center gap-3 mb-2">
@@ -139,12 +140,12 @@ export default function HomePage() {
               </CornerButton>
             </div>
           </div>
-        </div>
+        </GlareCard>
       </section>
 
       {/* SECCIÓN 2: ESTACIÓN CENTRAL: Armador de Pliegos DTF */}
       <section>
-        <div className="rounded-xl border border-[#20232A] bg-[#16181D] p-6 lg:p-8">
+        <GlareCard glareColor="white" className="p-6 lg:p-8">
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
             <div className="flex-1">
               <div className="flex items-center gap-2.5 mb-2">
@@ -187,7 +188,7 @@ export default function HomePage() {
               </CornerButton>
             </div>
           </div>
-        </div>
+        </GlareCard>
       </section>
 
       {/* SECCIÓN 3: MÓDULOS DE CALIBRACIÓN Y PRE-PRENSA */}
@@ -205,41 +206,44 @@ export default function HomePage() {
           {prepTools.map((tool) => {
             const Icon = tool.icon;
             return (
-              <div
+              <GlareCard
                 key={tool.id}
-                className="flex flex-col justify-between rounded-xl border border-[#20232A] bg-[#16181D] p-5 transition-all hover:border-[#00A3FF]/40 shadow-sm"
+                glareColor="cyan"
+                className="p-5 h-full flex flex-col justify-between"
               >
-                <div>
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-[#20232A] bg-[#0D0E11] text-[#F3F4F6]">
-                      <Icon className="h-4 w-4 text-[#00A3FF]" />
+                <div className="flex flex-col h-full justify-between">
+                  <div>
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-[#20232A] bg-[#0D0E11] text-[#F3F4F6]">
+                        <Icon className="h-4 w-4 text-[#00A3FF]" />
+                      </div>
+                      <span className="font-mono text-[11px] text-[#8E95A5]">
+                        {tool.spec}
+                      </span>
                     </div>
-                    <span className="font-mono text-[11px] text-[#8E95A5]">
-                      {tool.spec}
-                    </span>
+
+                    <h4 className="text-sm font-bold text-[#F3F4F6]">
+                      {tool.name}
+                    </h4>
+                    <p className="mt-2 text-xs text-[#8E95A5] leading-relaxed">
+                      {tool.desc}
+                    </p>
                   </div>
 
-                  <h4 className="text-sm font-bold text-[#F3F4F6]">
-                    {tool.name}
-                  </h4>
-                  <p className="mt-2 text-xs text-[#8E95A5] leading-relaxed">
-                    {tool.desc}
-                  </p>
+                  <div className="mt-5 pt-3 border-t border-[#20232A]">
+                    <CornerButton
+                      href={tool.href}
+                      variant="dark"
+                      size="sm"
+                      className="w-full"
+                      wrapperClassName="w-full"
+                      icon={<ArrowRight className="h-3.5 w-3.5 text-[#00A3FF]" />}
+                    >
+                      {tool.action}
+                    </CornerButton>
+                  </div>
                 </div>
-
-                <div className="mt-5 pt-3 border-t border-[#20232A]">
-                  <CornerButton
-                    href={tool.href}
-                    variant="dark"
-                    size="sm"
-                    className="w-full"
-                    wrapperClassName="w-full"
-                    icon={<ArrowRight className="h-3.5 w-3.5 text-[#00A3FF]" />}
-                  >
-                    {tool.action}
-                  </CornerButton>
-                </div>
-              </div>
+              </GlareCard>
             );
           })}
         </div>
