@@ -1,8 +1,15 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import { Montserrat } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/Navbar";
 import { LightLines } from "@/components/ui/light-lines";
+
+const montserrat = Montserrat({
+  subsets: ["latin"],
+  variable: "--font-montserrat",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "Privae Textil - Herramientas Profesionales de Preparación de Imágenes y DTF",
@@ -16,8 +23,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" className="dark">
-      <body className="relative flex min-h-screen flex-col bg-black text-[#F3F4F6] antialiased selection:bg-[#00A3FF]/30 selection:text-white">
+    <html lang="es" className={`dark ${montserrat.variable}`}>
+      <body className={`relative flex min-h-screen flex-col bg-black text-[#F3F4F6] font-sans antialiased selection:bg-[#00A3FF]/30 selection:text-white ${montserrat.className}`}>
         <div className="fixed inset-0 -z-10 pointer-events-none overflow-hidden">
           <LightLines
             className="w-full h-full"

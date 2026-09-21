@@ -36,6 +36,10 @@ module.exports = {
       boxShadow: {
         'subtle-edge': '0 1px 2px 0 rgba(0, 0, 0, 0.4)',
         'cyan-focus': '0 0 0 2px rgba(0, 163, 255, 0.3)',
+      },
+      fontFamily: {
+        sans: ["var(--font-montserrat)", "sans-serif"],
+        montserrat: ["var(--font-montserrat)", "sans-serif"],
       }
     },
   },
