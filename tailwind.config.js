@@ -40,7 +40,10 @@ module.exports = {
       fontFamily: {
         sans: ["var(--font-montserrat)", "sans-serif"],
         montserrat: ["var(--font-montserrat)", "sans-serif"],
-      }
+      },
+      backgroundImage: {
+        'gradient-conic': 'conic-gradient(var(--conic-position), var(--tw-gradient-stops))',
+      },
     },
   },
   plugins: [],

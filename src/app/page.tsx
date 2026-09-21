@@ -12,6 +12,8 @@ import {
 import { CornerButton } from "@/components/ui/corner-button";
 import { GlareCard } from "@/components/ui/glare-card";
 
+import LampDemo from "@/components/lamp-demo";
+
 export default function HomePage() {
   const prepTools = [
     {
@@ -53,42 +55,36 @@ export default function HomePage() {
   ];
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8 space-y-12">
-      {/* Barra de Parámetros de Taller */}
-      <section className="border-b border-[#20232A] pb-8">
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
-          <div>
-            <div className="flex items-center gap-2 mb-2 font-mono text-xs text-[#00A3FF]">
-              <span className="inline-block h-2 w-2 rounded-full bg-[#00A3FF]"></span>
-              <span>TALLER DTF LISTO</span>
-            </div>
-            <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#F3F4F6]">
-              Prepara tus Diseños para DTF
-            </h1>
-            <p className="mt-2 text-sm text-[#8E95A5] max-w-2xl leading-relaxed">
-              Todo lo que necesitas para dejar tus archivos listos para imprimir: quita fondos, mejora la calidad, checa errores y arma tus pliegos por metro a 300 DPI reales.
-            </p>
-          </div>
+    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-10">
+      {/* HERO CON ANIMACIÓN ACETERNITY LAMP */}
+      <section>
+        <LampDemo />
+      </section>
 
-          {/* Ficha de Calibración Técnica */}
-          <div className="flex flex-wrap items-center gap-4 font-mono text-xs text-[#8E95A5] bg-[#16181D] border border-[#20232A] px-4 py-2.5 rounded-lg shadow-inner">
-            <div>
-              <span className="text-[#8E95A5]/60 block text-[10px]">ANCHO BOBINA</span>
-              <span className="text-[#F3F4F6] font-semibold">58.0 cm</span>
-            </div>
-            <div className="h-6 w-px bg-[#20232A]" />
-            <div>
-              <span className="text-[#8E95A5]/60 block text-[10px]">RESOLUCIÓN</span>
-              <span className="text-[#F3F4F6] font-semibold">300 DPI</span>
-            </div>
-            <div className="h-6 w-px bg-[#20232A]" />
-            <div>
-              <span className="text-[#8E95A5]/60 block text-[10px]">CALIFICACIÓN</span>
-              <span className="text-[#00A3FF] font-semibold">Semáforo DTF</span>
-            </div>
+      {/* Ficha de Calibración Técnica de Taller */}
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-xs text-[#8E95A5] bg-[#16181D] border border-[#20232A] px-6 py-3.5 rounded-xl shadow-inner">
+        <div className="flex items-center gap-2">
+          <span className="inline-block h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span className="text-[#F3F4F6] font-bold">TALLER DTF LISTO:</span>
+          <span className="text-[#8E95A5]">Archivos listos para imprimir directo en tela</span>
+        </div>
+        <div className="flex items-center gap-6">
+          <div>
+            <span className="text-[#8E95A5]/60 block text-[10px]">ANCHO BOBINA</span>
+            <span className="text-[#F3F4F6] font-semibold">58.0 cm</span>
+          </div>
+          <div className="h-6 w-px bg-[#20232A]" />
+          <div>
+            <span className="text-[#8E95A5]/60 block text-[10px]">RESOLUCIÓN</span>
+            <span className="text-[#F3F4F6] font-semibold">300 DPI</span>
+          </div>
+          <div className="h-6 w-px bg-[#20232A]" />
+          <div>
+            <span className="text-[#8E95A5]/60 block text-[10px]">CALIFICACIÓN</span>
+            <span className="text-[#00A3FF] font-semibold">Semáforo DTF</span>
           </div>
         </div>
-      </section>
+      </div>
 
       {/* SECCIÓN 1: CHECADOR DE CALIDAD DTF */}
       <section>
