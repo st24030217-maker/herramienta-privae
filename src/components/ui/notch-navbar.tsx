@@ -49,11 +49,11 @@ export function NotchNavbar({
         {...props}
       >
         {/* Left Side Bar */}
-        <div className={cn("flex-1 h-10 z-20 relative min-w-0 flex items-center px-4", bgClassName)}>
+        <div className={cn("flex-1 h-10 z-20 relative min-w-0 flex items-center px-3 sm:px-4 overflow-hidden", bgClassName)}>
           <svg className="absolute inset-0 w-full h-full pointer-events-none" preserveAspectRatio="none">
             <line x1="0" y1="39.5" x2="100%" y2="39.5" stroke={strokeColor} strokeWidth={1} />
           </svg>
-          <div className="relative z-10 w-full">{leftWing}</div>
+          <div className="relative z-10 truncate">{leftWing}</div>
         </div>
 
         {/* Notch Container - 3 Slices */}
@@ -83,9 +83,9 @@ export function NotchNavbar({
             </div>
 
             {/* Inner Content Layer */}
-            <div className="relative w-full h-full flex items-center justify-between pb-1 px-3 md:px-5 gap-2 sm:gap-3">
+            <div className="relative w-full h-full flex items-center justify-between pb-1 px-2.5 md:px-4 gap-1.5 sm:gap-2">
               {/* Desktop Left Nav */}
-              <nav className="hidden lg:flex items-center gap-1 shrink-0 mt-2">
+              <nav className="hidden lg:flex items-center gap-0.5 xl:gap-1 shrink-0 mt-2">
                 {leftItems.map((item) => {
                   const Icon = item.icon;
                   return (
@@ -93,7 +93,7 @@ export function NotchNavbar({
                       key={item.href}
                       href={item.href}
                       className={cn(
-                        "group flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-md transition-colors whitespace-nowrap",
+                        "group flex items-center gap-1 xl:gap-1.5 px-2 xl:px-2.5 py-1 text-[11px] xl:text-xs font-medium rounded-md transition-colors whitespace-nowrap shrink-0",
                         item.isActive
                           ? "bg-white/10 text-white"
                           : item.highlight
@@ -129,7 +129,7 @@ export function NotchNavbar({
               </div>
 
               {/* Desktop Right Nav */}
-              <nav className="hidden lg:flex items-center gap-1 shrink-0 mt-2">
+              <nav className="hidden lg:flex items-center gap-0.5 xl:gap-1 shrink-0 mt-2">
                 {rightItems.map((item) => {
                   const Icon = item.icon;
                   return (
@@ -137,7 +137,7 @@ export function NotchNavbar({
                       key={item.href}
                       href={item.href}
                       className={cn(
-                        "group flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-md transition-colors whitespace-nowrap",
+                        "group flex items-center gap-1 xl:gap-1.5 px-2 xl:px-2.5 py-1 text-[11px] xl:text-xs font-medium rounded-md transition-colors whitespace-nowrap shrink-0",
                         item.isActive
                           ? "bg-white/10 text-white"
                           : item.highlight
@@ -178,11 +178,11 @@ export function NotchNavbar({
         </div>
 
         {/* Right Side Bar */}
-        <div className={cn("flex-1 h-10 z-20 relative min-w-0 -ml-px flex items-center justify-end px-4", bgClassName)}>
+        <div className={cn("flex-1 h-10 z-20 relative min-w-fit -ml-px flex items-center justify-end px-3 sm:px-4 shrink-0", bgClassName)}>
           <svg className="absolute inset-0 w-full h-full pointer-events-none" preserveAspectRatio="none">
             <line x1="0" y1="39.5" x2="100%" y2="39.5" stroke={strokeColor} strokeWidth={1} />
           </svg>
-          <div className="relative z-10">{rightWing}</div>
+          <div className="relative z-10 flex items-center shrink-0">{rightWing}</div>
         </div>
       </header>
 

@@ -126,19 +126,19 @@ export function Navbar() {
 
   // Contenido para el ala izquierda (Left Wing)
   const leftWingContent = (
-    <div className="flex items-center gap-2 font-mono text-[11px] text-neutral-400">
-      <span className="h-1.5 w-1.5 rounded-full bg-neutral-400"></span>
-      <span className="text-neutral-300 font-medium hidden sm:inline">TALLER DTF</span>
-      <span className="text-neutral-600 hidden sm:inline">·</span>
-      <span className="hidden md:inline">300 DPI</span>
-      <span className="text-neutral-600 hidden md:inline">·</span>
-      <span className="text-neutral-400 hidden md:inline">58 CM</span>
+    <div className="flex items-center gap-2 font-mono text-[11px] text-neutral-400 shrink-0 select-none">
+      <span className="h-1.5 w-1.5 rounded-full bg-white shrink-0"></span>
+      <span className="text-neutral-300 font-medium hidden md:inline shrink-0">TALLER DTF</span>
+      <span className="text-neutral-600 hidden lg:inline shrink-0">·</span>
+      <span className="hidden xl:inline shrink-0">300 DPI</span>
+      <span className="text-neutral-600 hidden 2xl:inline shrink-0">·</span>
+      <span className="text-neutral-400 hidden 2xl:inline shrink-0">58 CM</span>
     </div>
   );
 
   // Logo central para el Notch
   const centerLogo = (
-    <Link href="/" className="flex items-center gap-2 group px-2 py-0.5 rounded-md hover:opacity-85 transition-opacity">
+    <Link href="/" className="flex items-center gap-2 group px-2 py-0.5 rounded-md hover:opacity-85 transition-opacity shrink-0">
       <Image
         src="/logo.png"
         alt="Privae Textil"
@@ -150,36 +150,36 @@ export function Navbar() {
     </Link>
   );
 
-  // Contenido para el ala derecha (Right Wing)
+  // Contenido para el ala derecha (Right Wing) - Alineación perfecta, altura uniforme y sin saltos de línea
   const rightWingContent = (
-    <div className="flex items-center gap-2 sm:gap-3">
+    <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 select-none">
       {/* Botón de Guía de Uso Rápida */}
       <Link
         href="/guia"
-        className="inline-flex items-center gap-1.5 rounded-lg border border-neutral-800 bg-neutral-900 px-2.5 py-1 text-xs font-medium text-neutral-300 hover:text-white hover:border-neutral-600 transition-all active:scale-98"
+        className="inline-flex items-center gap-1.5 h-8 px-2.5 sm:px-3 rounded-lg border border-neutral-800 bg-[#16181D] text-xs font-medium text-neutral-300 hover:text-white hover:border-neutral-600 hover:bg-[#20232A] transition-all shrink-0 whitespace-nowrap active:scale-95 shadow-sm"
         title="Manual de Uso para Nuevos Usuarios y Talleres"
       >
-        <BookOpen className="h-3.5 w-3.5 text-white" />
-        <span className="hidden sm:inline text-[11px] font-mono">Guía</span>
+        <BookOpen className="h-3.5 w-3.5 text-white shrink-0" />
+        <span className="text-xs font-mono font-medium">Guía</span>
       </Link>
 
       {userData ? (
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 shrink-0">
           {/* Badge de rol / suscripción */}
           {userData.role === "ADMIN" ? (
-            <span className="hidden xl:inline-flex items-center gap-1 rounded-md border border-neutral-800 bg-neutral-900 text-neutral-300 px-2 py-0.5 font-mono text-[10px]">
+            <span className="hidden xl:inline-flex items-center gap-1 h-8 rounded-lg border border-neutral-800 bg-neutral-900 text-neutral-300 px-2 font-mono text-[10px] shrink-0 whitespace-nowrap">
               <Crown className="h-3 w-3 text-neutral-400" /> ADMIN
             </span>
           ) : userData.subscription.status === "ACTIVE" ? (
-            <span className="hidden xl:inline-flex items-center gap-1 rounded-md border border-neutral-800 bg-neutral-900 text-neutral-300 px-2 py-0.5 font-mono text-[10px]">
+            <span className="hidden xl:inline-flex items-center gap-1 h-8 rounded-lg border border-neutral-800 bg-neutral-900 text-neutral-300 px-2 font-mono text-[10px] shrink-0 whitespace-nowrap">
               <Crown className="h-3 w-3 text-neutral-400" /> PREMIUM
             </span>
           ) : userData.subscription.status === "GRACE_PERIOD" ? (
-            <span className="hidden xl:inline-flex items-center gap-1 rounded-md border border-amber-900/40 bg-amber-950/20 text-amber-400 px-2 py-0.5 font-mono text-[10px]">
+            <span className="hidden xl:inline-flex items-center gap-1 h-8 rounded-lg border border-amber-900/40 bg-amber-950/20 text-amber-400 px-2 font-mono text-[10px] shrink-0 whitespace-nowrap">
               <ShieldAlert className="h-3 w-3" /> {userData.subscription.daysRemaining}D
             </span>
           ) : userData.subscription.status === "TRIAL" ? (
-            <span className="hidden xl:inline-flex items-center gap-1 rounded-md border border-neutral-800 bg-neutral-900 px-2 py-0.5 font-mono text-[10px] text-neutral-400">
+            <span className="hidden xl:inline-flex items-center gap-1 h-8 rounded-lg border border-neutral-800 bg-neutral-900 px-2 font-mono text-[10px] text-neutral-400 shrink-0 whitespace-nowrap">
               PRUEBA {userData.subscription.daysRemaining}D
             </span>
           ) : null}
@@ -188,10 +188,10 @@ export function Navbar() {
           <div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setMenuOpen(!menuOpen)}
-              className="flex items-center gap-1.5 rounded-lg border border-neutral-800 bg-neutral-900 px-2.5 py-1 text-xs font-medium text-neutral-300 hover:border-neutral-700 active:scale-98 transition-all"
+              className="flex items-center gap-1.5 h-8 rounded-lg border border-neutral-800 bg-neutral-900 px-2.5 text-xs font-medium text-neutral-300 hover:border-neutral-700 active:scale-98 transition-all shrink-0 whitespace-nowrap"
             >
-              <User className="h-3.5 w-3.5 text-neutral-400" />
-              <span className="max-w-[80px] sm:max-w-[120px] truncate text-[11px]">
+              <User className="h-3.5 w-3.5 text-neutral-400 shrink-0" />
+              <span className="max-w-[80px] sm:max-w-[120px] truncate text-xs">
                 {userData.name || userData.email.split("@")[0]}
               </span>
               <ChevronDown className={`h-3 w-3 text-neutral-500 transition-transform ${menuOpen ? "rotate-180" : ""}`} />
@@ -253,18 +253,18 @@ export function Navbar() {
           </div>
         </div>
       ) : !loading ? (
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1 sm:gap-1.5 shrink-0 whitespace-nowrap">
           <Link
             href="/auth/login"
-            className="px-2.5 py-1 text-xs font-medium text-neutral-400 hover:text-white transition-colors"
+            className="inline-flex items-center h-8 px-2 sm:px-2.5 rounded-lg text-xs font-medium text-neutral-400 hover:text-white hover:bg-white/5 transition-colors shrink-0 whitespace-nowrap"
           >
             Ingresar
           </Link>
           <Link
             href="/auth/register"
-            className="rounded-lg bg-white px-3 py-1 text-xs font-semibold text-black hover:bg-neutral-200 active:scale-98 transition-all"
+            className="inline-flex items-center justify-center h-8 px-3 rounded-lg bg-white text-black text-xs font-bold hover:bg-neutral-200 active:scale-95 transition-all shrink-0 whitespace-nowrap shadow-sm"
           >
-            Prueba 5d
+            Prueba 5 Días
           </Link>
         </div>
       ) : null}
