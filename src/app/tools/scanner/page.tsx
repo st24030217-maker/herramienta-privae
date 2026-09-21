@@ -51,6 +51,164 @@ export default function DtfScannerPage() {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // Analizador client-side ultra-rápido para soportar archivos de cualquier tamaño sin límite de Vercel (4.5 MB)
+  const scanImageClientSide = async (selectedFile: File, imgUrl: string): Promise<DtfAnalysis> => {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.crossOrigin = "anonymous";
+      img.onload = () => {
+        try {
+          const width = img.naturalWidth || img.width;
+          const height = img.naturalHeight || img.height;
+          const widthCmAt300Dpi = parseFloat(((width / 300) * 2.54).toFixed(2));
+          const heightCmAt300Dpi = parseFloat(((height / 300) * 2.54).toFixed(2));
+
+          const maxSampleDim = 1200;
+          let sampleWidth = width;
+          let sampleHeight = height;
+          if (width > maxSampleDim || height > maxSampleDim) {
+            const ratio = Math.min(maxSampleDim / width, maxSampleDim / height);
+            sampleWidth = Math.round(width * ratio);
+            sampleHeight = Math.round(height * ratio);
+          }
+
+          const canvas = document.createElement("canvas");
+          canvas.width = sampleWidth;
+          canvas.height = sampleHeight;
+          const ctx = canvas.getContext("2d", { willReadFrequently: true });
+          if (!ctx) {
+            throw new Error("No se pudo inicializar el motor de escaneo en el navegador.");
+          }
+
+          ctx.drawImage(img, 0, 0, sampleWidth, sampleHeight);
+          const imgData = ctx.getImageData(0, 0, sampleWidth, sampleHeight);
+          const data = imgData.data;
+          const totalPixels = sampleWidth * sampleHeight;
+
+          let transparentPixels = 0;
+          let semiTransparentPixels = 0;
+          let solidPixels = 0;
+
+          for (let i = 0; i < data.length; i += 4) {
+            const a = data[i + 3];
+            if (a === 0) {
+              transparentPixels++;
+            } else if (a < 250) {
+              semiTransparentPixels++;
+            } else {
+              solidPixels++;
+            }
+          }
+
+          const cornerCoords = [
+            [0, 0],
+            [sampleWidth - 1, 0],
+            [0, sampleHeight - 1],
+            [sampleWidth - 1, sampleHeight - 1],
+          ];
+
+          let cornersOpaque = 0;
+          for (const [cx, cy] of cornerCoords) {
+            const idx = (cy * sampleWidth + cx) * 4;
+            if (data[idx + 3] >= 250) {
+              cornersOpaque++;
+            }
+          }
+
+          const semiPercent = parseFloat(((semiTransparentPixels / totalPixels) * 100).toFixed(2));
+          const transparentPercent = parseFloat(((transparentPixels / totalPixels) * 100).toFixed(2));
+          const solidPercent = parseFloat(((solidPixels / totalPixels) * 100).toFixed(2));
+          const hasAlpha = transparentPercent > 0.5 || semiPercent > 0.5;
+
+          let score = 100;
+          const issues: DtfAnalysis["issues"] = [];
+
+          if (!hasAlpha || transparentPercent < 2) {
+            score -= 35;
+            issues.push({
+              id: "no-alpha",
+              title: "Tu imagen tiene fondo (no es transparente)",
+              desc: "Tu imagen tiene un fondo sólido (blanco, negro o de color). Si la imprimes así, saldrá un parche cuadrado blanco en la playera.",
+              severity: "high",
+              toolHref: "/tools/remove-bg",
+              toolAction: "Quitar fondo ahora",
+            });
+          } else if (cornersOpaque >= 3 && transparentPercent < 15) {
+            score -= 25;
+            issues.push({
+              id: "solid-corners",
+              title: "Quedaron pedazos de fondo en las esquinas",
+              desc: "Las esquinas de tu imagen tienen color. Es muy probable que todavía tenga pedazos de fondo o un marco que debas borrar.",
+              severity: "high",
+              toolHref: "/tools/remove-bg",
+              toolAction: "Borrar esquinas y fondo",
+            });
+          }
+
+          if (semiPercent > 5) {
+            score -= 25;
+            issues.push({
+              id: "high-semi-alpha",
+              title: `Cuidado con la tinta blanca (${semiPercent}% de sombras)`,
+              desc: "Hay partes medio transparentes. La máquina DTF les pone base blanca y van a salir como plastas lechosas o sucias en la tela.",
+              severity: "high",
+              toolHref: "/tools/clean-alpha",
+              toolAction: "Limpiar bordes y sombras",
+            });
+          } else if (semiPercent > 1) {
+            score -= 10;
+            issues.push({
+              id: "mild-semi-alpha",
+              title: `Bordes con sombras leves (${semiPercent}%)`,
+              desc: "Tiene orillas difusas. Conviene limpiarlas para que el contorno quede parejo y nítido.",
+              severity: "medium",
+              toolHref: "/tools/clean-alpha",
+              toolAction: "Limpiar bordes",
+            });
+          }
+
+          if (width < 1200 || height < 1200) {
+            score -= 20;
+            issues.push({
+              id: "low-resolution",
+              title: "Imagen chica para estampar",
+              desc: `Tu imagen mide ${width}×${height} px. Para que no se pixelee, lo máximo que da a 300 DPI es ${widthCmAt300Dpi} × ${heightCmAt300Dpi} cm.`,
+              severity: "medium",
+              toolHref: "/tools/enhance",
+              toolAction: "Agrandar y dar nitidez",
+            });
+          }
+
+          score = Math.max(10, Math.min(100, score));
+          let status: "ready" | "warning" | "danger" = "ready";
+          if (score < 50) status = "danger";
+          else if (score < 80) status = "warning";
+
+          resolve({
+            fileName: selectedFile.name,
+            fileSizeMb: parseFloat((selectedFile.size / (1024 * 1024)).toFixed(2)),
+            width,
+            height,
+            density: 300,
+            widthCmAt300Dpi,
+            heightCmAt300Dpi,
+            hasAlpha,
+            transparentPercent,
+            semiPercent,
+            solidPercent,
+            score,
+            status,
+            issues,
+          });
+        } catch (err: any) {
+          reject(err);
+        }
+      };
+      img.onerror = () => reject(new Error("No se pudo cargar la imagen para su análisis."));
+      img.src = imgUrl;
+    });
+  };
+
   const handleFileChange = async (selectedFile: File) => {
     if (!selectedFile.type.startsWith("image/")) {
       setError("Por favor sube un archivo de imagen (PNG, JPG, WEBP, etc.)");
@@ -63,9 +221,16 @@ export default function DtfScannerPage() {
     const url = URL.createObjectURL(selectedFile);
     setPreviewUrl(url);
 
-    // Escanear automáticamente al cargar
     setLoading(true);
     try {
+      // Si el archivo supera 4 MB, usamos el analizador client-side de inmediato
+      // para evitar chocar con el límite de Vercel Serverless (4.5 MB)
+      if (selectedFile.size > 4 * 1024 * 1024) {
+        const clientAnalysis = await scanImageClientSide(selectedFile, url);
+        setAnalysis(clientAnalysis);
+        return;
+      }
+
       const formData = new FormData();
       formData.append("file", selectedFile);
 
@@ -74,14 +239,23 @@ export default function DtfScannerPage() {
         body: formData,
       });
 
-      const data = await res.json();
       if (!res.ok) {
-        throw new Error(data.error || "No se pudo completar el análisis forense.");
+        // Si el servidor falla (ej: 413 Payload Too Large de Vercel), fallback automático client-side
+        const clientAnalysis = await scanImageClientSide(selectedFile, url);
+        setAnalysis(clientAnalysis);
+        return;
       }
 
+      const data = await res.json();
       setAnalysis(data.analysis);
-    } catch (err: any) {
-      setError(err.message || "Error al escanear archivo.");
+    } catch {
+      // Fallback seguro client-side ante cualquier falla de red o formato
+      try {
+        const clientAnalysis = await scanImageClientSide(selectedFile, url);
+        setAnalysis(clientAnalysis);
+      } catch (err: any) {
+        setError(err.message || "Error al escanear archivo.");
+      }
     } finally {
       setLoading(false);
     }

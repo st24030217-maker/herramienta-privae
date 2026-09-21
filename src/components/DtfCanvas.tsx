@@ -348,8 +348,19 @@ export function DtfCanvas() {
 
       if (!res.ok) {
         setExportErrorStatus(res.status);
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err.error || "Error al componer el archivo DTF.");
+        let errorMsg = "Error al componer el archivo DTF.";
+        if (res.status === 413) {
+          errorMsg = "El conjunto de imágenes supera el límite de 4.5 MB del servidor de Vercel. Reduce o comprime alguna de las imágenes antes de exportar.";
+        } else {
+          try {
+            const err = await res.json();
+            if (err?.error) errorMsg = err.error;
+          } catch {
+            const text = await res.text().catch(() => "");
+            if (text && text.length < 150) errorMsg = text;
+          }
+        }
+        throw new Error(errorMsg);
       }
 
       const blob = await res.blob();

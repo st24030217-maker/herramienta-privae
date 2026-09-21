@@ -198,8 +198,19 @@ export function ToolLayout({
 
       if (!res.ok) {
         setErrorStatus(res.status);
-        const data = await res.json().catch(() => ({}));
-        throw new Error(data.error || "Ocurrió un error al procesar la imagen.");
+        let errorMsg = "Ocurrió un error al procesar la imagen.";
+        if (res.status === 413) {
+          errorMsg = `Tu archivo (${fileSizeMb} MB) supera el límite de 4.5 MB del servidor de Vercel. Por favor reduce o comprime un poco la imagen antes de procesarla.`;
+        } else {
+          try {
+            const data = await res.json();
+            if (data?.error) errorMsg = data.error;
+          } catch {
+            const text = await res.text().catch(() => "");
+            if (text && text.length < 150) errorMsg = text;
+          }
+        }
+        throw new Error(errorMsg);
       }
 
       const blob = await res.blob();
