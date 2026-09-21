@@ -376,14 +376,14 @@ export function DtfCanvas() {
         <div>
           <div className="flex items-center gap-3">
             <h1 className="text-2xl sm:text-3xl font-bold text-[#F3F4F6] tracking-tight">
-              Armador de Pliegos DTF
+              Armador de Metros DTF
             </h1>
             <span className="font-mono text-xs text-[#00A3FF] border border-[#00A3FF]/30 bg-[#00A3FF]/10 px-2.5 py-0.5 rounded">
-              BOBINA 58.0 CM — 300 DPI
+              METRO DE 58 CM — 300 DPI
             </span>
           </div>
           <p className="mt-1.5 text-xs sm:text-sm text-[#8E95A5]">
-            Distribuye tus artes a escala en centímetros y genera el archivo maestro listo para impresión.
+            Acomoda tus diseños en centímetros reales para aprovechar todo el metro y descargarlo listo para imprimir.
           </p>
         </div>
 
@@ -398,7 +398,7 @@ export function DtfCanvas() {
                   : "text-[#8E95A5] hover:text-[#F3F4F6]"
               }`}
             >
-              58 × 100 cm
+              58 × 100 cm (1 Metro)
             </button>
             <button
               onClick={() => setFormat("58x200")}
@@ -408,7 +408,7 @@ export function DtfCanvas() {
                   : "text-[#8E95A5] hover:text-[#F3F4F6]"
               }`}
             >
-              58 × 200 cm
+              58 × 200 cm (2 Metros)
             </button>
           </div>
 
@@ -421,15 +421,15 @@ export function DtfCanvas() {
                 ? "bg-[#00A3FF]/20 border-[#00A3FF] text-[#00A3FF] shadow-sm ring-1 ring-[#00A3FF]"
                 : "bg-[#0D0E11] border-[#20232A] text-[#8E95A5] hover:text-[#F3F4F6] hover:border-[#8E95A5]/40"
             }`}
-            title="Invierte todo el pliego horizontalmente (efecto espejo para impresión DTF)"
+            title="Voltea todo el metro al revés (modo espejo para imprimir directo)"
           >
             <FlipHorizontal className="h-4 w-4" />
-            <span>{mirrorAll ? "Espejo: ACTIVO" : "Espejar Pliego"}</span>
+            <span>{mirrorAll ? "Espejo: PUESTO" : "Modo Espejo"}</span>
           </button>
 
           {/* Medidor de Rendimiento de Bobina */}
           <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-[#0D0E11] border border-[#20232A] font-mono text-xs">
-            <span className="text-[#8E95A5]">Bobina:</span>
+            <span className="text-[#8E95A5]">Aprovechado:</span>
             <span className="font-bold text-[#F3F4F6]">{occupiedHeightCm.toFixed(1)} cm</span>
             <span className="text-[#8E95A5]">/ {canvasHeightCm} cm</span>
             <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
@@ -452,7 +452,7 @@ export function DtfCanvas() {
             ) : (
               <>
                 <Download className="h-5 w-5" />
-                <span>Exportar Pliego DTF</span>
+                <span>Descargar Metro DTF</span>
               </>
             )}
           </button>
@@ -499,7 +499,7 @@ export function DtfCanvas() {
         <div className="mb-4 rounded border border-[#00A3FF]/30 bg-[#00A3FF]/10 p-3 text-xs text-[#00A3FF] flex items-center justify-between gap-2 font-mono">
           <div className="flex items-center gap-2">
             <CheckCircle2 className="h-4 w-4 shrink-0" />
-            <span>Pliego DTF exportado con éxito a 300 DPI reales. ¡Tu descarga ha comenzado!</span>
+            <span>¡Metro DTF generado con éxito a 300 DPI reales! Tu descarga comenzó.</span>
           </div>
           <button
             onClick={() => setExportSuccess(false)}
@@ -518,20 +518,20 @@ export function DtfCanvas() {
           <div className="rounded-2xl border border-[#20232A] bg-[#16181D] p-5 shadow-sm">
             <div className="flex items-center justify-between mb-4">
               <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#8E95A5]">
-                Diseños en el Pliego ({designs.length})
+                Tus Diseños en el Metro ({designs.length})
               </span>
               <div className="flex items-center gap-2">
                 {designs.length > 0 && (
                   <button
                     onClick={() => {
-                      if (confirm("¿Deseas vaciar todo el pliego de diseño?")) {
+                      if (confirm("¿Deseas vaciar todo el metro de diseño?")) {
                         setDesigns([]);
                         setSelectedId(null);
                       }
                     }}
                     className="text-xs text-[#8E95A5] hover:text-red-400 font-mono transition-colors px-2 py-1 rounded"
                   >
-                    Vaciar pliego
+                    Borrar todo
                   </button>
                 )}
                 <button
@@ -539,7 +539,7 @@ export function DtfCanvas() {
                   className="inline-flex items-center gap-1.5 rounded-xl border border-[#00A3FF]/40 bg-[#00A3FF]/15 px-3.5 py-2 text-xs font-bold text-[#00A3FF] hover:bg-[#00A3FF]/25 transition-all shadow-sm active:scale-95"
                 >
                   <Plus className="h-4 w-4" />
-                  <span>Cargar artes</span>
+                  <span>Subir diseños</span>
                 </button>
               </div>
               <input
@@ -561,10 +561,10 @@ export function DtfCanvas() {
                   <Plus className="h-6 w-6" />
                 </div>
                 <span className="text-sm font-bold text-[#F3F4F6]">
-                  Haz clic para cargar imágenes
+                  Haz clic para subir imágenes
                 </span>
                 <span className="font-mono text-xs text-[#8E95A5] mt-1">
-                  O arrástralas directamente al lienzo de 58cm
+                  O arrástralas directo al metro de 58 cm
                 </span>
               </div>
             ) : (
@@ -627,7 +627,7 @@ export function DtfCanvas() {
             <div className="rounded-lg border border-[#20232A] bg-[#16181D] p-5 space-y-4">
               <div className="flex items-center justify-between border-b border-[#20232A] pb-3">
                 <h3 className="font-mono text-xs uppercase tracking-wider text-[#F3F4F6]">
-                  Cotas del Diseño
+                  Medidas del Diseño
                 </h3>
                 <span className="text-[11px] text-[#8E95A5] font-mono">
                   {selectedDesign.originalWidthPx} × {selectedDesign.originalHeightPx} px
@@ -637,17 +637,17 @@ export function DtfCanvas() {
               {/* Presets Textiles Rápidos y Accesibles */}
               <div className="space-y-2">
                 <span className="block text-xs font-mono text-[#8E95A5] uppercase tracking-wider">
-                  Medidas Estándar Textiles:
+                  Medidas Listas para Ropa:
                 </span>
                 <div className="flex flex-wrap gap-2">
                   {[
-                    { label: "Pectoral (10cm)", w: 10 },
-                    { label: "Pecho (20cm)", w: 20 },
-                    { label: "Frente A4 (21cm)", w: 21 },
-                    { label: "Frente A3 (28cm)", w: 28 },
-                    { label: "Espalda (32cm)", w: 32 },
-                    { label: "Manga (8cm)", w: 8 },
-                    { label: "Gorra (6cm)", w: 6 },
+                    { label: "Escudo / Pectoral (10 cm)", w: 10 },
+                    { label: "Pecho Mediano (20 cm)", w: 20 },
+                    { label: "Frente A4 (21 cm)", w: 21 },
+                    { label: "Frente Grande A3 (28 cm)", w: 28 },
+                    { label: "Espalda Completa (32 cm)", w: 32 },
+                    { label: "Manga (8 cm)", w: 8 },
+                    { label: "Gorra (6 cm)", w: 6 },
                   ].map((preset) => (
                     <button
                       key={preset.label}
@@ -706,7 +706,7 @@ export function DtfCanvas() {
 
                 <div>
                   <label className="block text-xs text-[#8E95A5] mb-1 font-mono">
-                    Posición X (cm):
+                    Mover Horizontal X (cm):
                   </label>
                   <input
                     type="number"
@@ -723,7 +723,7 @@ export function DtfCanvas() {
 
                 <div>
                   <label className="block text-xs text-[#8E95A5] mb-1 font-mono">
-                    Posición Y (cm):
+                    Mover Vertical Y (cm):
                   </label>
                   <input
                     type="number"
@@ -743,7 +743,7 @@ export function DtfCanvas() {
               <div className="pt-3 border-t border-[#20232A] space-y-3">
                 <div className="space-y-1.5">
                   <span className="text-xs font-mono text-[#8E95A5] uppercase tracking-wider block">
-                    Alineación Rápida:
+                    Acomodar Rápido:
                   </span>
                   <div className="grid grid-cols-3 gap-2">
                     <button
@@ -756,7 +756,7 @@ export function DtfCanvas() {
                       className="rounded-xl border border-[#20232A] bg-[#0D0E11] px-2.5 py-2 text-xs font-mono text-[#F3F4F6] hover:border-[#00A3FF] hover:text-[#00A3FF] hover:bg-[#00A3FF]/10 transition-all text-center"
                       title="Centrar en el ancho de 58 cm"
                     >
-                      Centrar X
+                      Centrar
                     </button>
                     <button
                       type="button"
@@ -764,7 +764,7 @@ export function DtfCanvas() {
                       className="rounded-xl border border-[#20232A] bg-[#0D0E11] px-2.5 py-2 text-xs font-mono text-[#F3F4F6] hover:border-[#00A3FF] hover:text-[#00A3FF] hover:bg-[#00A3FF]/10 transition-all text-center"
                       title="Alinear al margen izquierdo (1 cm)"
                     >
-                      Margen 1cm
+                      A la Izquierda
                     </button>
                     <button
                       type="button"
@@ -792,19 +792,19 @@ export function DtfCanvas() {
                           ? "border-[#00A3FF] bg-[#00A3FF]/15 text-[#00A3FF] ring-1 ring-[#00A3FF]"
                           : "border-[#20232A] bg-[#0D0E11] text-[#F3F4F6] hover:bg-[#20232A]"
                       }`}
-                      title="Espejar este diseño horizontalmente"
+                      title="Voltear diseño en modo espejo"
                     >
                       <FlipHorizontal className="h-4 w-4 text-[#00A3FF]" />
-                      <span>Espejo H</span>
+                      <span>Espejo</span>
                     </button>
                     <button
                       type="button"
                       onClick={() => handleDuplicate(selectedDesign.id)}
                       className="flex items-center gap-1.5 rounded-xl border border-[#20232A] bg-[#0D0E11] px-3.5 py-2 text-xs text-[#F3F4F6] hover:bg-[#20232A] font-semibold transition-all active:scale-95"
-                      title="Duplicar arte"
+                      title="Copiar diseño"
                     >
                       <Copy className="h-4 w-4 text-[#00A3FF]" />
-                      <span>Duplicar</span>
+                      <span>Copiar</span>
                     </button>
                     <button
                       type="button"
@@ -826,10 +826,10 @@ export function DtfCanvas() {
                   type="button"
                   onClick={handleGridFill}
                   className="w-full flex items-center justify-center gap-2 rounded-xl border border-[#00A3FF]/40 bg-[#00A3FF]/10 hover:bg-[#00A3FF]/20 px-3.5 py-2.5 text-xs text-[#00A3FF] font-bold transition-all active:scale-95"
-                  title="Multiplica y organiza automáticamente este arte para llenar toda la bobina"
+                  title="Multiplica y organiza automáticamente este arte para llenar todo el metro"
                 >
                   <Grid className="h-4 w-4" />
-                  <span>Llenar Pliego en Cuadrícula</span>
+                  <span>Llenar Todo el Metro con Copias</span>
                 </button>
               </div>
             </div>
@@ -845,12 +845,12 @@ export function DtfCanvas() {
         >
           <div className="mb-2 flex items-center justify-between bg-[#16181D] border border-[#20232A] px-4 py-2.5 rounded-t-xl text-xs text-[#8E95A5]">
             <div className="flex items-center gap-2">
-              <span className="font-semibold text-[#F3F4F6]">Lienzo de Montaje:</span>
+              <span className="font-semibold text-[#F3F4F6]">Tu Metro de Trabajo:</span>
               <span className="text-[#00A3FF] font-mono font-bold">
                 {canvasWidthCm} cm × {canvasHeightCm} cm
               </span>
               <span className="hidden sm:inline-block text-[#8E95A5]/60 text-[11px]">
-                (Gira con el mouse • Rueda del ratón: Zoom • Supr para eliminar)
+                (Arrastra con el mouse • Rueda: Zoom • Supr: Borrar)
               </span>
             </div>
 
@@ -907,8 +907,8 @@ export function DtfCanvas() {
             {isCanvasDragging && (
               <div className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-[#0D0E11]/80 backdrop-blur-sm pointer-events-none">
                 <UploadCloud className="h-12 w-12 text-[#00A3FF] animate-bounce mb-2" />
-                <p className="text-base font-bold text-white">Suelta tus diseños en el pliego</p>
-                <p className="font-mono text-xs text-[#8E95A5]">Se colocarán a escala real automáticamente</p>
+                <p className="text-base font-bold text-white">Suelta tus diseños en el metro</p>
+                <p className="font-mono text-xs text-[#8E95A5]">Se acomodan en medidas reales automáticamente</p>
               </div>
             )}
 

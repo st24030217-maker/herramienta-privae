@@ -86,21 +86,21 @@ export async function POST(req: NextRequest) {
       score -= 35;
       issues.push({
         id: "no-alpha",
-        title: "Fondo sólido detectado",
-        desc: "El diseño no tiene canal de transparencia real. La impresora DTF imprimirá un bloque rectangular blanco de fondo si no se elimina.",
+        title: "Tu imagen tiene fondo (no es transparente)",
+        desc: "Tu imagen tiene un fondo sólido (blanco, negro o de color). Si la imprimes así, saldrá un parche cuadrado blanco en la playera.",
         severity: "high",
         toolHref: "/tools/remove-bg",
-        toolAction: "Limpiar fondo ahora",
+        toolAction: "Quitar fondo ahora",
       });
     } else if (cornersOpaque >= 3 && transparentPercent < 15) {
       score -= 25;
       issues.push({
         id: "solid-corners",
-        title: "Posible fondo residual en esquinas",
-        desc: "Las esquinas del diseño contienen píxeles opacos. Es probable que contenga un marco o fondo indeseado.",
+        title: "Quedaron pedazos de fondo en las esquinas",
+        desc: "Las esquinas de tu imagen tienen color. Es muy probable que todavía tenga pedazos de fondo o un marco que debas borrar.",
         severity: "high",
         toolHref: "/tools/remove-bg",
-        toolAction: "Recortar silueta",
+        toolAction: "Borrar esquinas y fondo",
       });
     }
 
@@ -109,21 +109,21 @@ export async function POST(req: NextRequest) {
       score -= 25;
       issues.push({
         id: "high-semi-alpha",
-        title: `Peligro de tinta blanca: ${semiPercent}% de semitransparencias`,
-        desc: "Los softwares RIP para DTF generan base de tinta blanca en píxeles semitransparentes, creando halos lechosos o bordes manchados en la prenda.",
+        title: `Cuidado con la tinta blanca (${semiPercent}% de sombras)`,
+        desc: "Hay partes medio transparentes. La máquina DTF les pone base blanca y van a salir como plastas lechosas o sucias en la tela.",
         severity: "high",
         toolHref: "/tools/clean-alpha",
-        toolAction: "Depurar canal alfa",
+        toolAction: "Limpiar bordes y sombras",
       });
     } else if (semiPercent > 1) {
       score -= 10;
       issues.push({
         id: "mild-semi-alpha",
-        title: `Leve presencia de semitransparencias (${semiPercent}%)`,
-        desc: "Hay pequeños bordes difusos. Se recomienda filtrar el canal alfa para bordes más nítidos.",
+        title: `Bordes con sombras leves (${semiPercent}%)`,
+        desc: "Tiene orillas difusas. Conviene limpiarlas para que el contorno quede parejo y nítido.",
         severity: "medium",
         toolHref: "/tools/clean-alpha",
-        toolAction: "Optimizar bordes",
+        toolAction: "Limpiar bordes",
       });
     }
 
@@ -132,11 +132,11 @@ export async function POST(req: NextRequest) {
       score -= 20;
       issues.push({
         id: "low-resolution",
-        title: "Resolución baja para estampado textil",
-        desc: `Medidas actuales: ${width}×${height} px. A 300 DPI el tamaño máximo sin pixelar es de solo ${widthCmAt300Dpi} × ${heightCmAt300Dpi} cm.`,
+        title: "Imagen chica para estampar",
+        desc: `Tu imagen mide ${width}×${height} px. Para que no se pixelee, lo máximo que da a 300 DPI es ${widthCmAt300Dpi} × ${heightCmAt300Dpi} cm.`,
         severity: "medium",
         toolHref: "/tools/enhance",
-        toolAction: "Escalar 2X / 4X a 300 DPI",
+        toolAction: "Agrandar y dar nitidez",
       });
     }
 
@@ -145,11 +145,11 @@ export async function POST(req: NextRequest) {
       score -= 5;
       issues.push({
         id: "low-dpi-metadata",
-        title: `Metadato de resolución en ${density} DPI`,
-        desc: "El archivo no tiene fijada la etiqueta de 300 DPI en sus metadatos de impresión.",
+        title: `Calibración a 300 DPI recomendada`,
+        desc: "Tu archivo no tiene marcada la resolución de 300 DPI para que las máquinas de taller lo lean en automático.",
         severity: "low",
         toolHref: "/tools/enhance",
-        toolAction: "Fijar a 300 DPI",
+        toolAction: "Ajustar a 300 DPI",
       });
     }
 

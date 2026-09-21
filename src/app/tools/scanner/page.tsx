@@ -120,14 +120,14 @@ export default function DtfScannerPage() {
           <div>
             <div className="flex items-center gap-3">
               <h1 className="text-2xl sm:text-3xl font-bold text-[#F3F4F6] tracking-tight">
-                Escáner y Auditor DTF
+                Checador de Calidad DTF
               </h1>
               <span className="font-mono text-xs text-[#00A3FF] border border-[#00A3FF]/30 bg-[#00A3FF]/10 px-2.5 py-0.5 rounded">
-                SCORE DE PREPARACIÓN DTF
+                ESTADO DE TU DISEÑO
               </span>
             </div>
             <p className="mt-2 text-xs sm:text-sm text-[#8E95A5] max-w-3xl leading-relaxed">
-              Audita tus archivos antes de imprimir. Detecta semitransparencias que manchan con tinta blanca, comprueba el canal alfa real y calcula las dimensiones máximas recomendadas a 300 DPI.
+              Revisa de volada si tu diseño está listo para imprimir o si tiene problemas: fondos sin quitar, sombras que manchan con tinta blanca o baja calidad.
             </p>
           </div>
 
@@ -136,7 +136,7 @@ export default function DtfScannerPage() {
               onClick={handleReset}
               className="flex items-center gap-1.5 text-xs text-[#8E95A5] hover:text-[#F3F4F6] bg-[#16181D] border border-[#20232A] hover:border-[#8E95A5]/40 px-3 py-1.5 rounded transition-colors"
             >
-              <RefreshCw className="h-3.5 w-3.5" /> Analizar otro diseño
+              <RefreshCw className="h-3.5 w-3.5" /> Checar otro diseño
             </button>
           )}
         </div>
@@ -180,10 +180,10 @@ export default function DtfScannerPage() {
             <ScanSearch className="h-10 w-10" />
           </div>
           <h3 className="text-base font-bold text-[#F3F4F6]">
-            Arrastra aquí el arte a auditar o haz clic para explorar
+            Arrastra aquí tu diseño o haz clic para checarlo
           </h3>
           <p className="mt-2 text-xs text-[#8E95A5] max-w-md leading-relaxed">
-            Analizaremos en milisegundos si tiene canal alfa, halos de tinta blanca, resolución efectiva en cm y te daremos el Score DTF de 0 a 100.
+            Te diremos en segundos si está listo para imprimir, a qué tamaño rinde a 300 DPI y cómo arreglarlo con 1 clic.
           </p>
           <div className="mt-4 inline-flex items-center gap-2 rounded bg-[#20232A] px-3 py-1 font-mono text-[11px] text-[#8E95A5]">
             <span>Admite PNG, JPG, WEBP</span>
@@ -195,7 +195,7 @@ export default function DtfScannerPage() {
           <div className="space-y-6 lg:col-span-5">
             <div className="rounded-xl border border-[#20232A] bg-[#16181D] p-5">
               <div className="mb-3 flex items-center justify-between border-b border-[#20232A] pb-2 font-mono text-xs text-[#8E95A5]">
-                <span>VISTA PREVIA DEL ARTE</span>
+                <span>TU DISEÑO</span>
                 <span>{analysis?.fileSizeMb || (file.size / (1024 * 1024)).toFixed(2)} MB</span>
               </div>
 
@@ -224,7 +224,7 @@ export default function DtfScannerPage() {
             {analysis && (
               <div className="rounded-xl border border-[#20232A] bg-[#16181D] p-5 space-y-3">
                 <h3 className="font-mono text-xs uppercase tracking-wider text-[#8E95A5] flex items-center gap-1.5">
-                  <Maximize2 className="h-3.5 w-3.5 text-[#00A3FF]" /> Capacidad Física a 300 DPI Reales
+                  <Maximize2 className="h-3.5 w-3.5 text-[#00A3FF]" /> Tamaño Máximo Recomendado (300 DPI)
                 </h3>
 
                 <div className="grid grid-cols-2 gap-3 rounded-lg bg-[#0D0E11] p-3 border border-[#20232A] text-xs font-mono">
@@ -239,7 +239,7 @@ export default function DtfScannerPage() {
                 </div>
 
                 <p className="text-[11px] text-[#8E95A5] leading-relaxed">
-                  Si imprimes a un tamaño mayor a estos centímetros en tu bobina de 58cm, la calidad bajará de 300 DPI y podrá notarse pixelado.
+                  Si lo imprimes más grande que estas medidas en tu metro de 58 cm, se va a empezar a ver pixelado o borroso.
                 </p>
               </div>
             )}
@@ -250,8 +250,8 @@ export default function DtfScannerPage() {
             {loading ? (
               <div className="flex min-h-[400px] flex-col items-center justify-center rounded-xl border border-[#20232A] bg-[#16181D] p-8 text-center">
                 <Loader2 className="h-10 w-10 animate-spin text-[#00A3FF] mb-3" />
-                <h3 className="text-base font-bold text-white">Auditando píxeles y canal alfa...</h3>
-                <p className="font-mono text-xs text-[#8E95A5] mt-1">Calculando presencia de tinta blanca y densidad DPI</p>
+                <h3 className="text-base font-bold text-white">Revisando tu imagen...</h3>
+                <p className="font-mono text-xs text-[#8E95A5] mt-1">Buscando fondos, sombras y midiendo la nitidez</p>
               </div>
             ) : analysis ? (
               <>
@@ -277,19 +277,19 @@ export default function DtfScannerPage() {
                           analysis.status === "ready" ? "text-emerald-400" : analysis.status === "warning" ? "text-amber-400" : "text-red-400"
                         }`}>
                           {analysis.status === "ready"
-                            ? "Listo para Imprimir DTF"
+                            ? "¡Listo para Imprimir!"
                             : analysis.status === "warning"
-                            ? "Requiere Calibración Previa"
-                            : "Atención: No apto para impresión directa"}
+                            ? "Ojo: Necesita unos Arreglos"
+                            : "Cuidado: No lo imprimas así"}
                         </span>
                       </div>
                       <h2 className="text-2xl font-bold text-white tracking-tight">
-                        Score de Preparación: {analysis.score} / 100
+                        Calificación de tu Diseño: {analysis.score} de 100
                       </h2>
                       <p className="mt-1 text-xs text-[#8E95A5]">
                         {analysis.status === "ready"
-                          ? "El archivo cumple con los estándares de canal alfa, densidad y bordes limpios para impresión textil."
-                          : "Se detectaron factores que provocarán desperdicio de tinta o impresión defectuosa en taller si no se corrigen."}
+                          ? "Tu imagen no tiene fondos raros, no manchará con tinta blanca y saldrá nítida en la tela."
+                          : "Tu diseño tiene detalles que pueden arruinar tu playera o gastar tinta blanca innecesaria."}
                       </p>
                     </div>
 
@@ -309,24 +309,24 @@ export default function DtfScannerPage() {
                   {/* Barra de Distribución de Píxeles */}
                   <div className="mt-6 pt-5 border-t border-[#20232A]">
                     <div className="flex justify-between font-mono text-xs mb-2 text-[#8E95A5]">
-                      <span>Composición del Arte:</span>
-                      <span>{analysis.transparentPercent}% Transparente • {analysis.solidPercent}% Sólido • {analysis.semiPercent}% Semitransparente</span>
+                      <span>¿De qué está hecha tu imagen?</span>
+                      <span>{analysis.transparentPercent}% Fondo Libre • {analysis.solidPercent}% Color Firme • {analysis.semiPercent}% Sombras Raras</span>
                     </div>
                     <div className="flex h-3.5 w-full overflow-hidden rounded-lg bg-[#0D0E11] border border-[#20232A]">
                       <div
                         style={{ width: `${analysis.transparentPercent}%` }}
                         className="bg-[#20232A]"
-                        title={`Transparente: ${analysis.transparentPercent}%`}
+                        title={`Fondo libre: ${analysis.transparentPercent}%`}
                       />
                       <div
                         style={{ width: `${analysis.solidPercent}%` }}
                         className="bg-[#00A3FF]"
-                        title={`Sólido: ${analysis.solidPercent}%`}
+                        title={`Color firme: ${analysis.solidPercent}%`}
                       />
                       <div
                         style={{ width: `${analysis.semiPercent}%` }}
                         className="bg-amber-400 animate-pulse"
-                        title={`Semitransparente (Riesgo): ${analysis.semiPercent}%`}
+                        title={`Sombras raras (Riesgo): ${analysis.semiPercent}%`}
                       />
                     </div>
                   </div>
@@ -335,15 +335,15 @@ export default function DtfScannerPage() {
                 {/* Lista de Hallazgos y Acciones Recomendadas */}
                 <div className="rounded-2xl border border-[#20232A] bg-[#16181D] p-6 space-y-5 shadow-sm">
                   <h3 className="font-mono text-xs uppercase tracking-wider text-[#8E95A5] font-bold">
-                    Diagnóstico Forense ({analysis.issues.length} observaciones)
+                    ¿Qué le encontramos a tu diseño? ({analysis.issues.length} detalles)
                   </h3>
 
                   {analysis.issues.length === 0 ? (
                     <div className="flex items-center gap-4 rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-5 text-sm text-emerald-200">
                       <CheckCircle2 className="h-6 w-6 text-emerald-400 shrink-0" />
                       <div>
-                        <p className="font-bold text-base text-white">¡Tu archivo está perfectamente calibrado!</p>
-                        <p className="text-xs text-emerald-300/80 mt-0.5">Puedes enviarlo directamente al Armador de Pliegos DTF de 58cm.</p>
+                        <p className="font-bold text-base text-white">¡Tu diseño está al tiro para estampar!</p>
+                        <p className="text-xs text-emerald-300/80 mt-0.5">Pásalo directo a armar tus metros de 58 cm.</p>
                       </div>
                     </div>
                   ) : (
@@ -370,7 +370,7 @@ export default function DtfScannerPage() {
                               type="button"
                               onClick={() => handleFixIssue(issue.toolHref!)}
                               className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#00A3FF]/15 border border-[#00A3FF]/40 px-4 py-2.5 font-mono text-xs font-bold text-[#00A3FF] hover:bg-[#00A3FF] hover:text-white transition-all shrink-0 shadow-sm active:scale-95"
-                              title="Carga esta imagen automáticamente en la herramienta de reparación"
+                              title="Arregla esta imagen en 1 clic"
                             >
                               <span>{issue.toolAction}</span>
                               <ArrowRight className="h-4 w-4" />
@@ -388,7 +388,7 @@ export default function DtfScannerPage() {
                       className="inline-flex items-center gap-2.5 rounded-xl bg-[#00A3FF] hover:bg-[#00A3FF]/90 px-7 py-3 text-sm font-bold text-white transition-all shadow-lg active:scale-95 font-sans"
                     >
                       <Layers className="h-5 w-5" />
-                      <span>Ir a Armar en Pliego de 58 cm</span>
+                      <span>Armar en Metro de 58 cm</span>
                     </Link>
                   </div>
                 </div>

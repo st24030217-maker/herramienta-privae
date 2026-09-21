@@ -80,7 +80,7 @@ export function Navbar() {
   // Herramientas divididas a la izquierda y derecha del centro del Notch
   const leftNavItems: NotchNavItem[] = [
     { 
-      label: "Escáner DTF", 
+      label: "Checar Calidad", 
       href: "/tools/scanner", 
       icon: ScanSearch, 
       isActive: pathname === "/tools/scanner" 
@@ -92,7 +92,7 @@ export function Navbar() {
       isActive: pathname === "/tools/remove-bg" 
     },
     { 
-      label: "+Mejorar", 
+      label: "+Calidad", 
       href: "/tools/enhance", 
       icon: Sparkles, 
       isActive: pathname === "/tools/enhance" 
@@ -101,19 +101,19 @@ export function Navbar() {
 
   const rightNavItems: NotchNavItem[] = [
     { 
-      label: "Quitar Color", 
+      label: "Borrar Color", 
       href: "/tools/remove-color", 
       icon: Pipette, 
       isActive: pathname === "/tools/remove-color" 
     },
     { 
-      label: "Depurar Alfa", 
+      label: "Bordes Blancos", 
       href: "/tools/clean-alpha", 
       icon: Layers, 
       isActive: pathname === "/tools/clean-alpha" 
     },
     { 
-      label: "Armador 58cm", 
+      label: "Armar Metros", 
       href: "/tools/dtf-builder", 
       icon: LayoutGrid, 
       isActive: pathname === "/tools/dtf-builder",

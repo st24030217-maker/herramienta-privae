@@ -6,22 +6,22 @@ import { ShieldCheck, Layers, Sparkles } from "lucide-react";
 export default function RemoveBgPage() {
   return (
     <ToolLayout
-      title="Quitar Fondo (Depurar)"
-      description="Aísla el estampado textil eliminando fondos lisos, claros u oscuros con algoritmo Flood-Fill de bordes conectados que protege los detalles interiores de tu arte (como letras y ojos blancos). Salida certificada a 300 DPI."
-      badge="Transparencia Alfa DTF"
+      title="Quitar Fondo"
+      description="Borra fondos blancos, negros o lisos dejando tu diseño recortado y listo para estampar. Cuida tus letras y detalles interiores para que no se borren por error."
+      badge="Fondo Transparente"
       apiEndpoint="/api/process/remove-bg"
       renderControls={(_, setCustomParam, customParams) => (
         <div className="space-y-6">
-          {/* Selector de Fondo con Botones Grandes */}
+          {/* Selector de Fondo */}
           <div>
             <label className="block text-xs font-mono text-[#8E95A5] mb-2 uppercase tracking-wider">
-              1. Fondo a Depurar:
+              1. ¿Qué fondo tiene tu imagen?
             </label>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               {[
-                { id: "auto", title: "Automático (Muestreo)", desc: "Detecta bordes y fondo perimetral" },
-                { id: "white", title: "Quitar Fondo Blanco", desc: "Artes sobre fondo blanco / JPG común" },
-                { id: "black", title: "Quitar Fondo Negro", desc: "Siluetas y estampados oscuros" },
+                { id: "auto", title: "Automático", desc: "Detecta las orillas y el fondo solo" },
+                { id: "white", title: "Fondo Blanco", desc: "Para imágenes y JPGs con fondo blanco" },
+                { id: "black", title: "Fondo Negro", desc: "Para siluetas y diseños oscuros" },
               ].map((bg) => {
                 const isSelected = (customParams.bgType || "auto") === bg.id;
                 return (
@@ -46,20 +46,20 @@ export default function RemoveBgPage() {
           {/* Selector de Modo: Contiguo vs Global */}
           <div>
             <label className="block text-xs font-mono text-[#8E95A5] mb-2 uppercase tracking-wider">
-              2. Modo de Aislamiento Textil:
+              2. ¿Cómo quieres recortarlo?
             </label>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {[
                 {
                   id: "contiguous",
-                  title: "Fondo Exterior Contiguo (Recomendado)",
-                  desc: "Recorta desde el borde exterior. Protege detalles blancos o claros dentro del diseño.",
+                  title: "Solo por fuera (Recomendado)",
+                  desc: "Borra el fondo exterior y protege letras blancas, ojos o detalles de adentro.",
                   icon: ShieldCheck,
                 },
                 {
                   id: "global",
-                  title: "Todo el Lienzo (Purga Global)",
-                  desc: "Elimina el color objetivo en cualquier parte donde aparezca, interior o exterior.",
+                  title: "En toda la imagen",
+                  desc: "Borra ese color donde sea que aparezca, adentro o afuera.",
                   icon: Layers,
                 },
               ].map((m) => {
@@ -88,10 +88,10 @@ export default function RemoveBgPage() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-2 border-t border-[#20232A]">
-            {/* Sensibilidad */}
+            {/* Fuerza de recorte */}
             <div className="space-y-2">
               <div className="flex justify-between items-center text-xs font-mono">
-                <span className="text-[#8E95A5]">Sensibilidad de Recorte:</span>
+                <span className="text-[#8E95A5]">¿Qué tanto debe borrar? (Fuerza):</span>
                 <span className="text-sm font-bold text-[#00A3FF] bg-[#0D0E11] px-2.5 py-1 rounded border border-[#20232A]">
                   {customParams.sensitivity || 35}%
                 </span>
@@ -105,14 +105,14 @@ export default function RemoveBgPage() {
                 className="w-full h-2 rounded-lg bg-[#0D0E11] accent-[#00A3FF] cursor-pointer"
               />
               <span className="text-[11px] text-[#8E95A5]/80 block">
-                Aumenta si el fondo tiene sombras suaves o gradientes leves.
+                Súbelo si ves que todavía quedan manchas o sombras del fondo viejo.
               </span>
             </div>
 
-            {/* Suavizado */}
+            {/* Suavizado de orillas */}
             <div className="space-y-2">
               <div className="flex justify-between items-center text-xs font-mono">
-                <span className="text-[#8E95A5]">Suavizado de Contorno Alfa (Feather):</span>
+                <span className="text-[#8E95A5]">Suavizado de Orillas:</span>
                 <span className="text-sm font-bold text-[#00A3FF] bg-[#0D0E11] px-2.5 py-1 rounded border border-[#20232A]">
                   {customParams.featherRadius || 2} px
                 </span>
@@ -126,7 +126,7 @@ export default function RemoveBgPage() {
                 className="w-full h-2 rounded-lg bg-[#0D0E11] accent-[#00A3FF] cursor-pointer"
               />
               <span className="text-[11px] text-[#8E95A5]/80 block">
-                Suaviza el borde sin desenfocar los colores ni el texto del diseño.
+                Difumina un poquito el borde para que no se vea cortado con tijera.
               </span>
             </div>
           </div>

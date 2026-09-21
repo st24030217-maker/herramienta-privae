@@ -6,9 +6,9 @@ import { ShieldCheck, Sparkles, Minimize2, Trash2 } from "lucide-react";
 export default function CleanAlphaPage() {
   return (
     <ToolLayout
-      title="Depurar Semitransparencias (Cama Blanca DTF)"
-      description="Purga píxeles semitransparentes y halos lechosos que provocan depósitos sucios de tinta blanca en la tela. Incluye contracción de bordes (Choke 1-3 px) para evitar que la tinta blanca desborde los colores. Salida certificada a 300 DPI."
-      badge="Control Cama Blanca DTF"
+      title="Limpiar Bordes y Base Blanca"
+      description="Quita sombras transparentes y halos lechosos que manchan tu tela con tinta blanca. Encoge la base blanca (Choke 1 a 3 px) para que no se asome por debajo de los colores de tu diseño."
+      badge="Base Blanca Limpia"
       apiEndpoint="/api/process/clean-alpha"
       renderControls={(_, setCustomParam, customParams) => (
         <div className="space-y-6">
@@ -16,7 +16,7 @@ export default function CleanAlphaPage() {
             {/* Umbral Alpha */}
             <div className="space-y-2 p-4 rounded-xl border border-[#20232A] bg-[#0D0E11]">
               <div className="flex justify-between items-center text-xs font-mono">
-                <span className="text-[#8E95A5]">Umbral de Corte de Píxel Translúcido:</span>
+                <span className="text-[#8E95A5]">Limpieza de Sombras y Transparencias:</span>
                 <span className="text-sm font-bold text-[#00A3FF] bg-[#16181D] px-2.5 py-1 rounded border border-[#20232A]">
                   {customParams.threshold || 40} / 255
                 </span>
@@ -30,7 +30,7 @@ export default function CleanAlphaPage() {
                 className="w-full h-2 rounded-lg bg-[#16181D] accent-[#00A3FF] cursor-pointer mt-2"
               />
               <span className="text-[11px] text-[#8E95A5]/80 block">
-                Píxeles con opacidad menor a este valor se eliminan al 100% para evitar halos blancos lechosos.
+                Borra sombras o pixeles transparentes que hacen que la máquina pinte una plasta blanca alrededor.
               </span>
             </div>
 
@@ -38,7 +38,7 @@ export default function CleanAlphaPage() {
             <div className="space-y-2 p-4 rounded-xl border border-[#20232A] bg-[#0D0E11]">
               <div className="flex justify-between items-center text-xs font-mono">
                 <span className="text-[#8E95A5] flex items-center gap-1.5">
-                  <Minimize2 className="h-4 w-4 text-[#00A3FF]" /> Choke / Contraer Base Blanca:
+                  <Minimize2 className="h-4 w-4 text-[#00A3FF]" /> Encoger Base Blanca (Choke):
                 </span>
                 <span className="text-sm font-bold text-[#00A3FF] bg-[#16181D] px-2.5 py-1 rounded border border-[#20232A]">
                   {customParams.chokePixels || 0} px
@@ -46,10 +46,10 @@ export default function CleanAlphaPage() {
               </div>
               <div className="grid grid-cols-4 gap-2 mt-2">
                 {[
-                  { val: "0", label: "0 px", desc: "Sin choke" },
-                  { val: "1", label: "1 px", desc: "Sutil" },
+                  { val: "0", label: "0 px", desc: "Al ras" },
+                  { val: "1", label: "1 px", desc: "Ligero" },
                   { val: "2", label: "2 px", desc: "Recomendado" },
-                  { val: "3", label: "3 px", desc: "Firme" },
+                  { val: "3", label: "3 px", desc: "Más seguro" },
                 ].map((c) => {
                   const isSelected = String(customParams.chokePixels || "0") === c.val;
                   return (
@@ -70,7 +70,7 @@ export default function CleanAlphaPage() {
                 })}
               </div>
               <span className="text-[11px] text-[#8E95A5]/80 block">
-                Contrae el borde del canal alfa hacia adentro para evitar que la tinta blanca desborde bajo el color.
+                Mete la base blanca un poco hacia adentro para que no se vea el borde blanco salido al estampar.
               </span>
             </div>
           </div>
@@ -94,10 +94,10 @@ export default function CleanAlphaPage() {
               />
               <div className="space-y-0.5">
                 <span className="text-sm font-bold text-[#F3F4F6] flex items-center gap-1.5">
-                  <ShieldCheck className="h-4 w-4 text-[#00A3FF]" /> Base Sólida (100% Opacidad)
+                  <ShieldCheck className="h-4 w-4 text-[#00A3FF]" /> Base Blanca Sólida al 100%
                 </span>
                 <span className="text-[11px] text-[#8E95A5] block">
-                  Garantiza fondeado blanco opaco y uniforme en prendas oscuras.
+                  Asegura que los colores se vean vivos y no se transparenten en playeras negras u oscuras.
                 </span>
               </div>
             </label>
@@ -120,10 +120,10 @@ export default function CleanAlphaPage() {
               />
               <div className="space-y-0.5">
                 <span className="text-sm font-bold text-[#F3F4F6] flex items-center gap-1.5">
-                  <Sparkles className="h-4 w-4 text-[#00A3FF]" /> Suavizado de Contorno
+                  <Sparkles className="h-4 w-4 text-[#00A3FF]" /> Orillas Suaves al Tacto
                 </span>
                 <span className="text-[11px] text-[#8E95A5] block">
-                  Elimina el escalonado en curvas para acabado textil suave al tacto.
+                  Quita bordes pixelados o duros para que el estampado quede suave y limpio.
                 </span>
               </div>
             </label>
@@ -146,10 +146,10 @@ export default function CleanAlphaPage() {
               />
               <div className="space-y-0.5">
                 <span className="text-sm font-bold text-[#F3F4F6] flex items-center gap-1.5">
-                  <Trash2 className="h-4 w-4 text-[#00A3FF]" /> Purgar Motas Aisladas
+                  <Trash2 className="h-4 w-4 text-[#00A3FF]" /> Borrar Basuritas y Puntos Sueltos
                 </span>
                 <span className="text-[11px] text-[#8E95A5] block">
-                  Limpia partículas sueltas invisibles que ensucian la bobina en el RIP.
+                  Quita puntitos y manchas invisibles flotando que desperdician tinta o ensucian tu metro.
                 </span>
               </div>
             </label>

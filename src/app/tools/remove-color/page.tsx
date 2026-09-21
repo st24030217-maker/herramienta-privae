@@ -82,9 +82,9 @@ export default function RemoveColorPage() {
 
   return (
     <ToolLayout
-      title="Quitar Color (Tono Específico)"
-      description="Selecciona cualquier color de tu diseño (como fondos negros, fondos rojos o colores específicos) y conviértelo en transparencia limpia para impresión DTF. Incluye gotero universal y neutralizador de bordes."
-      badge="Gotero & Muestras Táctiles"
+      title="Borrar un Color Específico"
+      description="Toca con el gotero cualquier color de tu imagen (fondos negros, rojos o el color que quieras) para volverlo transparente al instante y dejarlo listo para imprimir."
+      badge="Gotero Directo"
       apiEndpoint="/api/process/remove-color"
       additionalFormData={(formData) => {
         const rgb = hexToRgb(selectedHex);
@@ -99,10 +99,10 @@ export default function RemoveColorPage() {
             <div className="p-4 rounded-xl border border-[#20232A] bg-[#0D0E11] space-y-3">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-mono font-bold text-[#00A3FF] uppercase tracking-wider flex items-center gap-1.5">
-                  <Crosshair className="h-4 w-4" /> Gotero Directo sobre tu Imagen:
+                  <Crosshair className="h-4 w-4" /> Toca tu imagen para elegir el color:
                 </span>
                 <span className="text-xs text-[#8E95A5]">
-                  Haz clic sobre el color que deseas quitar
+                  Haz clic en cualquier parte de la imagen para borrar ese color
                 </span>
               </div>
               <div className="relative overflow-hidden rounded-lg border border-[#20232A] bg-black/40 max-h-48 flex items-center justify-center">
@@ -112,7 +112,7 @@ export default function RemoveColorPage() {
                   alt="Muestra para gotero"
                   onClick={(e) => sampleColorFromImage(e, originalImage)}
                   className="max-h-48 object-contain cursor-crosshair hover:opacity-90 transition-opacity"
-                  title="Haz clic en cualquier punto para muestrear este color"
+                  title="Haz clic en cualquier punto para elegir este color"
                 />
               </div>
             </div>
@@ -121,7 +121,7 @@ export default function RemoveColorPage() {
           {/* ACCESOS DIRECTOS DE TALLER: NEGRO, ROJO Y BLANCO */}
           <div>
             <span className="text-xs font-mono font-bold text-[#F3F4F6] uppercase tracking-wider block mb-3">
-              ⚡ Colores de Taller Más Frecuentes (1 Clic):
+              ⚡ Borrar Colores Comunes (1 Clic):
             </span>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               {/* Botón Quitar Negro */}
@@ -137,7 +137,7 @@ export default function RemoveColorPage() {
                 <div className="flex items-center gap-3">
                   <span className="h-6 w-6 rounded-lg bg-black border-2 border-[#333] shadow-inner" />
                   <div className="text-left">
-                    <span className="font-bold text-sm text-[#F3F4F6] block">Quitar Negro</span>
+                    <span className="font-bold text-sm text-[#F3F4F6] block">Borrar Fondo Negro</span>
                     <span className="font-mono text-[11px] text-[#8E95A5]">#000000</span>
                   </div>
                 </div>
@@ -157,7 +157,7 @@ export default function RemoveColorPage() {
                 <div className="flex items-center gap-3">
                   <span className="h-6 w-6 rounded-lg bg-[#FF0000] border-2 border-red-400 shadow-inner" />
                   <div className="text-left">
-                    <span className="font-bold text-sm text-red-200 block">Quitar Rojo</span>
+                    <span className="font-bold text-sm text-red-200 block">Borrar Rojo</span>
                     <span className="font-mono text-[11px] text-red-300/80">#FF0000</span>
                   </div>
                 </div>
@@ -177,7 +177,7 @@ export default function RemoveColorPage() {
                 <div className="flex items-center gap-3">
                   <span className="h-6 w-6 rounded-lg bg-white border-2 border-gray-300 shadow-inner" />
                   <div className="text-left">
-                    <span className="font-bold text-sm text-[#F3F4F6] block">Quitar Blanco</span>
+                    <span className="font-bold text-sm text-[#F3F4F6] block">Borrar Fondo Blanco</span>
                     <span className="font-mono text-[11px] text-[#8E95A5]">#FFFFFF</span>
                   </div>
                 </div>
@@ -190,7 +190,7 @@ export default function RemoveColorPage() {
             {/* Muestra y Selector Hex/RGB */}
             <div className="space-y-2">
               <label className="block text-xs font-mono text-[#8E95A5] uppercase tracking-wider">
-                Color Objetivo Actual:
+                Color a Borrar:
               </label>
               <div className="flex items-center gap-3">
                 <input
@@ -198,7 +198,7 @@ export default function RemoveColorPage() {
                   value={selectedHex.startsWith("#") ? selectedHex : `#${selectedHex}`}
                   onChange={(e) => setSelectedHex(e.target.value)}
                   className="h-11 w-14 cursor-pointer rounded-xl border border-[#20232A] bg-[#0D0E11] p-1 shadow-sm"
-                  title="Abrir paleta"
+                  title="Abrir paleta de colores"
                 />
                 <input
                   type="text"
@@ -227,7 +227,7 @@ export default function RemoveColorPage() {
             {/* Tolerancia */}
             <div className="space-y-2">
               <div className="flex justify-between items-center text-xs font-mono">
-                <span className="text-[#8E95A5]">Tolerancia de Color:</span>
+                <span className="text-[#8E95A5]">Fuerza del Borrado (Tolerancia):</span>
                 <span className="text-sm font-bold text-[#00A3FF] bg-[#0D0E11] px-2.5 py-1 rounded border border-[#20232A]">
                   {customParams.tolerance || 30}%
                 </span>
@@ -241,14 +241,14 @@ export default function RemoveColorPage() {
                 className="w-full h-2 rounded-lg bg-[#0D0E11] accent-[#00A3FF] cursor-pointer mt-2"
               />
               <span className="text-[11px] text-[#8E95A5]/80 block">
-                Sube la tolerancia si quedan sombras o variaciones leves del color.
+                Sube este valor si todavía quedan sombras o rastros del color.
               </span>
             </div>
 
             {/* Suavizado */}
             <div className="space-y-2">
               <div className="flex justify-between items-center text-xs font-mono">
-                <span className="text-[#8E95A5]">Suavizado de Borde:</span>
+                <span className="text-[#8E95A5]">Suavizar Orillas:</span>
                 <span className="text-sm font-bold text-[#00A3FF] bg-[#0D0E11] px-2.5 py-1 rounded border border-[#20232A]">
                   {customParams.smoothness || 10}%
                 </span>
@@ -262,7 +262,7 @@ export default function RemoveColorPage() {
                 className="w-full h-2 rounded-lg bg-[#0D0E11] accent-[#00A3FF] cursor-pointer mt-2"
               />
               <span className="text-[11px] text-[#8E95A5]/80 block">
-                Atenúa los bordes para una transición suave sin halos duros.
+                Hace que el contorno no quede mordido ni con bordes duros.
               </span>
             </div>
           </div>
@@ -286,10 +286,10 @@ export default function RemoveColorPage() {
               />
               <div className="space-y-0.5">
                 <span className="text-sm font-bold text-[#F3F4F6] block flex items-center gap-1.5">
-                  <ShieldCheck className="h-4 w-4 text-[#00A3FF]" /> Solo Exterior (Contiguo)
+                  <ShieldCheck className="h-4 w-4 text-[#00A3FF]" /> Solo el Fondo de Afuera
                 </span>
                 <span className="text-[11px] text-[#8E95A5] block">
-                  Protege los elementos del mismo color que estén dentro del arte (ej: ojos o letras).
+                  Protege lo que esté adentro de tu diseño (como ojos o letras) para no borrarlo por accidente.
                 </span>
               </div>
             </label>
@@ -311,10 +311,10 @@ export default function RemoveColorPage() {
               />
               <div className="space-y-0.5">
                 <span className="text-sm font-bold text-[#F3F4F6] block flex items-center gap-1.5">
-                  <Sparkles className="h-4 w-4 text-[#00A3FF]" /> De-fringe (Neutralizar Flecos)
+                  <Sparkles className="h-4 w-4 text-[#00A3FF]" /> Limpiar Flecos en la Orilla
                 </span>
                 <span className="text-[11px] text-[#8E95A5] block">
-                  Elimina la contaminación lumínica del color purgado en el contorno del diseño.
+                  Quita el halo o resplandor del color que acabas de borrar para que no queden orillas manchadas.
                 </span>
               </div>
             </label>

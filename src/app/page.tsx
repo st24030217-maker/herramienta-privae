@@ -16,9 +16,9 @@ export default function HomePage() {
   const prepTools = [
     {
       id: "remove-bg",
-      name: "Quitar Fondo (Depurar)",
-      spec: "Transparencia 300 DPI",
-      desc: "Aísla el diseño y siluetas con recorte limpio y preservación de transparencias reales para DTF.",
+      name: "Quitar Fondo",
+      spec: "Fondo transparente",
+      desc: "Borra el fondo de tu imagen sin llevarte las letras blancas ni los detalles de adentro del diseño.",
       href: "/tools/remove-bg",
       icon: Scissors,
       action: "Quitar fondo",
@@ -26,29 +26,29 @@ export default function HomePage() {
     {
       id: "enhance",
       name: "+Mejorar Calidad",
-      spec: "Ultra Resolución 300 DPI",
-      desc: "Multiplica la resolución a 2X y 4X con nitidez y máscara de enfoque sin alterar geometrías.",
+      spec: "Sube a 300 DPI",
+      desc: "Multiplica la nitidez a 2X y 4X para que tus fotos y logos no salgan borrosos ni pixelados en la tela.",
       href: "/tools/enhance",
       icon: Sparkles,
-      action: "+Mejorar calidad",
+      action: "Mejorar nitidez",
     },
     {
       id: "remove-color",
-      name: "Quitar Color (Tono Específico)",
-      spec: "Gotero & Negro / Rojo",
-      desc: "Retira un color exacto o tonos difíciles (negro, rojo, blanco) con tolerancia y suavizado de borde.",
+      name: "Borrar un Color Específico",
+      spec: "Con gotero directo",
+      desc: "Toca con el gotero cualquier color que te estorbe (fondos negros, rojos o blancos) para volverlo transparente.",
       href: "/tools/remove-color",
       icon: Pipette,
-      action: "Quitar color",
+      action: "Borrar color",
     },
     {
       id: "clean-alpha",
-      name: "Depurar Semitransparencias",
-      spec: "Control Cama Blanca DTF",
-      desc: "Purga halos translúcidos para evitar depósitos lechosos o sucios de tinta blanca en la tela.",
+      name: "Limpiar Bordes Blancos",
+      spec: "Sin manchas de tinta",
+      desc: "Elimina sombras transparentes y halos lechosos para que la base blanca no se asome por los lados.",
       href: "/tools/clean-alpha",
       icon: Layers,
-      action: "Comparar y depurar",
+      action: "Limpiar bordes",
     },
   ];
 
@@ -60,13 +60,13 @@ export default function HomePage() {
           <div>
             <div className="flex items-center gap-2 mb-2 font-mono text-xs text-[#00A3FF]">
               <span className="inline-block h-2 w-2 rounded-full bg-[#00A3FF]"></span>
-              <span>TALLER DIGITAL DTF ACTIVO</span>
+              <span>TALLER DTF LISTO</span>
             </div>
             <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#F3F4F6]">
-              Consola de Preparación Textil DTF
+              Prepara tus Diseños para DTF
             </h1>
             <p className="mt-2 text-sm text-[#8E95A5] max-w-2xl leading-relaxed">
-              Suite integral para auditar archivos, calibrar transparencias, cotizar precios y armar pliegos continuos de impresión textil a 300 DPI reales.
+              Todo lo que necesitas para dejar tus archivos listos para imprimir: quita fondos, mejora la calidad, checa errores y arma tus pliegos por metro a 300 DPI reales.
             </p>
           </div>
 
@@ -78,30 +78,30 @@ export default function HomePage() {
             </div>
             <div className="h-6 w-px bg-[#20232A]" />
             <div>
-              <span className="text-[#8E95A5]/60 block text-[10px]">DENSIDAD</span>
+              <span className="text-[#8E95A5]/60 block text-[10px]">RESOLUCIÓN</span>
               <span className="text-[#F3F4F6] font-semibold">300 DPI</span>
             </div>
             <div className="h-6 w-px bg-[#20232A]" />
             <div>
-              <span className="text-[#8E95A5]/60 block text-[10px]">AUDITORÍA</span>
-              <span className="text-[#00A3FF] font-semibold">Score DTF en Vivo</span>
+              <span className="text-[#8E95A5]/60 block text-[10px]">CALIFICACIÓN</span>
+              <span className="text-[#00A3FF] font-semibold">Semáforo DTF</span>
             </div>
           </div>
         </div>
       </section>
 
-      {/* SECCIÓN 1: AUDITORÍA FORENSE DTF (Escáner & Diagnóstico) */}
+      {/* SECCIÓN 1: CHECADOR DE CALIDAD DTF */}
       <section>
         <div className="mb-4 flex items-center justify-between border-b border-[#20232A] pb-2">
           <h3 className="font-mono text-xs uppercase tracking-wider text-[#00A3FF] font-semibold flex items-center gap-2">
-            <span>Auditoría de Archivos y Diagnóstico Forense</span>
+            <span>Checador de Calidad (Revisión antes de imprimir)</span>
           </h3>
           <span className="font-mono text-xs text-[#8E95A5]/60">
-            Prevención de errores de impresión en bobina
+            Evita echar a perder film o desperdiciar tinta
           </span>
         </div>
 
-        {/* Tarjeta Escáner DTF a Ancho Completo con GlareCard */}
+        {/* Tarjeta Escáner DTF con GlareCard */}
         <GlareCard glareColor="cyan" className="p-6 lg:p-7">
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
             <div className="flex-1">
@@ -112,20 +112,20 @@ export default function HomePage() {
                 <div>
                   <div className="flex items-center gap-2">
                     <h3 className="text-xl font-bold text-white tracking-tight">
-                      Escáner y Auditor de Calidad DTF
+                      Revisar si tu Diseño está Listo para DTF
                     </h3>
                     <span className="font-mono text-xs text-emerald-400 border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 rounded">
-                      SCORE 0-100%
+                      CALIFICACIÓN 0-100%
                     </span>
                   </div>
                   <span className="font-mono text-xs text-[#8E95A5]">
-                    Inspección de canal alfa • Detección de halos de tinta blanca • Medidas a 300 DPI
+                    Checa si el fondo es transparente • Alerta de bordes blancos raros • Calcula medidas reales
                   </span>
                 </div>
               </div>
 
               <p className="mt-3 text-xs text-[#8E95A5] max-w-2xl leading-relaxed">
-                Examina tu diseño antes de imprimir. El escáner detecta píxeles semitransparentes que causan acumulación irregular de tinta blanca en el software RIP, verifica si el fondo es 100% transparente y calcula las dimensiones físicas máximas recomendadas sin pérdida de resolución.
+                Sube tu imagen y te decimos de volada si está lista: revisa si el fondo quedó 100% limpio, te avisa si hay manchas que harían salir tinta blanca de más, y te calcula el tamaño máximo en centímetros para que tu estampado se vea clarito y no pixeleado.
               </p>
             </div>
 
@@ -136,43 +136,43 @@ export default function HomePage() {
                 size="lg"
                 icon={<ScanSearch className="h-4 w-4" />}
               >
-                Escanear archivo ahora
+                Revisar mi diseño ahora
               </CornerButton>
             </div>
           </div>
         </GlareCard>
       </section>
 
-      {/* SECCIÓN 2: ESTACIÓN CENTRAL: Armador de Pliegos DTF */}
+      {/* SECCIÓN 2: ARMADOR DE PLIEGOS */}
       <section>
         <GlareCard glareColor="white" className="p-6 lg:p-8">
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
             <div className="flex-1">
               <div className="flex items-center gap-2.5 mb-2">
                 <span className="font-mono text-xs text-[#00A3FF] border border-[#00A3FF]/30 px-2 py-0.5 rounded bg-[#00A3FF]/10 font-semibold">
-                  ESTACIÓN CENTRAL DE PRODUCCIÓN
+                  MÓDULO PRINCIPAL
                 </span>
                 <span className="font-mono text-xs text-[#8E95A5]">
-                  580 × 1000 mm / 580 × 2000 mm
+                  Pliegos de 58 × 100 cm y 58 × 200 cm
                 </span>
               </div>
 
               <h2 className="text-xl sm:text-2xl font-bold text-[#F3F4F6] tracking-tight">
-                Armador de Pliegos DTF (58 cm)
+                Armar mi Metro DTF (Bobina de 58 cm)
               </h2>
               <p className="mt-2 text-sm text-[#8E95A5] max-w-2xl leading-relaxed">
-                Distribuye múltiples diseños en un lienzo calibrado con cotas en centímetros reales. Incluye soporte de Drag & Drop directo, presets textiles (Pectoral, A4, A3, Espalda) y exportación en PNG a 300 DPI reales.
+                Acomoda varios diseños en un solo lienzo de 58 cm de ancho. Arrastra tus imágenes, duplica para llenar el metro con 1 clic, usa medidas estándar para ropa (pecho, espalda, gorras) y descarga tu archivo listo para mandar a la máquina.
               </p>
 
               <div className="mt-4 flex flex-wrap gap-2 text-xs font-mono text-[#8E95A5]">
                 <span className="rounded bg-[#0D0E11] border border-[#20232A] px-2.5 py-1">
-                  Formatos: 58×100 cm y 58×200 cm
+                  Formatos: 1 metro (58×100 cm) y 2 metros (58×200 cm)
                 </span>
                 <span className="rounded bg-[#0D0E11] border border-[#20232A] px-2.5 py-1">
-                  Arrastre directo al lienzo
+                  Arrastra y acomoda libremente
                 </span>
                 <span className="rounded bg-[#0D0E11] border border-[#20232A] px-2.5 py-1">
-                  Presets textiles estándar (Pectoral, A4, A3)
+                  Medidas listas: Pecho, A4, A3, Espalda, Gorra
                 </span>
               </div>
             </div>
@@ -184,21 +184,21 @@ export default function HomePage() {
                 size="lg"
                 icon={<LayoutGrid className="h-4 w-4 text-[#0D0E11]" />}
               >
-                Armar pliego de 58 cm
+                Armar mi metro DTF
               </CornerButton>
             </div>
           </div>
         </GlareCard>
       </section>
 
-      {/* SECCIÓN 3: MÓDULOS DE CALIBRACIÓN Y PRE-PRENSA */}
+      {/* SECCIÓN 3: HERRAMIENTAS RÁPIDAS PARA TUS DISEÑOS */}
       <section>
         <div className="mb-4 flex items-center justify-between border-b border-[#20232A] pb-2">
           <h3 className="font-mono text-xs uppercase tracking-wider text-[#8E95A5]">
-            Módulos Individuales de Pre-Prensa
+            Herramientas Rápidas para tus Diseños
           </h3>
           <span className="font-mono text-xs text-[#8E95A5]/60">
-            4 utilidades especializadas
+            4 opciones para dejar tus archivos al tiro
           </span>
         </div>
 
