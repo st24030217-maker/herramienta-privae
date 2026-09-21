@@ -9,6 +9,7 @@ import {
   ArrowRight,
   ShieldCheck
 } from "lucide-react";
+import { CornerButton } from "@/components/ui/corner-button";
 
 export default function HomePage() {
   const prepTools = [
@@ -127,14 +128,15 @@ export default function HomePage() {
               </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row lg:flex-col gap-3 shrink-0">
-              <Link
+            <div className="flex flex-col sm:flex-row lg:flex-col gap-3 shrink-0 items-start">
+              <CornerButton
                 href="/tools/scanner"
-                className="inline-flex items-center justify-center gap-2.5 rounded-xl bg-[#00A3FF] px-7 py-3.5 text-sm font-bold text-white hover:bg-[#00A3FF]/90 active:scale-95 transition-all shadow-lg font-sans text-center"
+                variant="cyan"
+                size="lg"
+                icon={<ScanSearch className="h-4 w-4" />}
               >
-                <ScanSearch className="h-4 w-4" />
-                <span>Escanear archivo ahora</span>
-              </Link>
+                Escanear archivo ahora
+              </CornerButton>
             </div>
           </div>
         </div>
@@ -174,14 +176,15 @@ export default function HomePage() {
               </div>
             </div>
 
-            <div className="flex flex-col sm:flex-row lg:flex-col gap-3 shrink-0">
-              <Link
+            <div className="flex flex-col sm:flex-row lg:flex-col gap-3 shrink-0 items-start">
+              <CornerButton
                 href="/tools/dtf-builder"
-                className="inline-flex items-center justify-center gap-2.5 rounded-xl bg-[#F3F4F6] px-7 py-3.5 text-sm font-bold text-[#0D0E11] hover:bg-white active:scale-95 transition-all text-center shadow-lg"
+                variant="white"
+                size="lg"
+                icon={<LayoutGrid className="h-4 w-4 text-[#0D0E11]" />}
               >
-                <LayoutGrid className="h-4 w-4" />
-                <span>Armar pliego de 58 cm</span>
-              </Link>
+                Armar pliego de 58 cm
+              </CornerButton>
             </div>
           </div>
         </div>
@@ -225,13 +228,16 @@ export default function HomePage() {
                 </div>
 
                 <div className="mt-5 pt-3 border-t border-[#20232A]">
-                  <Link
+                  <CornerButton
                     href={tool.href}
-                    className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[#20232A] bg-[#0D0E11] py-2.5 px-4 text-xs font-bold text-[#F3F4F6] hover:bg-[#20232A] hover:border-[#00A3FF]/40 active:scale-95 transition-all"
+                    variant="dark"
+                    size="sm"
+                    className="w-full"
+                    wrapperClassName="w-full"
+                    icon={<ArrowRight className="h-3.5 w-3.5 text-[#00A3FF]" />}
                   >
-                    <span>{tool.action}</span>
-                    <ArrowRight className="h-3.5 w-3.5 text-[#00A3FF]" />
-                  </Link>
+                    {tool.action}
+                  </CornerButton>
                 </div>
               </div>
             );
