@@ -9,6 +9,12 @@ export interface DTFItem {
   rotation?: number; // Grados (0, 90, 180, 270, etc.)
   flipH?: boolean;   // Espejo horizontal
   flipV?: boolean;   // Espejo vertical
+  crop?: {
+    top: number;
+    right: number;
+    bottom: number;
+    left: number;
+  };
 }
 
 export interface ComposeDTFOptions {
@@ -57,6 +63,39 @@ export async function composeDTFCanvas(options: ComposeDTFOptions): Promise<Buff
     }
 
     let processedItem = sharp(item.imageBuffer).ensureAlpha();
+
+    // Recortar espacio restante si se especificó crop
+    if (
+      item.crop &&
+      (item.crop.top > 0 || item.crop.bottom > 0 || item.crop.left > 0 || item.crop.right > 0)
+    ) {
+      const meta = await sharp(item.imageBuffer).metadata();
+      if (meta.width && meta.height) {
+        const cropLeftPx = Math.max(0, Math.round(meta.width * Math.max(0, item.crop.left)));
+        const cropTopPx = Math.max(0, Math.round(meta.height * Math.max(0, item.crop.top)));
+        const cropWidthPx = Math.max(
+          1,
+          Math.min(
+            meta.width - cropLeftPx,
+            Math.round(meta.width * Math.max(0.01, 1 - item.crop.left - item.crop.right))
+          )
+        );
+        const cropHeightPx = Math.max(
+          1,
+          Math.min(
+            meta.height - cropTopPx,
+            Math.round(meta.height * Math.max(0.01, 1 - item.crop.top - item.crop.bottom))
+          )
+        );
+
+        processedItem = processedItem.extract({
+          left: cropLeftPx,
+          top: cropTopPx,
+          width: cropWidthPx,
+          height: cropHeightPx,
+        });
+      }
+    }
 
     // Rotación
     if (item.rotation && item.rotation !== 0) {

@@ -21,7 +21,9 @@ import {
   Minimize2,
   FlipHorizontal,
   Grid,
-  Sparkles
+  Sparkles,
+  Scissors,
+  RotateCcw
 } from "lucide-react";
 
 export interface CanvasDesign {
@@ -38,6 +40,12 @@ export interface CanvasDesign {
   flipH?: boolean;   // espejo horizontal
   flipV?: boolean;   // espejo vertical
   aspectRatio: number;
+  crop?: {
+    top: number;
+    right: number;
+    bottom: number;
+    left: number;
+  };
 }
 
 export function DtfCanvas() {
@@ -52,6 +60,7 @@ export function DtfCanvas() {
   const [exportSuccess, setExportSuccess] = useState<boolean>(false);
   const [isCanvasDragging, setIsCanvasDragging] = useState<boolean>(false);
   const [isCanvasFullscreen, setIsCanvasFullscreen] = useState<boolean>(false);
+  const [autoCroppingId, setAutoCroppingId] = useState<string | null>(null);
 
   const canvasContainerRef = useRef<HTMLDivElement>(null);
   const canvasWrapperRef = useRef<HTMLDivElement>(null);
@@ -454,6 +463,310 @@ export function DtfCanvas() {
     window.addEventListener("touchend", onPointerEnd);
   };
 
+  type CropEdge = "top" | "bottom" | "left" | "right";
+
+  // Arrastre interactivo de las barras entre los puntos para recortar espacio restante
+  const handleCropStart = (
+    e: React.MouseEvent | React.TouchEvent,
+    design: CanvasDesign,
+    edge: CropEdge
+  ) => {
+    e.stopPropagation();
+    e.preventDefault();
+    setSelectedId(design.id);
+
+    const isTouch = "touches" in e;
+    const startX = isTouch ? e.touches[0].clientX : e.clientX;
+    const startY = isTouch ? e.touches[0].clientY : e.clientY;
+
+    const startDesignX = design.xCm;
+    const startDesignY = design.yCm;
+    const startWidthCm = design.widthCm;
+    const startHeightCm = design.heightCm;
+    const startCrop = design.crop || { top: 0, right: 0, bottom: 0, left: 0 };
+
+    const uncroppedWidthCm = startWidthCm / Math.max(0.01, 1 - startCrop.left - startCrop.right);
+    const uncroppedHeightCm = startHeightCm / Math.max(0.01, 1 - startCrop.top - startCrop.bottom);
+
+    const handlePointerMove = (clientX: number, clientY: number) => {
+      const screenDeltaXCm = (clientX - startX) / pxPerCm;
+      const screenDeltaYCm = (clientY - startY) / pxPerCm;
+
+      // Compensar orientación por rotación
+      const rad = (-design.rotation * Math.PI) / 180;
+      const localDeltaX = screenDeltaXCm * Math.cos(rad) - screenDeltaYCm * Math.sin(rad);
+      const localDeltaY = screenDeltaXCm * Math.sin(rad) + screenDeltaYCm * Math.cos(rad);
+
+      let newCrop = { ...startCrop };
+      let newWidthCm = startWidthCm;
+      let newHeightCm = startHeightCm;
+      let newX = startDesignX;
+      let newY = startDesignY;
+
+      const rotRad = (design.rotation * Math.PI) / 180;
+
+      if (edge === "left") {
+        const deltaCrop = localDeltaX / uncroppedWidthCm;
+        const maxCropLeft = 1 - startCrop.right - (1 / uncroppedWidthCm);
+        const cropLeft = Math.max(0, Math.min(maxCropLeft, startCrop.left + deltaCrop));
+        const actualDeltaCrop = cropLeft - startCrop.left;
+        const deltaWCm = actualDeltaCrop * uncroppedWidthCm;
+        newWidthCm = Math.max(1, startWidthCm - deltaWCm);
+
+        const dispCanvasX = deltaWCm * Math.cos(rotRad);
+        const dispCanvasY = deltaWCm * Math.sin(rotRad);
+        newX = startDesignX + dispCanvasX;
+        newY = startDesignY + dispCanvasY;
+        newCrop.left = parseFloat(cropLeft.toFixed(4));
+      } else if (edge === "right") {
+        const deltaCrop = -localDeltaX / uncroppedWidthCm;
+        const maxCropRight = 1 - startCrop.left - (1 / uncroppedWidthCm);
+        const cropRight = Math.max(0, Math.min(maxCropRight, startCrop.right + deltaCrop));
+        const actualDeltaCrop = cropRight - startCrop.right;
+        const deltaWCm = actualDeltaCrop * uncroppedWidthCm;
+        newWidthCm = Math.max(1, startWidthCm - deltaWCm);
+        newCrop.right = parseFloat(cropRight.toFixed(4));
+      } else if (edge === "top") {
+        const deltaCrop = localDeltaY / uncroppedHeightCm;
+        const maxCropTop = 1 - startCrop.bottom - (1 / uncroppedHeightCm);
+        const cropTop = Math.max(0, Math.min(maxCropTop, startCrop.top + deltaCrop));
+        const actualDeltaCrop = cropTop - startCrop.top;
+        const deltaHCm = actualDeltaCrop * uncroppedHeightCm;
+        newHeightCm = Math.max(1, startHeightCm - deltaHCm);
+
+        const dispCanvasX = -deltaHCm * Math.sin(rotRad);
+        const dispCanvasY = deltaHCm * Math.cos(rotRad);
+        newX = startDesignX + dispCanvasX;
+        newY = startDesignY + dispCanvasY;
+        newCrop.top = parseFloat(cropTop.toFixed(4));
+      } else if (edge === "bottom") {
+        const deltaCrop = -localDeltaY / uncroppedHeightCm;
+        const maxCropBottom = 1 - startCrop.top - (1 / uncroppedHeightCm);
+        const cropBottom = Math.max(0, Math.min(maxCropBottom, startCrop.bottom + deltaCrop));
+        const actualDeltaCrop = cropBottom - startCrop.bottom;
+        const deltaHCm = actualDeltaCrop * uncroppedHeightCm;
+        newHeightCm = Math.max(1, startHeightCm - deltaHCm);
+        newCrop.bottom = parseFloat(cropBottom.toFixed(4));
+      }
+
+      const finalWCm = parseFloat(newWidthCm.toFixed(2));
+      const finalHCm = parseFloat(newHeightCm.toFixed(2));
+      const finalX = parseFloat(newX.toFixed(2));
+      const finalY = parseFloat(newY.toFixed(2));
+
+      setDesigns((prev) =>
+        prev.map((d) =>
+          d.id === design.id
+            ? {
+                ...d,
+                crop: newCrop,
+                widthCm: finalWCm,
+                heightCm: finalHCm,
+                xCm: finalX,
+                yCm: finalY,
+                aspectRatio: finalWCm / finalHCm,
+              }
+            : d
+        )
+      );
+    };
+
+    const onMouseMove = (moveEvent: MouseEvent) => {
+      handlePointerMove(moveEvent.clientX, moveEvent.clientY);
+    };
+
+    const onTouchMove = (moveEvent: TouchEvent) => {
+      if (moveEvent.touches.length > 0) {
+        moveEvent.preventDefault();
+        handlePointerMove(moveEvent.touches[0].clientX, moveEvent.touches[0].clientY);
+      }
+    };
+
+    const onPointerEnd = () => {
+      window.removeEventListener("mousemove", onMouseMove);
+      window.removeEventListener("mouseup", onPointerEnd);
+      window.removeEventListener("touchmove", onTouchMove);
+      window.removeEventListener("touchend", onPointerEnd);
+    };
+
+    window.addEventListener("mousemove", onMouseMove);
+    window.addEventListener("mouseup", onPointerEnd);
+    window.addEventListener("touchmove", onTouchMove, { passive: false });
+    window.addEventListener("touchend", onPointerEnd);
+  };
+
+  // Detección automática de límites de contenido no transparente
+  const detectImageContentBounds = async (
+    imageUrl: string
+  ): Promise<{ top: number; right: number; bottom: number; left: number } | null> => {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.crossOrigin = "anonymous";
+      img.onload = () => {
+        try {
+          const maxDim = 400;
+          const scale = Math.min(1, maxDim / Math.max(img.naturalWidth, img.naturalHeight));
+          const w = Math.max(1, Math.round(img.naturalWidth * scale));
+          const h = Math.max(1, Math.round(img.naturalHeight * scale));
+
+          const canvas = document.createElement("canvas");
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext("2d", { willReadFrequently: true });
+          if (!ctx) {
+            resolve(null);
+            return;
+          }
+
+          ctx.drawImage(img, 0, 0, w, h);
+          const imgData = ctx.getImageData(0, 0, w, h);
+          const data = imgData.data;
+
+          let minX = w;
+          let maxX = -1;
+          let minY = h;
+          let maxY = -1;
+
+          for (let y = 0; y < h; y++) {
+            const rowOffset = y * w * 4;
+            for (let x = 0; x < w; x++) {
+              const alpha = data[rowOffset + x * 4 + 3];
+              if (alpha > 12) {
+                if (x < minX) minX = x;
+                if (x > maxX) maxX = x;
+                if (y < minY) minY = y;
+                if (y > maxY) maxY = y;
+              }
+            }
+          }
+
+          if (maxX === -1) {
+            resolve(null);
+            return;
+          }
+
+          minX = Math.max(0, minX - 1);
+          minY = Math.max(0, minY - 1);
+          maxX = Math.min(w - 1, maxX + 1);
+          maxY = Math.min(h - 1, maxY + 1);
+
+          const left = minX / w;
+          const right = (w - 1 - maxX) / w;
+          const top = minY / h;
+          const bottom = (h - 1 - maxY) / h;
+
+          resolve({
+            left: parseFloat(left.toFixed(4)),
+            right: parseFloat(right.toFixed(4)),
+            top: parseFloat(top.toFixed(4)),
+            bottom: parseFloat(bottom.toFixed(4)),
+          });
+        } catch {
+          resolve(null);
+        }
+      };
+      img.onerror = () => resolve(null);
+      img.src = imageUrl;
+    });
+  };
+
+  // Recorte automático de espacio restante transparente
+  const handleAutoCrop = async (id: string) => {
+    const target = designs.find((d) => d.id === id);
+    if (!target) return;
+    setAutoCroppingId(id);
+
+    try {
+      const bounds = await detectImageContentBounds(target.previewUrl);
+      if (!bounds) {
+        alert("No se detectaron márgenes transparentes en esta imagen.");
+        return;
+      }
+
+      if (bounds.left < 0.005 && bounds.right < 0.005 && bounds.top < 0.005 && bounds.bottom < 0.005) {
+        alert("Este diseño ya está al ras de sus bordes, no tiene espacio restante.");
+        return;
+      }
+
+      const currentCrop = target.crop || { top: 0, right: 0, bottom: 0, left: 0 };
+      const uncroppedWCm = target.widthCm / Math.max(0.01, 1 - currentCrop.left - currentCrop.right);
+      const uncroppedHCm = target.heightCm / Math.max(0.01, 1 - currentCrop.top - currentCrop.bottom);
+
+      const newWCm = uncroppedWCm * Math.max(0.01, 1 - bounds.left - bounds.right);
+      const newHCm = uncroppedHCm * Math.max(0.01, 1 - bounds.top - bounds.bottom);
+
+      const deltaCropLeft = bounds.left - currentCrop.left;
+      const deltaCropTop = bounds.top - currentCrop.top;
+
+      const deltaWCm = deltaCropLeft * uncroppedWCm;
+      const deltaHCm = deltaCropTop * uncroppedHCm;
+
+      const rotRad = (target.rotation * Math.PI) / 180;
+      const dispCanvasX = deltaWCm * Math.cos(rotRad) - deltaHCm * Math.sin(rotRad);
+      const dispCanvasY = deltaWCm * Math.sin(rotRad) + deltaHCm * Math.cos(rotRad);
+
+      const newXCm = parseFloat(Math.max(0, target.xCm + dispCanvasX).toFixed(2));
+      const newYCm = parseFloat(Math.max(0, target.yCm + dispCanvasY).toFixed(2));
+      const finalWCm = parseFloat(newWCm.toFixed(2));
+      const finalHCm = parseFloat(newHCm.toFixed(2));
+
+      setDesigns((prev) =>
+        prev.map((d) =>
+          d.id === id
+            ? {
+                ...d,
+                crop: bounds,
+                widthCm: finalWCm,
+                heightCm: finalHCm,
+                xCm: newXCm,
+                yCm: newYCm,
+                aspectRatio: finalWCm / finalHCm,
+              }
+            : d
+        )
+      );
+    } finally {
+      setAutoCroppingId(null);
+    }
+  };
+
+  // Restablecer recorte
+  const handleResetCrop = (id: string) => {
+    const target = designs.find((d) => d.id === id);
+    if (!target || !target.crop) return;
+
+    const currentCrop = target.crop;
+    const uncroppedWCm = target.widthCm / Math.max(0.01, 1 - currentCrop.left - currentCrop.right);
+    const uncroppedHCm = target.heightCm / Math.max(0.01, 1 - currentCrop.top - currentCrop.bottom);
+
+    const rotRad = (target.rotation * Math.PI) / 180;
+    const deltaWCm = currentCrop.left * uncroppedWCm;
+    const deltaHCm = currentCrop.top * uncroppedHCm;
+    const dispCanvasX = deltaWCm * Math.cos(rotRad) - deltaHCm * Math.sin(rotRad);
+    const dispCanvasY = deltaWCm * Math.sin(rotRad) + deltaHCm * Math.cos(rotRad);
+
+    const restoredX = parseFloat(Math.max(0, target.xCm - dispCanvasX).toFixed(2));
+    const restoredY = parseFloat(Math.max(0, target.yCm - dispCanvasY).toFixed(2));
+    const restoredW = parseFloat(uncroppedWCm.toFixed(2));
+    const restoredH = parseFloat(uncroppedHCm.toFixed(2));
+
+    setDesigns((prev) =>
+      prev.map((d) =>
+        d.id === id
+          ? {
+              ...d,
+              crop: { top: 0, right: 0, bottom: 0, left: 0 },
+              xCm: restoredX,
+              yCm: restoredY,
+              widthCm: restoredW,
+              heightCm: restoredH,
+              aspectRatio: restoredW / restoredH,
+            }
+          : d
+      )
+    );
+  };
+
   const handleGridFill = () => {
     if (!selectedDesign) return;
     const spacingCm = 0.8;
@@ -501,6 +814,7 @@ export function DtfCanvas() {
           rotation: d.rotation,
           flipH: Boolean(d.flipH),
           flipV: Boolean(d.flipV),
+          crop: d.crop,
         };
       });
 
@@ -915,6 +1229,62 @@ export function DtfCanvas() {
                 </div>
               </div>
 
+              {/* Recorte de Espacio Restante (Márgenes Vacíos) */}
+              <div className="rounded-xl border border-[#20232A] bg-[#0D0E11] p-3.5 space-y-2.5">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-1.5 text-xs font-mono font-bold text-white uppercase tracking-wider">
+                    <Scissors className="h-3.5 w-3.5" />
+                    <span>Recortar Espacio Restante</span>
+                  </div>
+                  {selectedDesign.crop &&
+                    (selectedDesign.crop.top > 0 ||
+                      selectedDesign.crop.bottom > 0 ||
+                      selectedDesign.crop.left > 0 ||
+                      selectedDesign.crop.right > 0) && (
+                      <span className="text-[10px] font-mono text-[#F3F4F6] bg-white/10 px-2 py-0.5 rounded border border-white/20">
+                        Recorte Activo
+                      </span>
+                    )}
+                </div>
+
+                <p className="text-[11px] text-[#8E95A5] leading-relaxed">
+                  Arrastra las <strong className="text-white font-medium">barras entre los puntos</strong> en el metro para recortar manualmente cualquier lado, o ajusta al ras con 1 clic:
+                </p>
+
+                <div className="flex items-center gap-2 pt-0.5">
+                  <button
+                    type="button"
+                    onClick={() => handleAutoCrop(selectedDesign.id)}
+                    disabled={autoCroppingId === selectedDesign.id}
+                    className="flex-1 flex items-center justify-center gap-1.5 rounded-xl border border-white/30 bg-white/10 hover:bg-white/20 px-3 py-2 text-xs font-bold text-white transition-all active:scale-95 disabled:opacity-50"
+                    title="Detecta y recorta automáticamente los bordes transparentes sobrantes"
+                  >
+                    {autoCroppingId === selectedDesign.id ? (
+                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                    ) : (
+                      <Scissors className="h-3.5 w-3.5" />
+                    )}
+                    <span>Auto-Recortar Sobrante</span>
+                  </button>
+
+                  {selectedDesign.crop &&
+                    (selectedDesign.crop.top > 0 ||
+                      selectedDesign.crop.bottom > 0 ||
+                      selectedDesign.crop.left > 0 ||
+                      selectedDesign.crop.right > 0) && (
+                      <button
+                        type="button"
+                        onClick={() => handleResetCrop(selectedDesign.id)}
+                        className="flex items-center justify-center gap-1.5 rounded-xl border border-[#20232A] bg-[#16181D] hover:border-white/40 px-3 py-2 text-xs text-[#8E95A5] hover:text-white transition-all active:scale-95"
+                        title="Restablecer el diseño a sus dimensiones originales sin recorte"
+                      >
+                        <RotateCcw className="h-3.5 w-3.5" />
+                        <span>Restablecer</span>
+                      </button>
+                    )}
+                </div>
+              </div>
+
               {/* Acciones Rápidas de Posicionamiento */}
               <div className="pt-3 border-t border-[#20232A] space-y-3">
                 <div className="space-y-1.5">
@@ -1183,25 +1553,109 @@ export function DtfCanvas() {
                         >
                           <div className="w-1.5 h-1.5 rounded-full bg-[#0D0E11]" />
                         </div>
+
+                        {/* 4 BARRAS ENTRE LOS PUNTOS PARA RECORTAR EL ESPACIO RESTANTE */}
+                        {/* Barra de Recorte Superior (entre esquina NW y NE) */}
+                        <div
+                          onMouseDown={(e) => handleCropStart(e, d, "top")}
+                          onTouchStart={(e) => handleCropStart(e, d, "top")}
+                          className="absolute -top-2 left-1/2 -translate-x-1/2 w-10 h-3 rounded-full bg-[#0D0E11] border-2 border-white shadow-lg cursor-ns-resize z-30 hover:scale-110 active:scale-95 transition-transform flex items-center justify-center touch-none ring-1 ring-white/50 group/crop"
+                          title="Barra de recorte: Arrastra hacia abajo para recortar el espacio superior restante"
+                        >
+                          <div className="w-4 h-1 rounded-full bg-white group-hover/crop:bg-neutral-300 pointer-events-none" />
+                        </div>
+
+                        {/* Barra de Recorte Inferior (entre esquina SW y SE) */}
+                        <div
+                          onMouseDown={(e) => handleCropStart(e, d, "bottom")}
+                          onTouchStart={(e) => handleCropStart(e, d, "bottom")}
+                          className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-10 h-3 rounded-full bg-[#0D0E11] border-2 border-white shadow-lg cursor-ns-resize z-30 hover:scale-110 active:scale-95 transition-transform flex items-center justify-center touch-none ring-1 ring-white/50 group/crop"
+                          title="Barra de recorte: Arrastra hacia arriba para recortar el espacio inferior restante"
+                        >
+                          <div className="w-4 h-1 rounded-full bg-white group-hover/crop:bg-neutral-300 pointer-events-none" />
+                        </div>
+
+                        {/* Barra de Recorte Izquierda (entre esquina NW y SW) */}
+                        <div
+                          onMouseDown={(e) => handleCropStart(e, d, "left")}
+                          onTouchStart={(e) => handleCropStart(e, d, "left")}
+                          className="absolute top-1/2 -left-2 -translate-y-1/2 w-3 h-10 rounded-full bg-[#0D0E11] border-2 border-white shadow-lg cursor-ew-resize z-30 hover:scale-110 active:scale-95 transition-transform flex items-center justify-center touch-none ring-1 ring-white/50 group/crop"
+                          title="Barra de recorte: Arrastra hacia adentro para recortar el espacio izquierdo restante"
+                        >
+                          <div className="w-1 h-4 rounded-full bg-white group-hover/crop:bg-neutral-300 pointer-events-none" />
+                        </div>
+
+                        {/* Barra de Recorte Derecha (entre esquina NE y SE) */}
+                        <div
+                          onMouseDown={(e) => handleCropStart(e, d, "right")}
+                          onTouchStart={(e) => handleCropStart(e, d, "right")}
+                          className="absolute top-1/2 -right-2 -translate-y-1/2 w-3 h-10 rounded-full bg-[#0D0E11] border-2 border-white shadow-lg cursor-ew-resize z-30 hover:scale-110 active:scale-95 transition-transform flex items-center justify-center touch-none ring-1 ring-white/50 group/crop"
+                          title="Barra de recorte: Arrastra hacia adentro para recortar el espacio derecho restante"
+                        >
+                          <div className="w-1 h-4 rounded-full bg-white group-hover/crop:bg-neutral-300 pointer-events-none" />
+                        </div>
                       </>
                     )}
 
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={d.previewUrl}
-                      alt="design"
-                      className="h-full w-full object-fill pointer-events-none"
-                    />
+                    {/* Contenedor con recorte exacto de espacio restante */}
+                    {(() => {
+                      const crop = d.crop || { top: 0, right: 0, bottom: 0, left: 0 };
+                      const visibleWFrac = Math.max(0.01, 1 - crop.left - crop.right);
+                      const visibleHFrac = Math.max(0.01, 1 - crop.top - crop.bottom);
 
-                    {/* Cota de Medida Visible en Centímetros */}
+                      return (
+                        <div className="w-full h-full relative overflow-hidden pointer-events-none select-none">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={d.previewUrl}
+                            alt="design"
+                            style={{
+                              position: "absolute",
+                              width: `${(1 / visibleWFrac) * 100}%`,
+                              height: `${(1 / visibleHFrac) * 100}%`,
+                              left: `${-(crop.left / visibleWFrac) * 100}%`,
+                              top: `${-(crop.top / visibleHFrac) * 100}%`,
+                              maxWidth: "none",
+                              maxHeight: "none",
+                              objectFit: "fill",
+                            }}
+                            className="pointer-events-none select-none"
+                          />
+                        </div>
+                      );
+                    })()}
+
+                    {/* Cota de Medida Visible en Centímetros & Botón Rápido de Auto-Recorte */}
                     <div
-                      className={`absolute -bottom-6 left-1/2 -translate-x-1/2 px-2.5 py-0.5 rounded-lg whitespace-nowrap z-20 font-mono text-[11px] font-bold shadow-md transition-all ${
+                      className={`absolute -bottom-7 left-1/2 -translate-x-1/2 flex items-center gap-1.5 px-2.5 py-0.5 rounded-lg whitespace-nowrap z-20 font-mono text-[11px] font-bold shadow-md transition-all ${
                         isSelected
                           ? "bg-[#0D0E11] border border-white text-white ring-1 ring-white/40 scale-105"
                           : "bg-[#0D0E11]/90 border border-[#20232A] text-[#F3F4F6] text-[10px]"
                       }`}
                     >
-                      {d.widthCm} × {d.heightCm} cm {d.rotation !== 0 ? `• ${d.rotation}°` : ""}
+                      <span>
+                        {d.widthCm} × {d.heightCm} cm {d.rotation !== 0 ? `• ${d.rotation}°` : ""}
+                      </span>
+                      {isSelected && (
+                        <button
+                          type="button"
+                          onMouseDown={(e) => e.stopPropagation()}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleAutoCrop(d.id);
+                          }}
+                          disabled={autoCroppingId === d.id}
+                          className="inline-flex items-center gap-1 ml-1 px-1.5 py-0.5 rounded bg-white text-black hover:bg-neutral-200 text-[9px] font-bold tracking-tight shadow transition-transform active:scale-95 disabled:opacity-50"
+                          title="Recortar automáticamente el espacio transparente sobrante"
+                        >
+                          {autoCroppingId === d.id ? (
+                            <Loader2 className="h-2.5 w-2.5 animate-spin" />
+                          ) : (
+                            <Scissors className="h-2.5 w-2.5" />
+                          )}
+                          <span>Auto-Recortar</span>
+                        </button>
+                      )}
                     </div>
                   </div>
                 );

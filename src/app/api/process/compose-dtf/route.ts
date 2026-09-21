@@ -34,6 +34,12 @@ export async function POST(req: NextRequest) {
       rotation?: number;
       flipH?: boolean;
       flipV?: boolean;
+      crop?: {
+        top: number;
+        right: number;
+        bottom: number;
+        left: number;
+      };
     }
 
     let parsedLayers: RawLayer[] = [];
@@ -78,6 +84,7 @@ export async function POST(req: NextRequest) {
           rotation: Number(layer.rotation) || 0,
           flipH: Boolean(layer.flipH),
           flipV: Boolean(layer.flipV),
+          crop: layer.crop,
         });
       }
     }
