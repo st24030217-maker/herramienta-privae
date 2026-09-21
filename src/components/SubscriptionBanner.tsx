@@ -65,13 +65,13 @@ export function SubscriptionBanner({
     return (
       <div className="bg-[#16181D] border-b border-[#20232A] px-4 py-2.5 text-center text-xs text-[#F3F4F6] relative">
         <div className="mx-auto flex max-w-7xl items-center justify-center gap-2 font-mono pr-8">
-          <AlertTriangle className="h-4 w-4 text-[#00A3FF] shrink-0" />
+          <AlertTriangle className="h-4 w-4 text-white shrink-0" />
           <span>
             Período de prueba concluido. Reactiva las herramientas de preimpresión.
           </span>
           <Link
             href="/account"
-            className="ml-3 inline-flex items-center gap-1 rounded-lg bg-[#00A3FF] px-3 py-1 text-xs font-bold text-white hover:bg-[#00A3FF]/90 transition-colors font-sans"
+            className="ml-3 inline-flex items-center gap-1 rounded-lg bg-white px-3 py-1 text-xs font-bold text-black hover:bg-neutral-200 transition-colors font-sans"
           >
             Activar cuenta
           </Link>
@@ -91,13 +91,13 @@ export function SubscriptionBanner({
     return (
       <div className="bg-[#16181D] border-b border-[#20232A] px-4 py-2 text-center text-xs text-[#8E95A5] relative">
         <div className="mx-auto flex max-w-7xl items-center justify-center gap-2 font-mono text-[11px] pr-8">
-          <Clock className="h-3.5 w-3.5 text-[#00A3FF] shrink-0" />
+          <Clock className="h-3.5 w-3.5 text-white shrink-0" />
           <span>
             Quedan <strong className="text-[#F3F4F6]">{daysRemaining} días</strong> de prueba técnica.
           </span>
           <Link
             href="/account"
-            className="ml-2 font-semibold text-[#00A3FF] underline hover:text-white"
+            className="ml-2 font-semibold text-white underline hover:text-neutral-300"
           >
             Configurar plan
           </Link>

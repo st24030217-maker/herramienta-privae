@@ -101,13 +101,13 @@ export default function AccountPage() {
         <div
           className={`mb-6 flex items-center justify-between gap-2 rounded-lg p-3 text-xs border ${
             feedback.type === "success"
-              ? "bg-[#00A3FF]/10 border-[#00A3FF]/30 text-[#00A3FF]"
+              ? "bg-white/10 border-white/20 text-white"
               : "bg-red-500/10 border-red-500/30 text-red-200"
           }`}
         >
           <div className="flex items-center gap-2">
             {feedback.type === "success" ? (
-              <CheckCircle2 className="h-4 w-4 shrink-0 text-[#00A3FF]" />
+              <CheckCircle2 className="h-4 w-4 shrink-0 text-white" />
             ) : (
               <AlertTriangle className="h-4 w-4 shrink-0 text-red-400" />
             )}

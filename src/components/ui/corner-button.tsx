@@ -22,7 +22,7 @@ export interface CornerButtonProps
   icon?: React.ReactNode;
   /** Mostrar icono por defecto (ArrowRight). Por defecto true. */
   showIcon?: boolean;
-  /** Color de las líneas y marcas de calibración animadas. Por defecto #00A3FF */
+  /** Color de las líneas y marcas de calibración animadas. Por defecto #FFFFFF */
   accentColor?: string;
   /** Clases CSS extra para el contenedor exterior */
   wrapperClassName?: string;
@@ -33,11 +33,11 @@ export interface CornerButtonProps
 export function CornerButton({
   children = "Continuar",
   href,
-  variant = "cyan",
+  variant = "white",
   size = "md",
   icon,
   showIcon = true,
-  accentColor = "#00A3FF",
+  accentColor = "#FFFFFF",
   className,
   wrapperClassName,
   style,
@@ -50,10 +50,10 @@ export function CornerButton({
       <ArrowRight className="h-4 w-4 shrink-0 transition-transform duration-200 group-hover:translate-x-0.5" />
     ) : null);
 
-  // Variantes limpias y mate (sin bordes brillosos ni halos de neón)
+  // Variantes limpias y minimalistas en blanco y negro
   const variantClasses: Record<CornerButtonVariant, string> = {
-    cyan: "bg-[#00A3FF] text-[#0D0E11] font-bold hover:bg-[#38b6ff] border border-transparent shadow-none",
-    dark: "bg-[#16181D] text-[#E5E7EB] font-semibold border border-[#27272A] hover:bg-[#20232A] hover:border-neutral-500 shadow-none",
+    cyan: "bg-[#F3F4F6] text-[#0D0E11] font-bold hover:bg-white border border-transparent shadow-none",
+    dark: "bg-[#16181D] text-[#E5E7EB] font-semibold border border-[#27272A] hover:bg-[#20232A] hover:border-white shadow-none",
     white: "bg-[#F3F4F6] text-[#0D0E11] font-bold border border-transparent hover:bg-white shadow-none",
     danger: "bg-red-950/40 text-red-400 font-semibold border border-red-900/50 hover:bg-red-900/40 shadow-none",
   };
@@ -141,7 +141,7 @@ export function CornerButton({
           width: var(--dot-size);
           height: var(--dot-size);
           border-radius: 50%;
-          background-color: var(--dot-color, #00A3FF);
+          background-color: var(--dot-color, #FFFFFF);
           opacity: 0;
           transition: all 0.25s ease-in-out;
           pointer-events: none;
@@ -199,7 +199,7 @@ export function CornerButton({
           background-image: repeating-linear-gradient(
             90deg,
             transparent 0 calc(var(--line-weight) * 2),
-            var(--line-color, #00A3FF) calc(var(--line-weight) * 2) calc(var(--line-weight) * 4)
+            var(--line-color, #FFFFFF) calc(var(--line-weight) * 2) calc(var(--line-weight) * 4)
           );
         }
 
@@ -209,7 +209,7 @@ export function CornerButton({
           background-image: repeating-linear-gradient(
             0deg,
             transparent 0 calc(var(--line-weight) * 2),
-            var(--line-color, #00A3FF) calc(var(--line-weight) * 2) calc(var(--line-weight) * 4)
+            var(--line-color, #FFFFFF) calc(var(--line-weight) * 2) calc(var(--line-weight) * 4)
           );
         }
 

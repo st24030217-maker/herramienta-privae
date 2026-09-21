@@ -32,7 +32,7 @@ export default function EnhancePage() {
                       onClick={() => setCustomParam("scaleFactor", scale.val)}
                       className={`p-3 rounded-xl border text-center transition-all active:scale-95 ${
                         isSelected
-                          ? "border-[#00A3FF] bg-[#00A3FF]/15 text-white shadow-md ring-2 ring-[#00A3FF]"
+                          ? "border-white bg-white/10 text-white shadow-md ring-2 ring-white"
                           : "border-[#20232A] bg-[#0D0E11] text-[#8E95A5] hover:border-[#8E95A5]/40 hover:text-white"
                       }`}
                     >
@@ -64,7 +64,7 @@ export default function EnhancePage() {
                       onClick={() => setCustomParam("sharpenLevel", lvl.val)}
                       className={`p-2.5 rounded-xl border text-center transition-all ${
                         isSelected
-                          ? "border-[#00A3FF] bg-[#00A3FF]/15 text-white shadow-sm ring-1 ring-[#00A3FF]"
+                          ? "border-white bg-white/10 text-white shadow-sm ring-1 ring-white"
                           : "border-[#20232A] bg-[#0D0E11] text-[#8E95A5] hover:border-[#8E95A5]/40 hover:text-white"
                       }`}
                     >
@@ -81,7 +81,7 @@ export default function EnhancePage() {
                 htmlFor="denoise"
                 className={`flex items-start gap-3 p-3.5 rounded-xl border cursor-pointer transition-all ${
                   customParams.denoise === "true"
-                    ? "border-[#00A3FF] bg-[#00A3FF]/10 text-white shadow-sm"
+                    ? "border-white bg-white/10 text-white shadow-sm"
                     : "border-[#20232A] bg-[#0D0E11] text-[#8E95A5] hover:border-[#8E95A5]/40"
                 }`}
               >
@@ -90,7 +90,7 @@ export default function EnhancePage() {
                   id="denoise"
                   checked={customParams.denoise === "true"}
                   onChange={(e) => setCustomParam("denoise", e.target.checked ? "true" : "false")}
-                  className="h-5 w-5 rounded border-[#20232A] text-[#00A3FF] focus:ring-[#00A3FF] mt-0.5"
+                  className="h-5 w-5 rounded border-[#20232A] text-white focus:ring-white mt-0.5"
                 />
                 <div className="space-y-0.5">
                   <span className="text-xs font-bold text-[#F3F4F6] block">

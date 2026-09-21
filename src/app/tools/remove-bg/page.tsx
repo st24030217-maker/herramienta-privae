@@ -31,7 +31,7 @@ export default function RemoveBgPage() {
                     onClick={() => setCustomParam("bgType", bg.id)}
                     className={`flex flex-col items-start p-3.5 rounded-xl border text-left transition-all active:scale-95 ${
                       isSelected
-                        ? "border-[#00A3FF] bg-[#00A3FF]/15 text-white shadow-md ring-2 ring-[#00A3FF]"
+                        ? "border-white bg-white/10 text-white shadow-md ring-2 ring-white"
                         : "border-[#20232A] bg-[#0D0E11] text-[#8E95A5] hover:border-[#8E95A5]/40 hover:text-white"
                     }`}
                   >
@@ -72,11 +72,11 @@ export default function RemoveBgPage() {
                     onClick={() => setCustomParam("mode", m.id)}
                     className={`flex items-start gap-3 p-3.5 rounded-xl border text-left transition-all active:scale-95 ${
                       isSelected
-                        ? "border-[#00A3FF] bg-[#00A3FF]/15 text-white shadow-md ring-2 ring-[#00A3FF]"
+                        ? "border-white bg-white/10 text-white shadow-md ring-2 ring-white"
                         : "border-[#20232A] bg-[#0D0E11] text-[#8E95A5] hover:border-[#8E95A5]/40 hover:text-white"
                     }`}
                   >
-                    <Icon className={`h-5 w-5 shrink-0 mt-0.5 ${isSelected ? "text-[#00A3FF]" : "text-[#8E95A5]"}`} />
+                    <Icon className={`h-5 w-5 shrink-0 mt-0.5 ${isSelected ? "text-white" : "text-[#8E95A5]"}`} />
                     <div>
                       <span className="font-bold text-sm text-[#F3F4F6] block">{m.title}</span>
                       <span className="font-mono text-[11px] text-[#8E95A5] mt-0.5 block">{m.desc}</span>
@@ -92,7 +92,7 @@ export default function RemoveBgPage() {
             <div className="space-y-2">
               <div className="flex justify-between items-center text-xs font-mono">
                 <span className="text-[#8E95A5]">¿Qué tanto debe borrar? (Fuerza):</span>
-                <span className="text-sm font-bold text-[#00A3FF] bg-[#0D0E11] px-2.5 py-1 rounded border border-[#20232A]">
+                <span className="text-sm font-bold text-white bg-[#0D0E11] px-2.5 py-1 rounded border border-[#20232A]">
                   {customParams.sensitivity || 35}%
                 </span>
               </div>
@@ -102,7 +102,7 @@ export default function RemoveBgPage() {
                 max="80"
                 value={customParams.sensitivity || 35}
                 onChange={(e) => setCustomParam("sensitivity", e.target.value)}
-                className="w-full h-2 rounded-lg bg-[#0D0E11] accent-[#00A3FF] cursor-pointer"
+                className="w-full h-2 rounded-lg bg-[#0D0E11] accent-white cursor-pointer"
               />
               <span className="text-[11px] text-[#8E95A5]/80 block">
                 Súbelo si ves que todavía quedan manchas o sombras del fondo viejo.
@@ -113,7 +113,7 @@ export default function RemoveBgPage() {
             <div className="space-y-2">
               <div className="flex justify-between items-center text-xs font-mono">
                 <span className="text-[#8E95A5]">Suavizado de Orillas:</span>
-                <span className="text-sm font-bold text-[#00A3FF] bg-[#0D0E11] px-2.5 py-1 rounded border border-[#20232A]">
+                <span className="text-sm font-bold text-white bg-[#0D0E11] px-2.5 py-1 rounded border border-[#20232A]">
                   {customParams.featherRadius || 2} px
                 </span>
               </div>
@@ -123,7 +123,7 @@ export default function RemoveBgPage() {
                 max="8"
                 value={customParams.featherRadius || 2}
                 onChange={(e) => setCustomParam("featherRadius", e.target.value)}
-                className="w-full h-2 rounded-lg bg-[#0D0E11] accent-[#00A3FF] cursor-pointer"
+                className="w-full h-2 rounded-lg bg-[#0D0E11] accent-white cursor-pointer"
               />
               <span className="text-[11px] text-[#8E95A5]/80 block">
                 Difumina un poquito el borde para que no se vea cortado con tijera.

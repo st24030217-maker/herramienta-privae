@@ -8,7 +8,7 @@ export interface GlareCardProps extends React.HTMLAttributes<HTMLDivElement> {
   className?: string;
   /** Intensidad máxima de la inclinación 3D (por defecto 15 grados) */
   maxTilt?: number;
-  /** Color de brillo secundario (por defecto cian DTF #00A3FF) */
+  /** Color de brillo secundario (monocromático plata/blanco) */
   glareColor?: "cyan" | "white" | "neutral";
 }
 
@@ -88,11 +88,11 @@ export const GlareCard = ({
     }
   };
 
-  // Glare gradient selector adaptado a la estética minimalista y mate de Privae
+  // Glare gradient selector adaptado a la estética minimalista y blanco y negro de Privae
   const glareGradients = {
-    cyan: "radial-gradient(farthest-corner circle at var(--m-x) var(--m-y), rgba(0, 163, 255, 0.22) 10%, rgba(255, 255, 255, 0.12) 25%, transparent 70%)",
-    white: "radial-gradient(farthest-corner circle at var(--m-x) var(--m-y), rgba(255, 255, 255, 0.20) 12%, rgba(255, 255, 255, 0.06) 30%, transparent 65%)",
-    neutral: "radial-gradient(farthest-corner circle at var(--m-x) var(--m-y), rgba(200, 210, 225, 0.15) 10%, transparent 60%)",
+    cyan: "radial-gradient(farthest-corner circle at var(--m-x) var(--m-y), rgba(255, 255, 255, 0.22) 10%, rgba(255, 255, 255, 0.08) 25%, transparent 70%)",
+    white: "radial-gradient(farthest-corner circle at var(--m-x) var(--m-y), rgba(255, 255, 255, 0.22) 12%, rgba(255, 255, 255, 0.08) 30%, transparent 65%)",
+    neutral: "radial-gradient(farthest-corner circle at var(--m-x) var(--m-y), rgba(255, 255, 255, 0.15) 10%, transparent 60%)",
   };
 
   return (

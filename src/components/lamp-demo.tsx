@@ -18,8 +18,8 @@ export default function LampDemo() {
         }}
         className="flex flex-col items-center text-center max-w-3xl"
       >
-        <div className="inline-flex items-center gap-2 mb-3 font-mono text-xs text-[#00A3FF] border border-[#00A3FF]/30 bg-[#00A3FF]/10 px-3 py-1 rounded-full">
-          <span className="inline-block h-2 w-2 rounded-full bg-[#00A3FF] animate-pulse"></span>
+        <div className="inline-flex items-center gap-2 mb-3 font-mono text-xs text-[#F3F4F6] border border-white/20 bg-white/5 px-3 py-1 rounded-full">
+          <span className="inline-block h-2 w-2 rounded-full bg-white animate-pulse"></span>
           <span>TALLER DTF PROFESIONAL • BOBINA 58 CM</span>
         </div>
 
@@ -34,9 +34,9 @@ export default function LampDemo() {
         <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
           <CornerButton
             href="/tools/scanner"
-            variant="cyan"
+            variant="white"
             size="lg"
-            icon={<ScanSearch className="h-4 w-4" />}
+            icon={<ScanSearch className="h-4 w-4 text-[#0D0E11]" />}
           >
             Revisar si mi diseño está listo
           </CornerButton>

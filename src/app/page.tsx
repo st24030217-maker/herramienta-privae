@@ -81,7 +81,7 @@ export default function HomePage() {
           <div className="h-6 w-px bg-[#20232A]" />
           <div>
             <span className="text-[#8E95A5]/60 block text-[10px]">CALIFICACIÓN</span>
-            <span className="text-[#00A3FF] font-semibold">Semáforo DTF</span>
+            <span className="text-white font-semibold">Semáforo DTF</span>
           </div>
         </div>
       </div>
@@ -89,7 +89,7 @@ export default function HomePage() {
       {/* SECCIÓN 1: CHECADOR DE CALIDAD DTF */}
       <section>
         <div className="mb-4 flex items-center justify-between border-b border-[#20232A] pb-2">
-          <h3 className="font-mono text-xs uppercase tracking-wider text-[#00A3FF] font-semibold flex items-center gap-2">
+          <h3 className="font-mono text-xs uppercase tracking-wider text-white font-semibold flex items-center gap-2">
             <span>Checador de Calidad (Revisión antes de imprimir)</span>
           </h3>
           <span className="font-mono text-xs text-[#8E95A5]/60">
@@ -98,19 +98,19 @@ export default function HomePage() {
         </div>
 
         {/* Tarjeta Escáner DTF con GlareCard */}
-        <GlareCard glareColor="cyan" className="p-6 lg:p-7">
+        <GlareCard glareColor="white" className="p-6 lg:p-7">
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
             <div className="flex-1">
               <div className="flex items-center gap-3 mb-2">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-[#00A3FF]/30 bg-[#00A3FF]/10 text-[#00A3FF]">
-                  <ScanSearch className="h-5 w-5" />
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-white/20 bg-white/5 text-white">
+                  <ScanSearch className="h-5 w-5 text-white" />
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
                     <h3 className="text-xl font-bold text-white tracking-tight">
                       Revisar si tu Diseño está Listo para DTF
                     </h3>
-                    <span className="font-mono text-xs text-emerald-400 border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 rounded">
+                    <span className="font-mono text-xs text-white border border-white/30 bg-white/10 px-2 py-0.5 rounded font-bold">
                       CALIFICACIÓN 0-100%
                     </span>
                   </div>
@@ -128,9 +128,9 @@ export default function HomePage() {
             <div className="flex flex-col sm:flex-row lg:flex-col gap-3 shrink-0 items-start">
               <CornerButton
                 href="/tools/scanner"
-                variant="cyan"
+                variant="white"
                 size="lg"
-                icon={<ScanSearch className="h-4 w-4" />}
+                icon={<ScanSearch className="h-4 w-4 text-[#0D0E11]" />}
               >
                 Revisar mi diseño ahora
               </CornerButton>
@@ -145,7 +145,7 @@ export default function HomePage() {
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
             <div className="flex-1">
               <div className="flex items-center gap-2.5 mb-2">
-                <span className="font-mono text-xs text-[#00A3FF] border border-[#00A3FF]/30 px-2 py-0.5 rounded bg-[#00A3FF]/10 font-semibold">
+                <span className="font-mono text-xs text-white border border-white/20 px-2 py-0.5 rounded bg-white/5 font-semibold">
                   MÓDULO PRINCIPAL
                 </span>
                 <span className="font-mono text-xs text-[#8E95A5]">
@@ -204,14 +204,14 @@ export default function HomePage() {
             return (
               <GlareCard
                 key={tool.id}
-                glareColor="cyan"
+                glareColor="white"
                 className="p-5 h-full flex flex-col justify-between"
               >
                 <div className="flex flex-col h-full justify-between">
                   <div>
                     <div className="flex items-center justify-between mb-3">
-                      <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-[#20232A] bg-[#0D0E11] text-[#F3F4F6]">
-                        <Icon className="h-4 w-4 text-[#00A3FF]" />
+                      <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-[#20232A] bg-[#0D0E11] text-white">
+                        <Icon className="h-4 w-4 text-white" />
                       </div>
                       <span className="font-mono text-[11px] text-[#8E95A5]">
                         {tool.spec}
@@ -231,9 +231,9 @@ export default function HomePage() {
                       href={tool.href}
                       variant="dark"
                       size="sm"
-                      className="w-full"
+                      className="w-full hover:border-white"
                       wrapperClassName="w-full"
-                      icon={<ArrowRight className="h-3.5 w-3.5 text-[#00A3FF]" />}
+                      icon={<ArrowRight className="h-3.5 w-3.5 text-white" />}
                     >
                       {tool.action}
                     </CornerButton>

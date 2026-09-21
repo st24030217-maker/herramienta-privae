@@ -24,7 +24,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es" className={`dark ${montserrat.variable}`}>
-      <body className={`relative flex min-h-screen flex-col bg-black text-[#F3F4F6] font-sans antialiased selection:bg-[#00A3FF]/30 selection:text-white ${montserrat.className}`}>
+      <body className={`relative flex min-h-screen flex-col bg-black text-[#F3F4F6] font-sans antialiased selection:bg-white/20 selection:text-white ${montserrat.className}`}>
         <div className="fixed inset-0 -z-10 pointer-events-none overflow-hidden">
           <LightLines
             className="w-full h-full"

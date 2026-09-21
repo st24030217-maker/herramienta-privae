@@ -389,7 +389,7 @@ export function DtfCanvas() {
             <h1 className="text-2xl sm:text-3xl font-bold text-[#F3F4F6] tracking-tight">
               Armador de Metros DTF
             </h1>
-            <span className="font-mono text-xs text-[#00A3FF] border border-[#00A3FF]/30 bg-[#00A3FF]/10 px-2.5 py-0.5 rounded">
+            <span className="font-mono text-xs text-white border border-white/20 bg-white/10 px-2.5 py-0.5 rounded">
               METRO DE 58 CM — 300 DPI
             </span>
           </div>
@@ -429,7 +429,7 @@ export function DtfCanvas() {
             onClick={() => setMirrorAll(!mirrorAll)}
             className={`flex items-center gap-2 rounded-xl px-4 py-2.5 text-xs font-mono font-bold border transition-all active:scale-95 ${
               mirrorAll
-                ? "bg-[#00A3FF]/20 border-[#00A3FF] text-[#00A3FF] shadow-sm ring-1 ring-[#00A3FF]"
+                ? "bg-white/15 border-white text-white shadow-sm ring-1 ring-white"
                 : "bg-[#0D0E11] border-[#20232A] text-[#8E95A5] hover:text-[#F3F4F6] hover:border-[#8E95A5]/40"
             }`}
             title="Voltea todo el metro al revés (modo espejo para imprimir directo)"
@@ -444,7 +444,7 @@ export function DtfCanvas() {
             <span className="font-bold text-[#F3F4F6]">{occupiedHeightCm.toFixed(1)} cm</span>
             <span className="text-[#8E95A5]">/ {canvasHeightCm} cm</span>
             <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-              rollUtilizationPercent > 85 ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30" : "bg-[#20232A] text-[#00A3FF]"
+              rollUtilizationPercent > 85 ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30" : "bg-[#20232A] text-white"
             }`}>
               {rollUtilizationPercent}%
             </span>
@@ -453,11 +453,11 @@ export function DtfCanvas() {
           <button
             onClick={handleExport}
             disabled={designs.length === 0 || exporting}
-            className="inline-flex items-center gap-2.5 rounded-xl bg-[#00A3FF] hover:bg-[#00A3FF]/90 px-6 py-3 text-sm font-bold text-white transition-all shadow-lg active:scale-95 disabled:opacity-30 font-sans"
+            className="inline-flex items-center gap-2.5 rounded-xl bg-white hover:bg-neutral-200 px-6 py-3 text-sm font-bold text-black transition-all shadow-lg active:scale-95 disabled:opacity-30 font-sans"
           >
             {exporting ? (
               <>
-                <Loader2 className="h-5 w-5 animate-spin text-white" />
+                <Loader2 className="h-5 w-5 animate-spin text-black" />
                 <span>Generando 300 DPI...</span>
               </>
             ) : (
@@ -489,7 +489,7 @@ export function DtfCanvas() {
             {exportErrorStatus === 403 && (
               <Link
                 href="/account"
-                className="inline-flex items-center gap-1 rounded bg-[#00A3FF] px-2.5 py-1 text-xs font-bold text-white hover:bg-[#00A3FF]/90"
+                className="inline-flex items-center gap-1 rounded bg-white px-2.5 py-1 text-xs font-bold text-black hover:bg-neutral-200"
               >
                 <Crown className="h-3.5 w-3.5" /> Suscribirse
               </Link>
@@ -507,14 +507,14 @@ export function DtfCanvas() {
 
       {/* Alerta de Éxito con botón cerrar */}
       {exportSuccess && (
-        <div className="mb-4 rounded border border-[#00A3FF]/30 bg-[#00A3FF]/10 p-3 text-xs text-[#00A3FF] flex items-center justify-between gap-2 font-mono">
+        <div className="mb-4 rounded border border-white/20 bg-white/10 p-3 text-xs text-white flex items-center justify-between gap-2 font-mono">
           <div className="flex items-center gap-2">
             <CheckCircle2 className="h-4 w-4 shrink-0" />
             <span>¡Metro DTF generado con éxito a 300 DPI reales! Tu descarga comenzó.</span>
           </div>
           <button
             onClick={() => setExportSuccess(false)}
-            className="text-[#00A3FF] hover:text-white"
+            className="text-neutral-400 hover:text-white"
             aria-label="Cerrar notificación"
           >
             <X className="h-4 w-4" />
@@ -547,7 +547,7 @@ export function DtfCanvas() {
                 )}
                 <button
                   onClick={() => fileInputRef.current?.click()}
-                  className="inline-flex items-center gap-1.5 rounded-xl border border-[#00A3FF]/40 bg-[#00A3FF]/15 px-3.5 py-2 text-xs font-bold text-[#00A3FF] hover:bg-[#00A3FF]/25 transition-all shadow-sm active:scale-95"
+                  className="inline-flex items-center gap-1.5 rounded-xl border border-white/30 bg-white/10 px-3.5 py-2 text-xs font-bold text-white hover:bg-white/20 transition-all shadow-sm active:scale-95"
                 >
                   <Plus className="h-4 w-4" />
                   <span>Subir diseños</span>
@@ -566,9 +566,9 @@ export function DtfCanvas() {
             {designs.length === 0 ? (
               <div
                 onClick={() => fileInputRef.current?.click()}
-                className="flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-[#20232A] bg-[#0D0E11] p-8 text-center hover:border-[#00A3FF]/60 hover:bg-[#12141A] transition-all"
+                className="flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-[#20232A] bg-[#0D0E11] p-8 text-center hover:border-white/50 hover:bg-[#12141A] transition-all"
               >
-                <div className="mb-2 rounded-xl bg-[#16181D] p-3 text-[#00A3FF] border border-[#20232A]">
+                <div className="mb-2 rounded-xl bg-[#16181D] p-3 text-white border border-[#20232A]">
                   <Plus className="h-6 w-6" />
                 </div>
                 <span className="text-sm font-bold text-[#F3F4F6]">
@@ -586,7 +586,7 @@ export function DtfCanvas() {
                     onClick={() => setSelectedId(d.id)}
                     className={`flex items-center justify-between gap-2 p-2 rounded cursor-pointer border text-xs transition-colors ${
                       selectedId === d.id
-                        ? "bg-[#20232A] border-[#00A3FF]/50 text-[#F3F4F6] font-semibold"
+                        ? "bg-[#20232A] border-white/40 text-[#F3F4F6] font-semibold"
                         : "bg-[#0D0E11] border-[#20232A] text-[#8E95A5] hover:text-[#F3F4F6] hover:bg-[#12141A]"
                     }`}
                   >
@@ -668,7 +668,7 @@ export function DtfCanvas() {
                         const targetH = parseFloat((targetW / selectedDesign.aspectRatio).toFixed(2));
                         updateSelectedDesign({ widthCm: targetW, heightCm: targetH });
                       }}
-                      className="rounded-xl border border-[#20232A] bg-[#0D0E11] px-3 py-1.5 text-xs font-semibold text-[#8E95A5] hover:border-[#00A3FF] hover:text-[#00A3FF] hover:bg-[#00A3FF]/10 transition-all active:scale-95"
+                      className="rounded-xl border border-[#20232A] bg-[#0D0E11] px-3 py-1.5 text-xs font-semibold text-[#8E95A5] hover:border-white hover:text-white hover:bg-white/10 transition-all active:scale-95"
                     >
                       {preset.label}
                     </button>
@@ -693,7 +693,7 @@ export function DtfCanvas() {
                       const h = parseFloat((w / selectedDesign.aspectRatio).toFixed(2));
                       updateSelectedDesign({ widthCm: w, heightCm: h });
                     }}
-                    className="w-full rounded-xl border border-[#20232A] bg-[#0D0E11] px-3 py-2 text-sm text-[#F3F4F6] font-mono focus:border-[#00A3FF] focus:outline-none"
+                    className="w-full rounded-xl border border-[#20232A] bg-[#0D0E11] px-3 py-2 text-sm text-[#F3F4F6] font-mono focus:border-white focus:outline-none"
                   />
                 </div>
 
@@ -711,7 +711,7 @@ export function DtfCanvas() {
                       const w = parseFloat((h * selectedDesign.aspectRatio).toFixed(2));
                       updateSelectedDesign({ widthCm: w, heightCm: h });
                     }}
-                    className="w-full rounded-xl border border-[#20232A] bg-[#0D0E11] px-3 py-2 text-sm text-[#F3F4F6] font-mono focus:border-[#00A3FF] focus:outline-none"
+                    className="w-full rounded-xl border border-[#20232A] bg-[#0D0E11] px-3 py-2 text-sm text-[#F3F4F6] font-mono focus:border-white focus:outline-none"
                   />
                 </div>
 
@@ -728,7 +728,7 @@ export function DtfCanvas() {
                     onChange={(e) =>
                       updateSelectedDesign({ xCm: parseFloat(e.target.value) || 0 })
                     }
-                    className="w-full rounded-xl border border-[#20232A] bg-[#0D0E11] px-3 py-2 text-sm text-[#F3F4F6] font-mono focus:border-[#00A3FF] focus:outline-none"
+                    className="w-full rounded-xl border border-[#20232A] bg-[#0D0E11] px-3 py-2 text-sm text-[#F3F4F6] font-mono focus:border-white focus:outline-none"
                   />
                 </div>
 
@@ -745,7 +745,7 @@ export function DtfCanvas() {
                     onChange={(e) =>
                       updateSelectedDesign({ yCm: parseFloat(e.target.value) || 0 })
                     }
-                    className="w-full rounded-xl border border-[#20232A] bg-[#0D0E11] px-3 py-2 text-sm text-[#F3F4F6] font-mono focus:border-[#00A3FF] focus:outline-none"
+                    className="w-full rounded-xl border border-[#20232A] bg-[#0D0E11] px-3 py-2 text-sm text-[#F3F4F6] font-mono focus:border-white focus:outline-none"
                   />
                 </div>
               </div>
@@ -764,7 +764,7 @@ export function DtfCanvas() {
                           xCm: parseFloat(((canvasWidthCm - selectedDesign.widthCm) / 2).toFixed(2)),
                         })
                       }
-                      className="rounded-xl border border-[#20232A] bg-[#0D0E11] px-2.5 py-2 text-xs font-mono text-[#F3F4F6] hover:border-[#00A3FF] hover:text-[#00A3FF] hover:bg-[#00A3FF]/10 transition-all text-center"
+                      className="rounded-xl border border-[#20232A] bg-[#0D0E11] px-2.5 py-2 text-xs font-mono text-[#F3F4F6] hover:border-white hover:text-white hover:bg-white/10 transition-all text-center"
                       title="Centrar en el ancho de 58 cm"
                     >
                       Centrar
@@ -772,7 +772,7 @@ export function DtfCanvas() {
                     <button
                       type="button"
                       onClick={() => updateSelectedDesign({ xCm: 1 })}
-                      className="rounded-xl border border-[#20232A] bg-[#0D0E11] px-2.5 py-2 text-xs font-mono text-[#F3F4F6] hover:border-[#00A3FF] hover:text-[#00A3FF] hover:bg-[#00A3FF]/10 transition-all text-center"
+                      className="rounded-xl border border-[#20232A] bg-[#0D0E11] px-2.5 py-2 text-xs font-mono text-[#F3F4F6] hover:border-white hover:text-white hover:bg-white/10 transition-all text-center"
                       title="Alinear al margen izquierdo (1 cm)"
                     >
                       A la Izquierda
@@ -780,7 +780,7 @@ export function DtfCanvas() {
                     <button
                       type="button"
                       onClick={() => updateSelectedDesign({ yCm: 1 })}
-                      className="rounded-xl border border-[#20232A] bg-[#0D0E11] px-2.5 py-2 text-xs font-mono text-[#F3F4F6] hover:border-[#00A3FF] hover:text-[#00A3FF] hover:bg-[#00A3FF]/10 transition-all text-center"
+                      className="rounded-xl border border-[#20232A] bg-[#0D0E11] px-2.5 py-2 text-xs font-mono text-[#F3F4F6] hover:border-white hover:text-white hover:bg-white/10 transition-all text-center"
                       title="Alinear al borde superior"
                     >
                       Pegar Arriba
@@ -800,12 +800,12 @@ export function DtfCanvas() {
                       }
                       className={`flex items-center gap-1.5 rounded-xl border px-3 py-2 text-xs font-semibold transition-all active:scale-95 ${
                         selectedDesign.flipH
-                          ? "border-[#00A3FF] bg-[#00A3FF]/15 text-[#00A3FF] ring-1 ring-[#00A3FF]"
+                          ? "border-white bg-white/10 text-white ring-1 ring-white"
                           : "border-[#20232A] bg-[#0D0E11] text-[#F3F4F6] hover:bg-[#20232A]"
                       }`}
                       title="Voltear diseño en modo espejo"
                     >
-                      <FlipHorizontal className="h-4 w-4 text-[#00A3FF]" />
+                      <FlipHorizontal className="h-4 w-4 text-white" />
                       <span>Espejo</span>
                     </button>
                     <button
@@ -814,7 +814,7 @@ export function DtfCanvas() {
                       className="flex items-center gap-1.5 rounded-xl border border-[#20232A] bg-[#0D0E11] px-3.5 py-2 text-xs text-[#F3F4F6] hover:bg-[#20232A] font-semibold transition-all active:scale-95"
                       title="Copiar diseño"
                     >
-                      <Copy className="h-4 w-4 text-[#00A3FF]" />
+                      <Copy className="h-4 w-4 text-white" />
                       <span>Copiar</span>
                     </button>
                     <button
@@ -826,7 +826,7 @@ export function DtfCanvas() {
                       }
                       className="flex items-center gap-1.5 rounded-xl border border-[#20232A] bg-[#0D0E11] px-3.5 py-2 text-xs text-[#F3F4F6] hover:bg-[#20232A] font-semibold transition-all active:scale-95"
                     >
-                      <RotateCw className="h-4 w-4 text-[#00A3FF]" />
+                      <RotateCw className="h-4 w-4 text-white" />
                       <span>Girar 90°</span>
                     </button>
                   </div>
@@ -836,7 +836,7 @@ export function DtfCanvas() {
                 <button
                   type="button"
                   onClick={handleGridFill}
-                  className="w-full flex items-center justify-center gap-2 rounded-xl border border-[#00A3FF]/40 bg-[#00A3FF]/10 hover:bg-[#00A3FF]/20 px-3.5 py-2.5 text-xs text-[#00A3FF] font-bold transition-all active:scale-95"
+                  className="w-full flex items-center justify-center gap-2 rounded-xl border border-white/30 bg-white/10 hover:bg-white/20 px-3.5 py-2.5 text-xs text-white font-bold transition-all active:scale-95"
                   title="Multiplica y organiza automáticamente este arte para llenar todo el metro"
                 >
                   <Grid className="h-4 w-4" />
@@ -857,7 +857,7 @@ export function DtfCanvas() {
           <div className="mb-2 flex items-center justify-between bg-[#16181D] border border-[#20232A] px-4 py-2.5 rounded-t-xl text-xs text-[#8E95A5]">
             <div className="flex items-center gap-2">
               <span className="font-semibold text-[#F3F4F6]">Tu Metro de Trabajo:</span>
-              <span className="text-[#00A3FF] font-mono font-bold">
+              <span className="text-white font-mono font-bold">
                 {canvasWidthCm} cm × {canvasHeightCm} cm
               </span>
               <span className="hidden sm:inline-block text-[#8E95A5]/60 text-[11px]">
@@ -875,7 +875,7 @@ export function DtfCanvas() {
               </button>
               <button
                 onClick={() => setZoom(1)}
-                className="font-mono text-xs font-bold px-2.5 py-1 rounded-md text-[#F3F4F6] bg-[#0D0E11] border border-[#20232A] hover:border-[#00A3FF]"
+                className="font-mono text-xs font-bold px-2.5 py-1 rounded-md text-[#F3F4F6] bg-[#0D0E11] border border-[#20232A] hover:border-white"
                 title="Resetear zoom a 100%"
               >
                 {Math.round(zoom * 100)}%
@@ -889,13 +889,13 @@ export function DtfCanvas() {
               </button>
               <button
                 onClick={toggleCanvasFullscreen}
-                className="h-8 w-8 flex items-center justify-center text-[#8E95A5] hover:text-white rounded-lg bg-[#0D0E11] border border-[#20232A] hover:border-[#00A3FF] transition-all active:scale-95 ml-1"
+                className="h-8 w-8 flex items-center justify-center text-[#8E95A5] hover:text-white rounded-lg bg-[#0D0E11] border border-[#20232A] hover:border-white transition-all active:scale-95 ml-1"
                 title={isCanvasFullscreen ? "Salir de pantalla completa" : "Pantalla completa de taller"}
               >
                 {isCanvasFullscreen ? (
-                  <Minimize2 className="h-4 w-4 text-[#00A3FF]" />
+                  <Minimize2 className="h-4 w-4 text-white" />
                 ) : (
-                  <Maximize2 className="h-4 w-4 text-[#00A3FF]" />
+                  <Maximize2 className="h-4 w-4 text-white" />
                 )}
               </button>
             </div>
@@ -911,13 +911,13 @@ export function DtfCanvas() {
               isCanvasFullscreen ? "h-[calc(100vh-120px)] max-h-none" : "min-h-[600px] max-h-[750px]"
             } overflow-auto rounded-b-xl border bg-[#0D0E11] p-8 custom-scrollbar flex justify-center items-start transition-colors ${
               isCanvasDragging
-                ? "border-[#00A3FF] bg-[#00A3FF]/5"
+                ? "border-white bg-white/5"
                 : "border-[#20232A]"
             }`}
           >
             {isCanvasDragging && (
               <div className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-[#0D0E11]/80 backdrop-blur-sm pointer-events-none">
-                <UploadCloud className="h-12 w-12 text-[#00A3FF] animate-bounce mb-2" />
+                <UploadCloud className="h-12 w-12 text-white animate-bounce mb-2" />
                 <p className="text-base font-bold text-white">Suelta tus diseños en el metro</p>
                 <p className="font-mono text-xs text-[#8E95A5]">Se acomodan en medidas reales automáticamente</p>
               </div>
@@ -928,9 +928,9 @@ export function DtfCanvas() {
                 width: `${visualWidthPx}px`,
                 height: `${visualHeightPx}px`,
               }}
-              className="relative shadow-2xl border-2 border-[#00A3FF]/40 bg-transparency-grid shrink-0 transition-all"
+              className="relative shadow-2xl border-2 border-white/30 bg-transparency-grid shrink-0 transition-all"
             >
-              <div className="absolute top-0 left-0 bg-[#0D0E11] text-[#00A3FF] border-r border-b border-[#20232A] text-[10px] font-mono px-2 py-0.5 z-10 font-bold">
+              <div className="absolute top-0 left-0 bg-[#0D0E11] text-white border-r border-b border-[#20232A] text-[10px] font-mono px-2 py-0.5 z-10 font-bold">
                 58 cm × {canvasHeightCm} cm • 300 DPI
               </div>
 
@@ -956,19 +956,19 @@ export function DtfCanvas() {
                     }}
                     className={`cursor-move group select-none ${
                       isSelected
-                        ? "ring-2 ring-[#00A3FF] shadow-2xl"
+                        ? "ring-2 ring-white shadow-2xl"
                         : "hover:ring-1 hover:ring-[#8E95A5]/60"
                     }`}
                   >
                     {/* Tirador de Rotación con el Mouse */}
                     {isSelected && (
                       <>
-                        <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-0.5 h-4 bg-[#00A3FF] pointer-events-none" />
+                        <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-0.5 h-4 bg-white pointer-events-none" />
                         <div
                           onMouseDown={(e) =>
                             handleRotateStart(e, d, e.currentTarget.parentElement as HTMLDivElement)
                           }
-                          className="absolute -top-9 left-1/2 -translate-x-1/2 h-7 w-7 rounded-full bg-[#00A3FF] text-white flex items-center justify-center cursor-grab active:cursor-grabbing shadow-xl hover:scale-110 transition-transform z-30 ring-2 ring-[#0D0E11]"
+                          className="absolute -top-9 left-1/2 -translate-x-1/2 h-7 w-7 rounded-full bg-white text-black flex items-center justify-center cursor-grab active:cursor-grabbing shadow-xl hover:scale-110 transition-transform z-30 ring-2 ring-[#0D0E11]"
                           title="Gira este diseño con el mouse (mantén Shift para pasos de 15°)"
                         >
                           <RotateCw className="h-3.5 w-3.5" />
@@ -987,7 +987,7 @@ export function DtfCanvas() {
                     <div
                       className={`absolute -bottom-6 left-1/2 -translate-x-1/2 px-2.5 py-0.5 rounded-lg whitespace-nowrap z-20 font-mono text-[11px] font-bold shadow-md transition-all ${
                         isSelected
-                          ? "bg-[#0D0E11] border border-[#00A3FF] text-[#00A3FF] ring-1 ring-[#00A3FF]/40 scale-105"
+                          ? "bg-[#0D0E11] border border-white text-white ring-1 ring-white/40 scale-105"
                           : "bg-[#0D0E11]/90 border border-[#20232A] text-[#F3F4F6] text-[10px]"
                       }`}
                     >

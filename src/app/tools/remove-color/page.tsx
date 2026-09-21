@@ -98,7 +98,7 @@ export default function RemoveColorPage() {
           {originalImage && (
             <div className="p-4 rounded-xl border border-[#20232A] bg-[#0D0E11] space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-mono font-bold text-[#00A3FF] uppercase tracking-wider flex items-center gap-1.5">
+                <span className="text-xs font-mono font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
                   <Crosshair className="h-4 w-4" /> Toca tu imagen para elegir el color:
                 </span>
                 <span className="text-xs text-[#8E95A5]">
@@ -130,7 +130,7 @@ export default function RemoveColorPage() {
                 onClick={() => setSelectedHex("#000000")}
                 className={`flex items-center justify-between p-3.5 rounded-xl border transition-all active:scale-95 ${
                   selectedHex.toLowerCase() === "#000000"
-                    ? "border-[#00A3FF] bg-[#16181D] ring-2 ring-[#00A3FF] shadow-lg"
+                    ? "border-white bg-[#16181D] ring-2 ring-white shadow-lg"
                     : "border-[#20232A] bg-[#0D0E11] hover:border-gray-500"
                 }`}
               >
@@ -170,7 +170,7 @@ export default function RemoveColorPage() {
                 onClick={() => setSelectedHex("#ffffff")}
                 className={`flex items-center justify-between p-3.5 rounded-xl border transition-all active:scale-95 ${
                   selectedHex.toLowerCase() === "#ffffff"
-                    ? "border-[#00A3FF] bg-[#16181D] ring-2 ring-[#00A3FF] shadow-lg"
+                    ? "border-white bg-[#16181D] ring-2 ring-white shadow-lg"
                     : "border-[#20232A] bg-[#0D0E11] hover:border-gray-500"
                 }`}
               >
@@ -205,13 +205,13 @@ export default function RemoveColorPage() {
                   value={selectedHex}
                   onChange={(e) => setSelectedHex(e.target.value)}
                   placeholder="#000000"
-                  className="w-28 rounded-xl border border-[#20232A] bg-[#0D0E11] px-3 py-2.5 text-sm font-mono text-[#F3F4F6] uppercase font-bold focus:border-[#00A3FF] focus:outline-none"
+                  className="w-28 rounded-xl border border-[#20232A] bg-[#0D0E11] px-3 py-2.5 text-sm font-mono text-[#F3F4F6] uppercase font-bold focus:border-white focus:outline-none"
                 />
                 {hasEyeDropper && (
                   <button
                     type="button"
                     onClick={handlePickColor}
-                    className="inline-flex items-center gap-2 rounded-xl border border-[#00A3FF]/40 bg-[#00A3FF]/15 px-3 py-2.5 text-xs font-bold text-[#00A3FF] hover:bg-[#00A3FF]/25 transition-all shadow-sm active:scale-95"
+                    className="inline-flex items-center gap-2 rounded-xl border border-white/30 bg-white/10 px-3 py-2.5 text-xs font-bold text-white hover:bg-white/20 transition-all shadow-sm active:scale-95"
                     title="Gotero de pantalla"
                   >
                     <Pipette className="h-4 w-4" />
@@ -228,7 +228,7 @@ export default function RemoveColorPage() {
             <div className="space-y-2">
               <div className="flex justify-between items-center text-xs font-mono">
                 <span className="text-[#8E95A5]">Fuerza del Borrado (Tolerancia):</span>
-                <span className="text-sm font-bold text-[#00A3FF] bg-[#0D0E11] px-2.5 py-1 rounded border border-[#20232A]">
+                <span className="text-sm font-bold text-white bg-[#0D0E11] px-2.5 py-1 rounded border border-[#20232A]">
                   {customParams.tolerance || 30}%
                 </span>
               </div>
@@ -238,7 +238,7 @@ export default function RemoveColorPage() {
                 max="90"
                 value={customParams.tolerance || 30}
                 onChange={(e) => setCustomParam("tolerance", e.target.value)}
-                className="w-full h-2 rounded-lg bg-[#0D0E11] accent-[#00A3FF] cursor-pointer mt-2"
+                className="w-full h-2 rounded-lg bg-[#0D0E11] accent-white cursor-pointer mt-2"
               />
               <span className="text-[11px] text-[#8E95A5]/80 block">
                 Sube este valor si todavía quedan sombras o rastros del color.
@@ -249,7 +249,7 @@ export default function RemoveColorPage() {
             <div className="space-y-2">
               <div className="flex justify-between items-center text-xs font-mono">
                 <span className="text-[#8E95A5]">Suavizar Orillas:</span>
-                <span className="text-sm font-bold text-[#00A3FF] bg-[#0D0E11] px-2.5 py-1 rounded border border-[#20232A]">
+                <span className="text-sm font-bold text-white bg-[#0D0E11] px-2.5 py-1 rounded border border-[#20232A]">
                   {customParams.smoothness || 10}%
                 </span>
               </div>
@@ -259,7 +259,7 @@ export default function RemoveColorPage() {
                 max="40"
                 value={customParams.smoothness || 10}
                 onChange={(e) => setCustomParam("smoothness", e.target.value)}
-                className="w-full h-2 rounded-lg bg-[#0D0E11] accent-[#00A3FF] cursor-pointer mt-2"
+                className="w-full h-2 rounded-lg bg-[#0D0E11] accent-white cursor-pointer mt-2"
               />
               <span className="text-[11px] text-[#8E95A5]/80 block">
                 Hace que el contorno no quede mordido ni con bordes duros.
@@ -273,7 +273,7 @@ export default function RemoveColorPage() {
               htmlFor="mode"
               className={`flex items-start gap-3 p-3.5 rounded-xl border cursor-pointer transition-all ${
                 customParams.mode === "contiguous"
-                  ? "border-[#00A3FF] bg-[#00A3FF]/15 text-white"
+                  ? "border-white bg-white/10 text-white"
                   : "border-[#20232A] bg-[#0D0E11] text-[#8E95A5]"
               }`}
             >
@@ -282,11 +282,11 @@ export default function RemoveColorPage() {
                 id="mode"
                 checked={customParams.mode === "contiguous"}
                 onChange={(e) => setCustomParam("mode", e.target.checked ? "contiguous" : "global")}
-                className="h-5 w-5 rounded border-[#20232A] text-[#00A3FF] focus:ring-[#00A3FF] mt-0.5"
+                className="h-5 w-5 rounded border-[#20232A] text-white focus:ring-white mt-0.5"
               />
               <div className="space-y-0.5">
                 <span className="text-sm font-bold text-[#F3F4F6] block flex items-center gap-1.5">
-                  <ShieldCheck className="h-4 w-4 text-[#00A3FF]" /> Solo el Fondo de Afuera
+                  <ShieldCheck className="h-4 w-4 text-white" /> Solo el Fondo de Afuera
                 </span>
                 <span className="text-[11px] text-[#8E95A5] block">
                   Protege lo que esté adentro de tu diseño (como ojos o letras) para no borrarlo por accidente.
@@ -298,7 +298,7 @@ export default function RemoveColorPage() {
               htmlFor="defringe"
               className={`flex items-start gap-3 p-3.5 rounded-xl border cursor-pointer transition-all ${
                 customParams.defringe !== "false"
-                  ? "border-[#00A3FF] bg-[#00A3FF]/15 text-white"
+                  ? "border-white bg-white/10 text-white"
                   : "border-[#20232A] bg-[#0D0E11] text-[#8E95A5]"
               }`}
             >
@@ -307,11 +307,11 @@ export default function RemoveColorPage() {
                 id="defringe"
                 checked={customParams.defringe !== "false"}
                 onChange={(e) => setCustomParam("defringe", e.target.checked ? "true" : "false")}
-                className="h-5 w-5 rounded border-[#20232A] text-[#00A3FF] focus:ring-[#00A3FF] mt-0.5"
+                className="h-5 w-5 rounded border-[#20232A] text-white focus:ring-white mt-0.5"
               />
               <div className="space-y-0.5">
                 <span className="text-sm font-bold text-[#F3F4F6] block flex items-center gap-1.5">
-                  <Sparkles className="h-4 w-4 text-[#00A3FF]" /> Limpiar Flecos en la Orilla
+                  <Sparkles className="h-4 w-4 text-white" /> Limpiar Flecos en la Orilla
                 </span>
                 <span className="text-[11px] text-[#8E95A5] block">
                   Quita el halo o resplandor del color que acabas de borrar para que no queden orillas manchadas.
