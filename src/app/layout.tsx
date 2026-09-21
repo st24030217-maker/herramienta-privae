@@ -4,6 +4,8 @@ import { Montserrat } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/Navbar";
 import { LightLines } from "@/components/ui/light-lines";
+import { UserGuideModal } from "@/components/UserGuideModal";
+import Link from "next/link";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -38,6 +40,7 @@ export default function RootLayout({
         </div>
         <Navbar />
         <main className="relative z-0 flex-1">{children}</main>
+        <UserGuideModal />
         <footer className="border-t border-[#20232A] bg-[#16181D] py-5 text-xs text-[#8E95A5]">
           <div className="mx-auto max-w-7xl px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
             <div className="flex items-center gap-3">
@@ -52,6 +55,9 @@ export default function RootLayout({
               <span className="font-medium text-neutral-300">Consola de Preparación y Salida DTF</span>
             </div>
             <div className="flex items-center gap-4 font-mono text-[11px] text-[#8E95A5]">
+              <Link href="/guia" className="hover:text-white transition-colors underline">
+                MANUAL DEL TALLER
+              </Link>
               <span>300 DPI CERTIFICADO</span>
               <span>ANCHO 580 MM</span>
               <span>CANAL RGBA ALFA</span>

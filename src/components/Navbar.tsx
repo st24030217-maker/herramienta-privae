@@ -15,7 +15,8 @@ import {
   LogOut, 
   Crown,
   ChevronDown,
-  ScanSearch
+  ScanSearch,
+  BookOpen
 } from "lucide-react";
 import { SubscriptionBanner } from "./SubscriptionBanner";
 import { NotchNavbar, type NotchNavItem } from "./ui/notch-navbar";
@@ -152,6 +153,16 @@ export function Navbar() {
   // Contenido para el ala derecha (Right Wing)
   const rightWingContent = (
     <div className="flex items-center gap-2 sm:gap-3">
+      {/* Botón de Guía de Uso Rápida */}
+      <Link
+        href="/guia"
+        className="inline-flex items-center gap-1.5 rounded-lg border border-neutral-800 bg-neutral-900 px-2.5 py-1 text-xs font-medium text-neutral-300 hover:text-white hover:border-neutral-600 transition-all active:scale-98"
+        title="Manual de Uso para Nuevos Usuarios y Talleres"
+      >
+        <BookOpen className="h-3.5 w-3.5 text-white" />
+        <span className="hidden sm:inline text-[11px] font-mono">Guía</span>
+      </Link>
+
       {userData ? (
         <div className="flex items-center gap-2">
           {/* Badge de rol / suscripción */}
@@ -206,6 +217,14 @@ export function Navbar() {
                   className="flex items-center gap-2.5 px-4 py-2 text-xs text-neutral-300 hover:bg-neutral-800/60 transition-colors"
                 >
                   <User className="h-3.5 w-3.5 text-neutral-400" /> Mi Cuenta & Suscripción
+                </Link>
+
+                <Link
+                  href="/guia"
+                  onClick={() => setMenuOpen(false)}
+                  className="flex items-center gap-2.5 px-4 py-2 text-xs text-neutral-300 hover:bg-neutral-800/60 transition-colors"
+                >
+                  <BookOpen className="h-3.5 w-3.5 text-neutral-400" /> Manual & Guía de Uso
                 </Link>
 
                 {userData.role === "ADMIN" && (
@@ -281,6 +300,16 @@ export function Navbar() {
             );
           })}
         </div>
+
+        {/* Acceso a Guía de Uso en Móvil */}
+        <Link
+          href="/guia"
+          onClick={onClose}
+          className="mt-2 flex items-center gap-2.5 p-2.5 rounded-lg border border-[#20232A] bg-[#0D0E11] text-xs font-medium text-white hover:bg-white/10 transition-colors"
+        >
+          <BookOpen className="h-4 w-4 text-white shrink-0" />
+          <span>Manual y Guía de Uso (Primera Vez)</span>
+        </Link>
       </div>
 
       <div className="border-t border-neutral-800 pt-3">
