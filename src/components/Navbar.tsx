@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
 import { 
@@ -136,18 +137,15 @@ export function Navbar() {
 
   // Logo central para el Notch
   const centerLogo = (
-    <Link href="/" className="flex items-center gap-2 group px-1 py-0.5 rounded-md hover:opacity-85 transition-opacity">
-      <div className="flex h-6 w-6 items-center justify-center rounded-md bg-neutral-900 border border-neutral-800 text-white font-mono font-bold text-xs">
-        P
-      </div>
-      <div className="flex flex-col text-left">
-        <span className="font-bold tracking-tight text-white text-xs leading-none">
-          PRIVAE <span className="text-neutral-400 font-normal">DTF</span>
-        </span>
-        <span className="font-mono text-[8px] tracking-wider text-neutral-500 leading-none mt-0.5">
-          PRE-PRESS
-        </span>
-      </div>
+    <Link href="/" className="flex items-center gap-2 group px-2 py-0.5 rounded-md hover:opacity-85 transition-opacity">
+      <Image
+        src="/logo.png"
+        alt="Privae Textil"
+        width={96}
+        height={48}
+        className="h-7 w-auto object-contain"
+        priority
+      />
     </Link>
   );
 

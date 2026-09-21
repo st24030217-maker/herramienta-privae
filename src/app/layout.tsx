@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import "./globals.css";
 import { Navbar } from "@/components/Navbar";
 import { LightLines } from "@/components/ui/light-lines";
@@ -32,10 +33,16 @@ export default function RootLayout({
         <main className="relative z-0 flex-1">{children}</main>
         <footer className="border-t border-[#20232A] bg-[#16181D] py-5 text-xs text-[#8E95A5]">
           <div className="mx-auto max-w-7xl px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-            <div className="flex items-center gap-2">
-              <span className="font-semibold text-[#F3F4F6]">Privae Textil</span>
-              <span>—</span>
-              <span>Consola de Preparación y Salida DTF</span>
+            <div className="flex items-center gap-3">
+              <Image
+                src="/logo.png"
+                alt="Privae Textil"
+                width={70}
+                height={35}
+                className="h-5 w-auto object-contain opacity-80"
+              />
+              <span className="text-neutral-600">|</span>
+              <span className="font-medium text-neutral-300">Consola de Preparación y Salida DTF</span>
             </div>
             <div className="flex items-center gap-4 font-mono text-[11px] text-[#8E95A5]">
               <span>300 DPI CERTIFICADO</span>
