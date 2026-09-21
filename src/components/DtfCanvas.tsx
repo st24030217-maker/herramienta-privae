@@ -224,16 +224,17 @@ export function DtfCanvas() {
     return Math.round(d.originalWidthPx / widthInches);
   };
 
-  const handleDragStart = (e: React.MouseEvent, design: CanvasDesign) => {
+  const handleDragStart = (e: React.MouseEvent | React.TouchEvent, design: CanvasDesign) => {
     setSelectedId(design.id);
-    const startX = e.clientX;
-    const startY = e.clientY;
+    const isTouch = "touches" in e;
+    const startX = isTouch ? e.touches[0].clientX : e.clientX;
+    const startY = isTouch ? e.touches[0].clientY : e.clientY;
     const startDesignX = design.xCm;
     const startDesignY = design.yCm;
 
-    const handleMouseMove = (moveEvent: MouseEvent) => {
-      const deltaXCm = (moveEvent.clientX - startX) / pxPerCm;
-      const deltaYCm = (moveEvent.clientY - startY) / pxPerCm;
+    const handlePointerMove = (clientX: number, clientY: number) => {
+      const deltaXCm = (clientX - startX) / pxPerCm;
+      const deltaYCm = (clientY - startY) / pxPerCm;
 
       const newX = Math.max(0, Math.min(canvasWidthCm - design.widthCm, parseFloat((startDesignX + deltaXCm).toFixed(2))));
       const newY = Math.max(0, Math.min(canvasHeightCm - design.heightCm, parseFloat((startDesignY + deltaYCm).toFixed(2))));
@@ -243,16 +244,31 @@ export function DtfCanvas() {
       );
     };
 
-    const handleMouseUp = () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("mouseup", handleMouseUp);
+    const onMouseMove = (moveEvent: MouseEvent) => {
+      handlePointerMove(moveEvent.clientX, moveEvent.clientY);
     };
 
-    window.addEventListener("mousemove", handleMouseMove);
-    window.addEventListener("mouseup", handleMouseUp);
+    const onTouchMove = (moveEvent: TouchEvent) => {
+      if (moveEvent.touches.length > 0) {
+        moveEvent.preventDefault();
+        handlePointerMove(moveEvent.touches[0].clientX, moveEvent.touches[0].clientY);
+      }
+    };
+
+    const onPointerEnd = () => {
+      window.removeEventListener("mousemove", onMouseMove);
+      window.removeEventListener("mouseup", onPointerEnd);
+      window.removeEventListener("touchmove", onTouchMove);
+      window.removeEventListener("touchend", onPointerEnd);
+    };
+
+    window.addEventListener("mousemove", onMouseMove);
+    window.addEventListener("mouseup", onPointerEnd);
+    window.addEventListener("touchmove", onTouchMove, { passive: false });
+    window.addEventListener("touchend", onPointerEnd);
   };
 
-  const handleRotateStart = (e: React.MouseEvent, design: CanvasDesign, element: HTMLDivElement | null) => {
+  const handleRotateStart = (e: React.MouseEvent | React.TouchEvent, design: CanvasDesign, element: HTMLDivElement | null) => {
     e.stopPropagation();
     e.preventDefault();
     setSelectedId(design.id);
@@ -262,16 +278,14 @@ export function DtfCanvas() {
     const centerX = rect.left + rect.width / 2;
     const centerY = rect.top + rect.height / 2;
 
-    const handleMouseMove = (moveEvent: MouseEvent) => {
-      const deltaX = moveEvent.clientX - centerX;
-      const deltaY = moveEvent.clientY - centerY;
-      // Calcular ángulo con respecto al centro
+    const handlePointerMove = (clientX: number, clientY: number, shiftKey: boolean) => {
+      const deltaX = clientX - centerX;
+      const deltaY = clientY - centerY;
       let degrees = Math.round((Math.atan2(deltaY, deltaX) * 180) / Math.PI + 90);
       if (degrees < 0) degrees += 360;
       degrees = degrees % 360;
 
-      // Si presiona Shift, ajusta en pasos de 15 grados
-      if (moveEvent.shiftKey) {
+      if (shiftKey) {
         degrees = Math.round(degrees / 15) * 15;
       }
 
@@ -280,13 +294,164 @@ export function DtfCanvas() {
       );
     };
 
-    const handleMouseUp = () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("mouseup", handleMouseUp);
+    const onMouseMove = (moveEvent: MouseEvent) => {
+      handlePointerMove(moveEvent.clientX, moveEvent.clientY, moveEvent.shiftKey);
     };
 
-    window.addEventListener("mousemove", handleMouseMove);
-    window.addEventListener("mouseup", handleMouseUp);
+    const onTouchMove = (moveEvent: TouchEvent) => {
+      if (moveEvent.touches.length > 0) {
+        moveEvent.preventDefault();
+        handlePointerMove(moveEvent.touches[0].clientX, moveEvent.touches[0].clientY, false);
+      }
+    };
+
+    const onPointerEnd = () => {
+      window.removeEventListener("mousemove", onMouseMove);
+      window.removeEventListener("mouseup", onPointerEnd);
+      window.removeEventListener("touchmove", onTouchMove);
+      window.removeEventListener("touchend", onPointerEnd);
+    };
+
+    window.addEventListener("mousemove", onMouseMove);
+    window.addEventListener("mouseup", onPointerEnd);
+    window.addEventListener("touchmove", onTouchMove, { passive: false });
+    window.addEventListener("touchend", onPointerEnd);
+  };
+
+  type ResizeCorner = "nw" | "ne" | "sw" | "se";
+
+  const handleResizeStart = (
+    e: React.MouseEvent | React.TouchEvent,
+    design: CanvasDesign,
+    corner: ResizeCorner
+  ) => {
+    e.stopPropagation();
+    e.preventDefault();
+    setSelectedId(design.id);
+
+    const isTouch = "touches" in e;
+    const startX = isTouch ? e.touches[0].clientX : e.clientX;
+    const startY = isTouch ? e.touches[0].clientY : e.clientY;
+
+    const startDesignX = design.xCm;
+    const startDesignY = design.yCm;
+    const startWidthCm = design.widthCm;
+    const startHeightCm = design.heightCm;
+    const aspect = design.aspectRatio || (startWidthCm / startHeightCm);
+
+    const handlePointerMove = (clientX: number, clientY: number) => {
+      const screenDeltaXCm = (clientX - startX) / pxPerCm;
+      const screenDeltaYCm = (clientY - startY) / pxPerCm;
+
+      // Rotar el delta según la orientación del diseño para que pellizcar funcione natural en cualquier ángulo
+      const rad = (-design.rotation * Math.PI) / 180;
+      const localDeltaXCm = screenDeltaXCm * Math.cos(rad) - screenDeltaYCm * Math.sin(rad);
+      const localDeltaYCm = screenDeltaXCm * Math.sin(rad) + screenDeltaYCm * Math.cos(rad);
+
+      const diag = Math.hypot(startWidthCm, startHeightCm);
+      if (diag <= 0) return;
+
+      let proj = 0;
+      if (corner === "se") {
+        proj = (localDeltaXCm * startWidthCm + localDeltaYCm * startHeightCm) / diag;
+      } else if (corner === "sw") {
+        proj = (-localDeltaXCm * startWidthCm + localDeltaYCm * startHeightCm) / diag;
+      } else if (corner === "ne") {
+        proj = (localDeltaXCm * startWidthCm - localDeltaYCm * startHeightCm) / diag;
+      } else if (corner === "nw") {
+        proj = (-localDeltaXCm * startWidthCm - localDeltaYCm * startHeightCm) / diag;
+      }
+
+      // Proyección escalar proporcional (conserva medidas proporcionales exactas)
+      const scale = Math.max(0.05, (diag + proj) / diag);
+      let newW = startWidthCm * scale;
+      let newH = newW / aspect;
+
+      // Limitar tamaño mínimo a 2 cm para que no desaparezca
+      const minW = 2;
+      const minH = minW / aspect;
+      if (newW < minW) {
+        newW = minW;
+        newH = minH;
+      }
+
+      let newX = startDesignX;
+      let newY = startDesignY;
+
+      if (corner === "se") {
+        newX = startDesignX;
+        newY = startDesignY;
+      } else if (corner === "sw") {
+        const anchorX = startDesignX + startWidthCm;
+        newX = anchorX - newW;
+        newY = startDesignY;
+      } else if (corner === "ne") {
+        const anchorY = startDesignY + startHeightCm;
+        newX = startDesignX;
+        newY = anchorY - newH;
+      } else if (corner === "nw") {
+        const anchorX = startDesignX + startWidthCm;
+        const anchorY = startDesignY + startHeightCm;
+        newX = anchorX - newW;
+        newY = anchorY - newH;
+      }
+
+      // Restricción dentro de los límites del metro (58 cm de ancho x canvasHeightCm de alto)
+      if (newX < 0) {
+        newW += newX;
+        newH = newW / aspect;
+        newX = 0;
+      }
+      if (newY < 0) {
+        newH += newY;
+        newW = newH * aspect;
+        newY = 0;
+      }
+      if (newX + newW > canvasWidthCm) {
+        newW = canvasWidthCm - newX;
+        newH = newW / aspect;
+      }
+      if (newY + newH > canvasHeightCm) {
+        newH = canvasHeightCm - newY;
+        newW = newH * aspect;
+      }
+
+      newW = parseFloat(newW.toFixed(2));
+      newH = parseFloat(newH.toFixed(2));
+      newX = parseFloat(newX.toFixed(2));
+      newY = parseFloat(newY.toFixed(2));
+
+      setDesigns((prev) =>
+        prev.map((d) =>
+          d.id === design.id
+            ? { ...d, xCm: newX, yCm: newY, widthCm: newW, heightCm: newH }
+            : d
+        )
+      );
+    };
+
+    const onMouseMove = (moveEvent: MouseEvent) => {
+      handlePointerMove(moveEvent.clientX, moveEvent.clientY);
+    };
+
+    const onTouchMove = (moveEvent: TouchEvent) => {
+      if (moveEvent.touches.length > 0) {
+        moveEvent.preventDefault();
+        handlePointerMove(moveEvent.touches[0].clientX, moveEvent.touches[0].clientY);
+      }
+    };
+
+    const onPointerEnd = () => {
+      window.removeEventListener("mousemove", onMouseMove);
+      window.removeEventListener("mouseup", onPointerEnd);
+      window.removeEventListener("touchmove", onTouchMove);
+      window.removeEventListener("touchend", onPointerEnd);
+    };
+
+    window.addEventListener("mousemove", onMouseMove);
+    window.addEventListener("mouseup", onPointerEnd);
+    window.addEventListener("touchmove", onTouchMove, { passive: false });
+    window.addEventListener("touchend", onPointerEnd);
   };
 
   const handleGridFill = () => {
@@ -945,6 +1110,7 @@ export function DtfCanvas() {
                   <div
                     key={d.id}
                     onMouseDown={(e) => handleDragStart(e, d)}
+                    onTouchStart={(e) => handleDragStart(e, d)}
                     style={{
                       position: "absolute",
                       left: `${left}px`,
@@ -960,7 +1126,7 @@ export function DtfCanvas() {
                         : "hover:ring-1 hover:ring-[#8E95A5]/60"
                     }`}
                   >
-                    {/* Tirador de Rotación con el Mouse */}
+                    {/* Tirador de Rotación con el Mouse / Dedo */}
                     {isSelected && (
                       <>
                         <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-0.5 h-4 bg-white pointer-events-none" />
@@ -968,10 +1134,54 @@ export function DtfCanvas() {
                           onMouseDown={(e) =>
                             handleRotateStart(e, d, e.currentTarget.parentElement as HTMLDivElement)
                           }
-                          className="absolute -top-9 left-1/2 -translate-x-1/2 h-7 w-7 rounded-full bg-white text-black flex items-center justify-center cursor-grab active:cursor-grabbing shadow-xl hover:scale-110 transition-transform z-30 ring-2 ring-[#0D0E11]"
-                          title="Gira este diseño con el mouse (mantén Shift para pasos de 15°)"
+                          onTouchStart={(e) =>
+                            handleRotateStart(e, d, e.currentTarget.parentElement as HTMLDivElement)
+                          }
+                          className="absolute -top-9 left-1/2 -translate-x-1/2 h-7 w-7 rounded-full bg-white text-black flex items-center justify-center cursor-grab active:cursor-grabbing shadow-xl hover:scale-110 transition-transform z-30 ring-2 ring-[#0D0E11] touch-none"
+                          title="Gira este diseño con el mouse o dedo (mantén Shift para pasos de 15°)"
                         >
                           <RotateCw className="h-3.5 w-3.5" />
+                        </div>
+
+                        {/* 4 Tiradores de Esquina para Pellizcar y Redimensionar Proporcionalmente */}
+                        {/* Esquina Superior Izquierda (NW) */}
+                        <div
+                          onMouseDown={(e) => handleResizeStart(e, d, "nw")}
+                          onTouchStart={(e) => handleResizeStart(e, d, "nw")}
+                          className="absolute -top-2.5 -left-2.5 h-5 w-5 rounded-full bg-white border-2 border-[#0D0E11] shadow-lg cursor-nwse-resize z-30 hover:scale-125 transition-transform flex items-center justify-center touch-none ring-1 ring-white/50"
+                          title="Pellizca o arrastra para achicar o agrandar proporcionalmente"
+                        >
+                          <div className="w-1.5 h-1.5 rounded-full bg-[#0D0E11]" />
+                        </div>
+
+                        {/* Esquina Superior Derecha (NE) */}
+                        <div
+                          onMouseDown={(e) => handleResizeStart(e, d, "ne")}
+                          onTouchStart={(e) => handleResizeStart(e, d, "ne")}
+                          className="absolute -top-2.5 -right-2.5 h-5 w-5 rounded-full bg-white border-2 border-[#0D0E11] shadow-lg cursor-nesw-resize z-30 hover:scale-125 transition-transform flex items-center justify-center touch-none ring-1 ring-white/50"
+                          title="Pellizca o arrastra para achicar o agrandar proporcionalmente"
+                        >
+                          <div className="w-1.5 h-1.5 rounded-full bg-[#0D0E11]" />
+                        </div>
+
+                        {/* Esquina Inferior Izquierda (SW) */}
+                        <div
+                          onMouseDown={(e) => handleResizeStart(e, d, "sw")}
+                          onTouchStart={(e) => handleResizeStart(e, d, "sw")}
+                          className="absolute -bottom-2.5 -left-2.5 h-5 w-5 rounded-full bg-white border-2 border-[#0D0E11] shadow-lg cursor-nesw-resize z-30 hover:scale-125 transition-transform flex items-center justify-center touch-none ring-1 ring-white/50"
+                          title="Pellizca o arrastra para achicar o agrandar proporcionalmente"
+                        >
+                          <div className="w-1.5 h-1.5 rounded-full bg-[#0D0E11]" />
+                        </div>
+
+                        {/* Esquina Inferior Derecha (SE) */}
+                        <div
+                          onMouseDown={(e) => handleResizeStart(e, d, "se")}
+                          onTouchStart={(e) => handleResizeStart(e, d, "se")}
+                          className="absolute -bottom-2.5 -right-2.5 h-5 w-5 rounded-full bg-white border-2 border-[#0D0E11] shadow-lg cursor-nwse-resize z-30 hover:scale-125 transition-transform flex items-center justify-center touch-none ring-1 ring-white/50"
+                          title="Pellizca o arrastra para achicar o agrandar proporcionalmente"
+                        >
+                          <div className="w-1.5 h-1.5 rounded-full bg-[#0D0E11]" />
                         </div>
                       </>
                     )}
