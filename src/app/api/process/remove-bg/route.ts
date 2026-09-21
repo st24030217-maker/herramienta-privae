@@ -6,14 +6,9 @@ import { fileTooLarge } from "@/lib/upload";
 
 export async function POST(req: NextRequest) {
   try {
-    const user = await getCurrentUser();
-    if (!user) {
-      return NextResponse.json(
-        { error: "Debes iniciar sesión para utilizar las herramientas de preparación DTF." },
-        { status: 401 }
-      );
-    }
-    if (!user.subscription.isAccessGranted) {
+    const user = await getCurrentUser().catch(() => null);
+
+    if (user && !user.subscription.isAccessGranted) {
       return NextResponse.json(
         { error: "Tu período de prueba ha terminado. Activa tu suscripción para continuar." },
         { status: 403 }
@@ -22,11 +17,13 @@ export async function POST(req: NextRequest) {
 
     const formData = await req.formData();
     const file = formData.get("file") as File | null;
-    const sensitivity = parseInt(formData.get("sensitivity") as string || "35");
-    const featherRadius = parseInt(formData.get("featherRadius") as string || "2");
-    const rawBgType = formData.get("bgType") as string || "auto";
+    const sensitivity = parseInt(formData.get("sensitivity") as string || "35", 10);
+    const featherRadius = parseInt(formData.get("featherRadius") as string || "2", 10);
+    const rawBgType = (formData.get("bgType") as string || "auto").toLowerCase();
     const bgType: "auto" | "white" | "black" = 
       rawBgType === "white" || rawBgType === "black" ? rawBgType : "auto";
+    const rawMode = (formData.get("mode") as string || "contiguous").toLowerCase();
+    const mode: "contiguous" | "global" = rawMode === "global" ? "global" : "contiguous";
 
     if (!file) {
       return NextResponse.json({ error: "No se proporcionó ningún archivo" }, { status: 400 });
@@ -42,6 +39,7 @@ export async function POST(req: NextRequest) {
       sensitivity,
       featherRadius,
       bgType,
+      mode,
     });
 
     if (user) {

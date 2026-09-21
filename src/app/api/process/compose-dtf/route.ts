@@ -6,14 +6,9 @@ import { fileTooLarge } from "@/lib/upload";
 
 export async function POST(req: NextRequest) {
   try {
-    const user = await getCurrentUser();
-    if (!user) {
-      return NextResponse.json(
-        { error: "Debes iniciar sesión para armar y exportar pliegos DTF." },
-        { status: 401 }
-      );
-    }
-    if (!user.subscription.isAccessGranted) {
+    const user = await getCurrentUser().catch(() => null);
+
+    if (user && !user.subscription.isAccessGranted) {
       return NextResponse.json(
         { error: "Tu período de prueba ha terminado. Activa tu suscripción para continuar." },
         { status: 403 }
@@ -23,6 +18,7 @@ export async function POST(req: NextRequest) {
     const formData = await req.formData();
     const rawFormat = formData.get("format") as string;
     const format: "58x100" | "58x200" = rawFormat === "58x200" ? "58x200" : "58x100";
+    const mirrorAll = formData.get("mirrorAll") === "true";
     const layoutJson = formData.get("layout") as string;
 
     if (!layoutJson) {
@@ -36,6 +32,8 @@ export async function POST(req: NextRequest) {
       widthCm: number;
       heightCm: number;
       rotation?: number;
+      flipH?: boolean;
+      flipV?: boolean;
     }
 
     let parsedLayers: RawLayer[] = [];
@@ -56,7 +54,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Validar tamaños de archivo ANTES de cargarlos en memoria para prevenir consumo excesivo de RAM
+    // Validar tamaños de archivo
     for (const layer of parsedLayers) {
       const file = formData.get(layer.fileKey) as File | null;
       if (file) {
@@ -78,6 +76,8 @@ export async function POST(req: NextRequest) {
           widthCm: Number(layer.widthCm) || 5,
           heightCm: Number(layer.heightCm) || 5,
           rotation: Number(layer.rotation) || 0,
+          flipH: Boolean(layer.flipH),
+          flipV: Boolean(layer.flipV),
         });
       }
     }
@@ -89,6 +89,7 @@ export async function POST(req: NextRequest) {
     const dtfCanvasBuffer = await composeDTFCanvas({
       format,
       items: dtfItems,
+      mirrorAll,
     });
 
     if (user) {
@@ -106,13 +107,13 @@ export async function POST(req: NextRequest) {
       status: 200,
       headers: {
         "Content-Type": "image/png",
-        "Content-Disposition": `attachment; filename="privae_dtf_${format}_300dpi_${Date.now()}.png"`,
+        "Content-Disposition": `attachment; filename="privae_pliego_dtf_${format}_300dpi_${Date.now()}.png"`,
       },
     });
   } catch (error: any) {
-    console.error("Error al componer lienzo DTF:", error);
+    console.error("Error al exportar pliego DTF:", error);
     return NextResponse.json(
-      { error: "Error al exportar lienzo DTF: " + (error.message || "desconocido") },
+      { error: "Error al exportar pliego DTF: " + (error.message || "desconocido") },
       { status: 500 }
     );
   }

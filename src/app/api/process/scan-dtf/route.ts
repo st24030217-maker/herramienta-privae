@@ -5,14 +5,8 @@ import { fileTooLarge } from "@/lib/upload";
 
 export async function POST(req: NextRequest) {
   try {
-    const user = await getCurrentUser();
-    if (!user) {
-      return NextResponse.json(
-        { error: "Debes iniciar sesión para escanear y auditar archivos DTF." },
-        { status: 401 }
-      );
-    }
-    if (!user.subscription.isAccessGranted) {
+    const user = await getCurrentUser().catch(() => null);
+    if (user && !user.subscription.isAccessGranted) {
       return NextResponse.json(
         { error: "Tu período de prueba ha terminado. Activa tu suscripción para continuar." },
         { status: 403 }

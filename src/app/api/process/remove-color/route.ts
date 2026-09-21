@@ -6,14 +6,9 @@ import { fileTooLarge } from "@/lib/upload";
 
 export async function POST(req: NextRequest) {
   try {
-    const user = await getCurrentUser();
-    if (!user) {
-      return NextResponse.json(
-        { error: "Debes iniciar sesión para utilizar las herramientas de preparación DTF." },
-        { status: 401 }
-      );
-    }
-    if (!user.subscription.isAccessGranted) {
+    const user = await getCurrentUser().catch(() => null);
+
+    if (user && !user.subscription.isAccessGranted) {
       return NextResponse.json(
         { error: "Tu período de prueba ha terminado. Activa tu suscripción para continuar." },
         { status: 403 }
@@ -22,11 +17,13 @@ export async function POST(req: NextRequest) {
 
     const formData = await req.formData();
     const file = formData.get("file") as File | null;
-    const r = Math.min(255, Math.max(0, parseInt(formData.get("r") as string || "255") || 0));
-    const g = Math.min(255, Math.max(0, parseInt(formData.get("g") as string || "255") || 0));
-    const b = Math.min(255, Math.max(0, parseInt(formData.get("b") as string || "255") || 0));
-    const tolerance = Math.min(100, Math.max(1, parseInt(formData.get("tolerance") as string || "30") || 30));
-    const smoothness = Math.min(50, Math.max(0, parseInt(formData.get("smoothness") as string || "10") || 10));
+    const r = Math.min(255, Math.max(0, parseInt(formData.get("r") as string || "255", 10) || 0));
+    const g = Math.min(255, Math.max(0, parseInt(formData.get("g") as string || "255", 10) || 0));
+    const b = Math.min(255, Math.max(0, parseInt(formData.get("b") as string || "255", 10) || 0));
+    const tolerance = Math.min(100, Math.max(1, parseInt(formData.get("tolerance") as string || "30", 10) || 30));
+    const smoothness = Math.min(50, Math.max(0, parseInt(formData.get("smoothness") as string || "10", 10) || 10));
+    const defringe = formData.get("defringe") !== "false";
+    const mode = (formData.get("mode") as string) === "contiguous" ? "contiguous" : "global";
 
     if (!file) {
       return NextResponse.json({ error: "No se proporcionó ningún archivo" }, { status: 400 });
@@ -41,11 +38,14 @@ export async function POST(req: NextRequest) {
     const processedBuffer = await removeColorFromImage(
       buffer,
       { r, g, b },
-      tolerance,
-      smoothness
+      {
+        tolerance,
+        smoothness,
+        defringe,
+        mode,
+      }
     );
 
-    // Registrar uso si hay usuario logueado
     if (user) {
       await prisma.toolUsage.create({
         data: {

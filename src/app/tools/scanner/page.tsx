@@ -95,6 +95,23 @@ export default function DtfScannerPage() {
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
+  const handleFixIssue = (href: string) => {
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          sessionStorage.setItem("privae_pending_file_data", reader.result as string);
+          sessionStorage.setItem("privae_pending_file_name", file.name);
+          sessionStorage.setItem("privae_pending_file_type", file.type);
+        } catch {}
+        window.location.href = href;
+      };
+      reader.readAsDataURL(file);
+    } else {
+      window.location.href = href;
+    }
+  };
+
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
       {/* Header */}
@@ -349,13 +366,15 @@ export default function DtfScannerPage() {
                           </div>
 
                           {issue.toolHref && (
-                            <Link
-                              href={issue.toolHref}
+                            <button
+                              type="button"
+                              onClick={() => handleFixIssue(issue.toolHref!)}
                               className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#00A3FF]/15 border border-[#00A3FF]/40 px-4 py-2.5 font-mono text-xs font-bold text-[#00A3FF] hover:bg-[#00A3FF] hover:text-white transition-all shrink-0 shadow-sm active:scale-95"
+                              title="Carga esta imagen automáticamente en la herramienta de reparación"
                             >
                               <span>{issue.toolAction}</span>
                               <ArrowRight className="h-4 w-4" />
-                            </Link>
+                            </button>
                           )}
                         </div>
                       ))}

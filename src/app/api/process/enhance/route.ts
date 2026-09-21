@@ -6,14 +6,9 @@ import { fileTooLarge } from "@/lib/upload";
 
 export async function POST(req: NextRequest) {
   try {
-    const user = await getCurrentUser();
-    if (!user) {
-      return NextResponse.json(
-        { error: "Debes iniciar sesión para utilizar las herramientas de preparación DTF." },
-        { status: 401 }
-      );
-    }
-    if (!user.subscription.isAccessGranted) {
+    const user = await getCurrentUser().catch(() => null);
+
+    if (user && !user.subscription.isAccessGranted) {
       return NextResponse.json(
         { error: "Tu período de prueba ha terminado. Activa tu suscripción para continuar." },
         { status: 403 }
@@ -22,11 +17,11 @@ export async function POST(req: NextRequest) {
 
     const formData = await req.formData();
     const file = formData.get("file") as File | null;
-    const rawScale = parseInt(formData.get("scaleFactor") as string || "2");
-    const scaleFactor: 2 | 4 = rawScale === 4 ? 4 : 2;
+    const rawScale = parseInt(formData.get("scaleFactor") as string || "2", 10);
+    const scaleFactor: 2 | 3 | 4 = rawScale === 4 ? 4 : rawScale === 3 ? 3 : 2;
     const rawSharpen = (formData.get("sharpenLevel") as string || "medium");
-    const sharpenLevel: "light" | "medium" | "strong" = 
-      rawSharpen === "light" || rawSharpen === "strong" ? rawSharpen : "medium";
+    const sharpenLevel: "none" | "light" | "medium" | "strong" = 
+      rawSharpen === "none" || rawSharpen === "light" || rawSharpen === "strong" ? rawSharpen : "medium";
     const denoise = formData.get("denoise") === "true";
 
     if (!file) {
@@ -60,13 +55,13 @@ export async function POST(req: NextRequest) {
       status: 200,
       headers: {
         "Content-Type": "image/png",
-        "Content-Disposition": `attachment; filename="privae_hd_300dpi_${Date.now()}.png"`,
+        "Content-Disposition": `attachment; filename="privae_ultra_${scaleFactor}x_${Date.now()}.png"`,
       },
     });
   } catch (error: any) {
     console.error("Error al mejorar resolución:", error);
     return NextResponse.json(
-      { error: "Error al mejorar la imagen: " + (error.message || "desconocido") },
+      { error: "Error al mejorar resolución: " + (error.message || "desconocido") },
       { status: 500 }
     );
   }

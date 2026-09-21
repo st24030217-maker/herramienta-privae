@@ -1,13 +1,13 @@
 "use client";
 
 import { ToolLayout } from "@/components/ToolLayout";
-import { Sparkles, SlidersHorizontal } from "lucide-react";
+import { Sparkles, SlidersHorizontal, ShieldCheck } from "lucide-react";
 
 export default function EnhancePage() {
   return (
     <ToolLayout
       title="+ Mejorar Calidad (Superresolución 300 DPI)"
-      description="Multiplica la densidad de píxeles, nitidez y definición de artes rasterizados con interpolación Lanczos3 y máscara de enfoque sin halos. Salida lista a 300 DPI para impresión textil."
+      description="Multiplica la densidad de píxeles, nitidez y definición de artes rasterizados con interpolación Lanczos3 y máscara de enfoque sin halos en transparencias. Salida lista a 300 DPI reales para estampado textil."
       badge="+Resolución 300 DPI"
       apiEndpoint="/api/process/enhance"
       renderControls={(_, setCustomParam, customParams) => (
@@ -16,12 +16,13 @@ export default function EnhancePage() {
             {/* Factor de Escala con Botones Grandes */}
             <div className="space-y-2">
               <label className="block text-xs font-mono text-[#8E95A5] uppercase tracking-wider">
-                1. Multiplicador de Calidad:
+                1. Multiplicador de Resolución:
               </label>
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-3 gap-2">
                 {[
-                  { val: "2", label: "+2X Calidad", desc: "Duplicar Píxeles" },
-                  { val: "4", label: "+4X Ultra", desc: "Ultra Resolución" },
+                  { val: "2", label: "2X", desc: "Doble Píxeles" },
+                  { val: "3", label: "3X", desc: "Triple Nitidez" },
+                  { val: "4", label: "4X", desc: "Ultra Textil" },
                 ].map((scale) => {
                   const isSelected = String(customParams.scaleFactor || "2") === scale.val;
                   return (
@@ -46,10 +47,11 @@ export default function EnhancePage() {
             {/* Máscara de Enfoque con Botones Grandes */}
             <div className="space-y-2">
               <label className="block text-xs font-mono text-[#8E95A5] uppercase tracking-wider">
-                2. Máscara de Enfoque:
+                2. Realce de Bordes (Enfoque):
               </label>
-              <div className="grid grid-cols-3 gap-2">
+              <div className="grid grid-cols-4 gap-2">
                 {[
+                  { val: "none", label: "Off" },
                   { val: "light", label: "Suave" },
                   { val: "medium", label: "Estándar" },
                   { val: "strong", label: "Intenso" },
@@ -60,7 +62,7 @@ export default function EnhancePage() {
                       key={lvl.val}
                       type="button"
                       onClick={() => setCustomParam("sharpenLevel", lvl.val)}
-                      className={`p-3 rounded-xl border text-center transition-all ${
+                      className={`p-2.5 rounded-xl border text-center transition-all ${
                         isSelected
                           ? "border-[#00A3FF] bg-[#00A3FF]/15 text-white shadow-sm ring-1 ring-[#00A3FF]"
                           : "border-[#20232A] bg-[#0D0E11] text-[#8E95A5] hover:border-[#8E95A5]/40 hover:text-white"
@@ -92,10 +94,10 @@ export default function EnhancePage() {
                 />
                 <div className="space-y-0.5">
                   <span className="text-xs font-bold text-[#F3F4F6] block">
-                    Filtro de Ruido y Granulado
+                    Filtro Anti-Artefactos JPG
                   </span>
                   <span className="text-[11px] text-[#8E95A5] block">
-                    Limpia artefactos de compresión JPEG antes de escalar.
+                    Limpia ruido de compresión y grano antes de aplicar el escalado.
                   </span>
                 </div>
               </label>

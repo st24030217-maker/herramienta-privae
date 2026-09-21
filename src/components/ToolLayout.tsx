@@ -126,6 +126,31 @@ export function ToolLayout({
     return () => window.removeEventListener("paste", handlePaste);
   }, []);
 
+  // Cargar imagen transferida desde el Escáner DTF (Flujo de Reparación 1-Clic)
+  useEffect(() => {
+    try {
+      const pendingData = sessionStorage.getItem("privae_pending_file_data");
+      const pendingName = sessionStorage.getItem("privae_pending_file_name");
+      const pendingType = sessionStorage.getItem("privae_pending_file_type");
+
+      if (pendingData && pendingName) {
+        sessionStorage.removeItem("privae_pending_file_data");
+        sessionStorage.removeItem("privae_pending_file_name");
+        sessionStorage.removeItem("privae_pending_file_type");
+
+        fetch(pendingData)
+          .then((res) => res.blob())
+          .then((blob) => {
+            const transferredFile = new File([blob], pendingName, {
+              type: pendingType || "image/png",
+            });
+            handleFileChange(transferredFile);
+          })
+          .catch(() => {});
+      }
+    } catch {}
+  }, []);
+
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
     setIsDragging(true);

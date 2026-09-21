@@ -18,7 +18,10 @@ import {
   Crown,
   UploadCloud,
   Maximize2,
-  Minimize2
+  Minimize2,
+  FlipHorizontal,
+  Grid,
+  Sparkles
 } from "lucide-react";
 
 export interface CanvasDesign {
@@ -32,6 +35,8 @@ export interface CanvasDesign {
   widthCm: number;   // ancho en cm
   heightCm: number;  // alto en cm
   rotation: number;  // grados (0 a 359)
+  flipH?: boolean;   // espejo horizontal
+  flipV?: boolean;   // espejo vertical
   aspectRatio: number;
 }
 
@@ -39,6 +44,7 @@ export function DtfCanvas() {
   const [format, setFormat] = useState<"58x100" | "58x200">("58x100");
   const [designs, setDesigns] = useState<CanvasDesign[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [mirrorAll, setMirrorAll] = useState<boolean>(false);
   const [zoom, setZoom] = useState<number>(1);
   const [exporting, setExporting] = useState<boolean>(false);
   const [exportError, setExportError] = useState<string | null>(null);
@@ -57,6 +63,11 @@ export function DtfCanvas() {
   const pxPerCm = 8 * zoom;
   const visualWidthPx = canvasWidthCm * pxPerCm;
   const visualHeightPx = canvasHeightCm * pxPerCm;
+
+  const occupiedHeightCm = designs.length > 0 
+    ? Math.max(...designs.map((d) => d.yCm + d.heightCm))
+    : 0;
+  const rollUtilizationPercent = Math.min(100, Math.round((occupiedHeightCm / canvasHeightCm) * 100));
 
   const selectedDesign = designs.find((d) => d.id === selectedId);
 
@@ -278,6 +289,29 @@ export function DtfCanvas() {
     window.addEventListener("mouseup", handleMouseUp);
   };
 
+  const handleGridFill = () => {
+    if (!selectedDesign) return;
+    const spacingCm = 0.8;
+    const colWidth = selectedDesign.widthCm + spacingCm;
+    const rowHeight = selectedDesign.heightCm + spacingCm;
+    const cols = Math.max(1, Math.floor((canvasWidthCm - 1) / colWidth));
+    const rows = Math.max(1, Math.floor((canvasHeightCm - 1) / rowHeight));
+
+    const newDesigns: CanvasDesign[] = [];
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        newDesigns.push({
+          ...selectedDesign,
+          id: "design_" + Math.random().toString(36).substring(2, 9),
+          xCm: parseFloat((1 + c * colWidth).toFixed(2)),
+          yCm: parseFloat((1 + r * rowHeight).toFixed(2)),
+        });
+      }
+    }
+    setDesigns(newDesigns);
+    setSelectedId(newDesigns[0]?.id || null);
+  };
+
   const handleExport = async () => {
     if (designs.length === 0) return;
     setExporting(true);
@@ -288,6 +322,7 @@ export function DtfCanvas() {
     try {
       const formData = new FormData();
       formData.append("format", format);
+      formData.append("mirrorAll", String(mirrorAll));
 
       const layoutData = designs.map((d, index) => {
         const fileKey = `file_${index}`;
@@ -299,6 +334,8 @@ export function DtfCanvas() {
           widthCm: d.widthCm,
           heightCm: d.heightCm,
           rotation: d.rotation,
+          flipH: Boolean(d.flipH),
+          flipV: Boolean(d.flipV),
         };
       });
 
@@ -373,6 +410,33 @@ export function DtfCanvas() {
             >
               58 × 200 cm
             </button>
+          </div>
+
+          {/* Botón Espejar Todo el Pliego */}
+          <button
+            type="button"
+            onClick={() => setMirrorAll(!mirrorAll)}
+            className={`flex items-center gap-2 rounded-xl px-4 py-2.5 text-xs font-mono font-bold border transition-all active:scale-95 ${
+              mirrorAll
+                ? "bg-[#00A3FF]/20 border-[#00A3FF] text-[#00A3FF] shadow-sm ring-1 ring-[#00A3FF]"
+                : "bg-[#0D0E11] border-[#20232A] text-[#8E95A5] hover:text-[#F3F4F6] hover:border-[#8E95A5]/40"
+            }`}
+            title="Invierte todo el pliego horizontalmente (efecto espejo para impresión DTF)"
+          >
+            <FlipHorizontal className="h-4 w-4" />
+            <span>{mirrorAll ? "Espejo: ACTIVO" : "Espejar Pliego"}</span>
+          </button>
+
+          {/* Medidor de Rendimiento de Bobina */}
+          <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-[#0D0E11] border border-[#20232A] font-mono text-xs">
+            <span className="text-[#8E95A5]">Bobina:</span>
+            <span className="font-bold text-[#F3F4F6]">{occupiedHeightCm.toFixed(1)} cm</span>
+            <span className="text-[#8E95A5]">/ {canvasHeightCm} cm</span>
+            <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+              rollUtilizationPercent > 85 ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30" : "bg-[#20232A] text-[#00A3FF]"
+            }`}>
+              {rollUtilizationPercent}%
+            </span>
           </div>
 
           <button
@@ -715,7 +779,24 @@ export function DtfCanvas() {
 
                 <div className="flex items-center justify-between pt-1">
                   <span className="text-xs font-mono text-[#8E95A5]">Acciones:</span>
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        updateSelectedDesign({
+                          flipH: !selectedDesign.flipH,
+                        })
+                      }
+                      className={`flex items-center gap-1.5 rounded-xl border px-3 py-2 text-xs font-semibold transition-all active:scale-95 ${
+                        selectedDesign.flipH
+                          ? "border-[#00A3FF] bg-[#00A3FF]/15 text-[#00A3FF] ring-1 ring-[#00A3FF]"
+                          : "border-[#20232A] bg-[#0D0E11] text-[#F3F4F6] hover:bg-[#20232A]"
+                      }`}
+                      title="Espejar este diseño horizontalmente"
+                    >
+                      <FlipHorizontal className="h-4 w-4 text-[#00A3FF]" />
+                      <span>Espejo H</span>
+                    </button>
                     <button
                       type="button"
                       onClick={() => handleDuplicate(selectedDesign.id)}
@@ -739,6 +820,17 @@ export function DtfCanvas() {
                     </button>
                   </div>
                 </div>
+
+                {/* Duplicador en Cuadrícula para Llenar la Bobina */}
+                <button
+                  type="button"
+                  onClick={handleGridFill}
+                  className="w-full flex items-center justify-center gap-2 rounded-xl border border-[#00A3FF]/40 bg-[#00A3FF]/10 hover:bg-[#00A3FF]/20 px-3.5 py-2.5 text-xs text-[#00A3FF] font-bold transition-all active:scale-95"
+                  title="Multiplica y organiza automáticamente este arte para llenar toda la bobina"
+                >
+                  <Grid className="h-4 w-4" />
+                  <span>Llenar Pliego en Cuadrícula</span>
+                </button>
               </div>
             </div>
           )}
@@ -848,7 +940,7 @@ export function DtfCanvas() {
                       top: `${top}px`,
                       width: `${width}px`,
                       height: `${height}px`,
-                      transform: `rotate(${d.rotation}deg)`,
+                      transform: `rotate(${d.rotation}deg) scaleX(${Boolean(d.flipH) !== Boolean(mirrorAll) ? -1 : 1}) scaleY(${d.flipV ? -1 : 1})`,
                       transformOrigin: "center center",
                     }}
                     className={`cursor-move group select-none ${

@@ -6,14 +6,9 @@ import { fileTooLarge } from "@/lib/upload";
 
 export async function POST(req: NextRequest) {
   try {
-    const user = await getCurrentUser();
-    if (!user) {
-      return NextResponse.json(
-        { error: "Debes iniciar sesión para utilizar las herramientas de preparación DTF." },
-        { status: 401 }
-      );
-    }
-    if (!user.subscription.isAccessGranted) {
+    const user = await getCurrentUser().catch(() => null);
+
+    if (user && !user.subscription.isAccessGranted) {
       return NextResponse.json(
         { error: "Tu período de prueba ha terminado. Activa tu suscripción para continuar." },
         { status: 403 }
@@ -22,10 +17,12 @@ export async function POST(req: NextRequest) {
 
     const formData = await req.formData();
     const file = formData.get("file") as File | null;
-    const rawThreshold = parseInt(formData.get("threshold") as string || "40");
+    const rawThreshold = parseInt(formData.get("threshold") as string || "40", 10);
     const threshold = Math.min(254, Math.max(1, isNaN(rawThreshold) ? 40 : rawThreshold));
     const boostSolid = formData.get("boostSolid") === "true";
     const smoothEdges = formData.get("smoothEdges") === "true";
+    const chokePixels = Math.min(3, Math.max(0, parseInt(formData.get("chokePixels") as string || "0", 10)));
+    const removeSpeckles = formData.get("removeSpeckles") !== "false";
 
     if (!file) {
       return NextResponse.json({ error: "No se proporcionó ningún archivo" }, { status: 400 });
@@ -41,6 +38,8 @@ export async function POST(req: NextRequest) {
       threshold,
       boostSolid,
       smoothEdges,
+      chokePixels,
+      removeSpeckles,
     });
 
     if (user) {
@@ -58,13 +57,13 @@ export async function POST(req: NextRequest) {
       status: 200,
       headers: {
         "Content-Type": "image/png",
-        "Content-Disposition": `attachment; filename="privae_dtf_limpio_${Date.now()}.png"`,
+        "Content-Disposition": `attachment; filename="privae_alfa_depurado_${Date.now()}.png"`,
       },
     });
   } catch (error: any) {
-    console.error("Error al limpiar semitransparencias:", error);
+    console.error("Error al depurar canal alfa:", error);
     return NextResponse.json(
-      { error: "Error al procesar semitransparencias: " + (error.message || "desconocido") },
+      { error: "Error al depurar canal alfa: " + (error.message || "desconocido") },
       { status: 500 }
     );
   }
