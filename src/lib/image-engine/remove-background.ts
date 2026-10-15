@@ -99,7 +99,7 @@ export async function removeBackground(
     const dr = r - bgR;
     const dg = g - bgG;
     const db = b - bgB;
-    return Math.sqrt(2 * dr * dr + 4 * dr * dr + 3 * db * db);
+    return Math.sqrt(2 * dr * dr + 4 * dg * dg + 3 * db * db);
   };
 
   // Máscara de opacidad (1 byte por píxel)
@@ -198,7 +198,7 @@ export async function removeBackground(
   // Suavizado / Feathering EXCLUSIVO sobre el canal alfa (evita desenfocar colores RGB)
   let finalAlpha: Uint8Array = alphaMask;
   if (featherRadius > 0) {
-    const blurredAlphaBuffer = await sharp(Buffer.from(alphaMask.buffer), {
+    const blurredAlphaBuffer = await sharp(Buffer.from(alphaMask), {
       raw: { width, height, channels: 1 },
     })
       .blur(Math.max(0.3, featherRadius * 0.45))

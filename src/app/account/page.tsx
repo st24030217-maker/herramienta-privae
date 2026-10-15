@@ -209,13 +209,15 @@ export default function AccountPage() {
               </button>
             )}
 
-            <button
-              onClick={() => handleSimulateSubscription("RESET_TRIAL")}
-              disabled={actionLoading}
-              className="rounded-lg border border-neutral-800 bg-neutral-900 px-3.5 py-2 text-xs font-semibold text-neutral-300 hover:bg-neutral-800 hover:text-white"
-            >
-              Reiniciar 5 Días de Prueba (Demo)
-            </button>
+            {user.role === "ADMIN" && (
+              <button
+                onClick={() => handleSimulateSubscription("RESET_TRIAL")}
+                disabled={actionLoading}
+                className="rounded-lg border border-neutral-800 bg-neutral-900 px-3.5 py-2 text-xs font-semibold text-neutral-300 hover:bg-neutral-800 hover:text-white"
+              >
+                Reiniciar 5 Días de Prueba (Admin Demo)
+              </button>
+            )}
           </div>
         </div>
       </div>

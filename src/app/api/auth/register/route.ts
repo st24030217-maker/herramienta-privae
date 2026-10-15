@@ -6,8 +6,10 @@ import { rateLimit } from "@/lib/rate-limit";
 export async function POST(req: NextRequest) {
   try {
     const clientIp =
-      req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+      req.headers.get("x-vercel-ip") ||
+      req.headers.get("cf-connecting-ip") ||
       req.headers.get("x-real-ip") ||
+      req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
       "unknown";
 
     const { allowed, retryAfterSec } = rateLimit(`register:${clientIp}`, 10, 15 * 60 * 1000);
@@ -35,6 +37,21 @@ export async function POST(req: NextRequest) {
     }
 
     const normalizedEmail = email.toLowerCase().trim();
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(normalizedEmail) || normalizedEmail.length > 100) {
+      return NextResponse.json(
+        { error: "El correo electrónico no tiene un formato válido" },
+        { status: 400 }
+      );
+    }
+
+    if (password.length > 128) {
+      return NextResponse.json(
+        { error: "La contraseña es demasiado larga (máx. 128 caracteres)" },
+        { status: 400 }
+      );
+    }
 
     const existingUser = await prisma.user.findUnique({
       where: { email: normalizedEmail },
@@ -79,7 +96,7 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    const token = await createSessionToken(user.id);
+    const token = await createSessionToken(user.id, user.role);
 
     const response = NextResponse.json({
       success: true,

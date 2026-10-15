@@ -2,16 +2,32 @@ import { NextRequest, NextResponse } from "next/server";
 import { removeBackground } from "@/lib/image-engine/remove-background";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { fileTooLarge } from "@/lib/upload";
+import { fileTooLarge, validateImageBuffer } from "@/lib/upload";
+import { rateLimit } from "@/lib/rate-limit";
 
 export async function POST(req: NextRequest) {
   try {
     const user = await getCurrentUser().catch(() => null);
 
-    if (user && !user.subscription.isAccessGranted) {
+    if (!user) {
+      return NextResponse.json(
+        { error: "Debes iniciar sesión para remover el fondo de tus imágenes." },
+        { status: 401 }
+      );
+    }
+
+    if (!user.subscription.isAccessGranted) {
       return NextResponse.json(
         { error: "Tu período de prueba ha terminado. Activa tu suscripción para continuar." },
         { status: 403 }
+      );
+    }
+
+    const { allowed, retryAfterSec } = rateLimit(`process:${user.id}`, 30, 60 * 1000);
+    if (!allowed) {
+      return NextResponse.json(
+        { error: `Has superado el límite de operaciones por minuto. Espera ${retryAfterSec} segundos.` },
+        { status: 429, headers: { "Retry-After": String(retryAfterSec) } }
       );
     }
 
@@ -34,6 +50,8 @@ export async function POST(req: NextRequest) {
 
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
+    const magicError = validateImageBuffer(buffer);
+    if (magicError) return magicError;
 
     const processedBuffer = await removeBackground(buffer, {
       sensitivity,

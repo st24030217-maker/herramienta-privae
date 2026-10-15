@@ -45,15 +45,25 @@ export async function PATCH(req: NextRequest) {
 
     const { userId, newStatus, addDays } = await req.json();
 
-    if (!userId || !newStatus) {
-      return NextResponse.json({ error: "Parámetros insuficientes" }, { status: 400 });
+    const VALID_STATUSES = [
+      "TRIAL",
+      "ACTIVE",
+      "PAST_DUE",
+      "GRACE_PERIOD",
+      "SUSPENDED",
+      "CANCELED",
+    ];
+
+    if (!userId || !newStatus || !VALID_STATUSES.includes(newStatus)) {
+      return NextResponse.json({ error: "Parámetros insuficientes o estado no válido" }, { status: 400 });
     }
 
     let updateData: any = { status: newStatus };
 
-    if (addDays && newStatus === "TRIAL") {
+    const parsedDays = parseInt(String(addDays), 10);
+    if (!isNaN(parsedDays) && parsedDays > 0 && newStatus === "TRIAL") {
       const trialEndsAt = new Date();
-      trialEndsAt.setDate(trialEndsAt.getDate() + parseInt(addDays));
+      trialEndsAt.setDate(trialEndsAt.getDate() + Math.min(365, parsedDays));
       updateData.trialEndsAt = trialEndsAt;
     } else if (newStatus === "ACTIVE") {
       const currentPeriodEnd = new Date();
@@ -62,9 +72,20 @@ export async function PATCH(req: NextRequest) {
       updateData.gracePeriodEndsAt = null;
     }
 
-    const updatedSub = await prisma.subscription.update({
+    // Usar upsert para evitar error si el usuario no tenía registro previo de suscripción
+    const defaultTrial = new Date();
+    defaultTrial.setDate(defaultTrial.getDate() + 5);
+
+    const updatedSub = await prisma.subscription.upsert({
       where: { userId },
-      data: updateData,
+      update: updateData,
+      create: {
+        userId,
+        status: newStatus,
+        trialEndsAt: updateData.trialEndsAt || defaultTrial,
+        currentPeriodEnd: updateData.currentPeriodEnd || null,
+        gracePeriodEndsAt: updateData.gracePeriodEndsAt || null,
+      },
     });
 
     return NextResponse.json({ success: true, subscription: updatedSub });

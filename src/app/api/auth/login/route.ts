@@ -6,8 +6,10 @@ import { rateLimit } from "@/lib/rate-limit";
 export async function POST(req: NextRequest) {
   try {
     const clientIp =
-      req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+      req.headers.get("x-vercel-ip") ||
+      req.headers.get("cf-connecting-ip") ||
       req.headers.get("x-real-ip") ||
+      req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
       "unknown";
 
     const { allowed, retryAfterSec } = rateLimit(`login:${clientIp}`, 5, 15 * 60 * 1000);
@@ -47,7 +49,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const token = await createSessionToken(user.id);
+    const token = await createSessionToken(user.id, user.role);
 
     const response = NextResponse.json({
       success: true,

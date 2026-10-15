@@ -2,16 +2,32 @@ import { NextRequest, NextResponse } from "next/server";
 import { composeDTFCanvas, DTFItem } from "@/lib/image-engine/dtf-compositor";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { fileTooLarge } from "@/lib/upload";
+import { fileTooLarge, validateImageBuffer } from "@/lib/upload";
+import { rateLimit } from "@/lib/rate-limit";
 
 export async function POST(req: NextRequest) {
   try {
     const user = await getCurrentUser().catch(() => null);
 
-    if (user && !user.subscription.isAccessGranted) {
+    if (!user) {
+      return NextResponse.json(
+        { error: "Debes iniciar sesión para exportar pliegos DTF." },
+        { status: 401 }
+      );
+    }
+
+    if (!user.subscription.isAccessGranted) {
       return NextResponse.json(
         { error: "Tu período de prueba ha terminado. Activa tu suscripción para continuar." },
         { status: 403 }
+      );
+    }
+
+    const { allowed, retryAfterSec } = rateLimit(`process:${user.id}`, 20, 60 * 1000);
+    if (!allowed) {
+      return NextResponse.json(
+        { error: `Has superado el límite de exportaciones por minuto. Espera ${retryAfterSec} segundos.` },
+        { status: 429, headers: { "Retry-After": String(retryAfterSec) } }
       );
     }
 
@@ -75,8 +91,12 @@ export async function POST(req: NextRequest) {
       const file = formData.get(layer.fileKey) as File | null;
       if (file) {
         const arrayBuffer = await file.arrayBuffer();
+        const imageBuffer = Buffer.from(arrayBuffer);
+        const magicError = validateImageBuffer(imageBuffer);
+        if (magicError) return magicError;
+
         dtfItems.push({
-          imageBuffer: Buffer.from(arrayBuffer),
+          imageBuffer,
           xCm: Number(layer.xCm) || 0,
           yCm: Number(layer.yCm) || 0,
           widthCm: Number(layer.widthCm) || 5,

@@ -9,6 +9,10 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "No autenticado" }, { status: 401 });
     }
 
+    if (process.env.NODE_ENV === "production") {
+      return NextResponse.json({ error: "No disponible en producción" }, { status: 403 });
+    }
+
     const { action } = await req.json();
 
     const VALID_ACTIONS = [

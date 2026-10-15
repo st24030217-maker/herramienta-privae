@@ -38,8 +38,8 @@ export async function verifyPassword(password: string, hash: string): Promise<bo
   return await bcrypt.compare(password, hash);
 }
 
-export async function createSessionToken(userId: string): Promise<string> {
-    return await new SignJWT({ sub: userId })
+export async function createSessionToken(userId: string, role: string = "USER"): Promise<string> {
+    return await new SignJWT({ sub: userId, role })
       .setProtectedHeader({ alg: "HS256" })
       .setIssuedAt()
       .setExpirationTime("30d")

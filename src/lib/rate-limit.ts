@@ -4,10 +4,23 @@ interface RateLimitEntry {
 }
 
 const store = new Map<string, RateLimitEntry>();
+const CLEANUP_INTERVAL_MS = 60 * 1000; // Limpiar cada 60 segundos
+let lastCleanup = Date.now();
+
+function cleanupExpired(now: number) {
+  if (now - lastCleanup < CLEANUP_INTERVAL_MS && store.size < 5000) return;
+  lastCleanup = now;
+
+  for (const [k, v] of store.entries()) {
+    if (v.resetAt <= now) {
+      store.delete(k);
+    }
+  }
+}
 
 /**
- * Rate limiter en memoria (por IP + clave).
- * Apto para una sola instancia. Para producción multi-instancia usa Redis.
+ * Rate limiter en memoria con auto-limpieza periódica.
+ * Evita fuga de memoria eliminando registros caducados.
  */
 export function rateLimit(
   key: string,
@@ -15,6 +28,8 @@ export function rateLimit(
   windowMs: number
 ): { allowed: boolean; remaining: number; retryAfterSec: number } {
   const now = Date.now();
+  cleanupExpired(now);
+
   const entry = store.get(key);
 
   if (!entry || entry.resetAt < now) {

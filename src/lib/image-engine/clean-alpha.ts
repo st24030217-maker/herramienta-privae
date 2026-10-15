@@ -113,7 +113,7 @@ export async function cleanAlphaChannel(
   // Paso 4: Suavizado antialias de borde si se solicitó (sin tocar RGB)
   let finalAlpha = erodedAlpha;
   if (smoothEdges) {
-    const blurredAlphaBuffer = await sharp(Buffer.from(erodedAlpha.buffer), {
+    const blurredAlphaBuffer = await sharp(Buffer.from(erodedAlpha), {
       raw: { width, height, channels: 1 },
     })
       .blur(0.4)

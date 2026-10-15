@@ -26,7 +26,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es" className={`dark ${montserrat.variable}`}>
-      <body className={`relative flex min-h-screen flex-col bg-black text-[#F3F4F6] font-sans antialiased selection:bg-white/20 selection:text-white ${montserrat.className}`}>
+      <head>
+        <link rel="preconnect" href="https://api.fontshare.com" />
+        <link
+          rel="stylesheet"
+          href="https://api.fontshare.com/v2/css?f[]=tanker@400&display=swap"
+        />
+      </head>
+      <body className="relative flex min-h-screen flex-col bg-black text-[#F3F4F6] font-sans antialiased selection:bg-white/20 selection:text-white">
         <div className="fixed inset-0 -z-10 pointer-events-none overflow-hidden">
           <LightLines
             className="w-full h-full"

@@ -119,7 +119,11 @@ export function DtfCanvas() {
         return;
       }
       if ((e.key === "Delete" || e.key === "Backspace") && selectedId) {
-        setDesigns((prev) => prev.filter((d) => d.id !== selectedId));
+        setDesigns((prev) => {
+          const target = prev.find((d) => d.id === selectedId);
+          if (target?.previewUrl) URL.revokeObjectURL(target.previewUrl);
+          return prev.filter((d) => d.id !== selectedId);
+        });
         setSelectedId(null);
       }
     };
@@ -224,7 +228,11 @@ export function DtfCanvas() {
   };
 
   const handleDelete = (id: string) => {
-    setDesigns((prev) => prev.filter((d) => d.id !== id));
+    setDesigns((prev) => {
+      const target = prev.find((d) => d.id === id);
+      if (target?.previewUrl) URL.revokeObjectURL(target.previewUrl);
+      return prev.filter((d) => d.id !== id);
+    });
     if (selectedId === id) setSelectedId(null);
   };
 
@@ -1015,6 +1023,9 @@ export function DtfCanvas() {
                   <button
                     onClick={() => {
                       if (confirm("¿Deseas vaciar todo el metro de diseño?")) {
+                        designs.forEach((d) => {
+                          if (d.previewUrl) URL.revokeObjectURL(d.previewUrl);
+                        });
                         setDesigns([]);
                         setSelectedId(null);
                       }

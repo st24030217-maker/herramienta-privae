@@ -24,8 +24,22 @@ export async function enhanceImageResolution(
   const originalWidth = metadata.width || 1000;
   const originalHeight = metadata.height || 1000;
 
+  const MAX_INPUT_DIMENSION = 6000;
+  if (originalWidth > MAX_INPUT_DIMENSION || originalHeight > MAX_INPUT_DIMENSION) {
+    throw new Error(
+      `La imagen de entrada (${originalWidth}×${originalHeight} px) excede la dimensión máxima admitida (${MAX_INPUT_DIMENSION}×${MAX_INPUT_DIMENSION} px).`
+    );
+  }
+
   const targetWidth = Math.round(originalWidth * scaleFactor);
   const targetHeight = Math.round(originalHeight * scaleFactor);
+
+  const MAX_TARGET_PIXELS = 45000000; // 45 Megapixels
+  if (targetWidth * targetHeight > MAX_TARGET_PIXELS) {
+    throw new Error(
+      `La resolución resultante (${targetWidth}×${targetHeight} px) excede el límite de seguridad de memoria. Reduce el factor de escala.`
+    );
+  }
 
   if (denoise) {
     baseImage = baseImage.median(1);

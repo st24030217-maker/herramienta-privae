@@ -29,7 +29,11 @@ export default function LoginPage() {
         throw new Error(data.error || "Error al iniciar sesión");
       }
 
-      router.push("/");
+      const params = new URLSearchParams(window.location.search);
+      const redirectUrl = params.get("redirect") || "/";
+      const safeRedirect = redirectUrl.startsWith("/") && !redirectUrl.startsWith("//") ? redirectUrl : "/";
+
+      router.push(safeRedirect);
       router.refresh();
     } catch (err: any) {
       setError(err.message);
