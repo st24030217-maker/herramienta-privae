@@ -21,7 +21,12 @@ export async function GET(req: NextRequest) {
             ],
           }
         : undefined,
-      include: {
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        createdAt: true,
         subscription: true,
         _count: {
           select: { toolUsages: true, payments: true },

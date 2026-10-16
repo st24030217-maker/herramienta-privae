@@ -34,15 +34,12 @@ export async function POST(req: NextRequest) {
       include: { subscription: true },
     });
 
-    if (!user) {
-      return NextResponse.json(
-        { error: "Credenciales inválidas" },
-        { status: 401 }
-      );
-    }
+    // Dummy hash para mitigar ataques de temporización (timing attacks)
+    const DUMMY_HASH = "$2a$10$wT8m9ZqFj1m7bNxV9ZqFj1m7bNxV9ZqFj1m7bNxV9ZqFj1m7bNxVe";
+    const passwordHash = user ? user.passwordHash : DUMMY_HASH;
+    const isValid = await verifyPassword(password, passwordHash);
 
-    const isValid = await verifyPassword(password, user.passwordHash);
-    if (!isValid) {
+    if (!user || !isValid) {
       return NextResponse.json(
         { error: "Credenciales inválidas" },
         { status: 401 }

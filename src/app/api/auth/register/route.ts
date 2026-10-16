@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const { email, password, name } = await req.json();
+    const { email, password, name, adminKey } = await req.json();
 
     if (!email || !password) {
       return NextResponse.json(
@@ -70,12 +70,19 @@ export async function POST(req: NextRequest) {
     const trialEndsAt = new Date();
     trialEndsAt.setDate(trialEndsAt.getDate() + 5);
 
-    // Rol ADMIN solo si el correo coincide con ADMIN_EMAIL (definido en env)
+    // Rol ADMIN solo si coincide con ADMIN_EMAIL y supera la clave de registro si está definida
     const adminEmails = (process.env.ADMIN_EMAIL || "")
       .split(",")
       .map((e) => e.trim().toLowerCase())
       .filter(Boolean);
-    const role = adminEmails.includes(normalizedEmail) ? "ADMIN" : "USER";
+
+    let role = "USER";
+    if (adminEmails.includes(normalizedEmail)) {
+      const requiredKey = process.env.ADMIN_REGISTRATION_KEY;
+      if (!requiredKey || adminKey === requiredKey) {
+        role = "ADMIN";
+      }
+    }
 
     const user = await prisma.user.create({
       data: {

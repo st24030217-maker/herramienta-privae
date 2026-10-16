@@ -4,9 +4,10 @@
 
 @font-face {
   font-family: 'Tanker';
-  src: url('https://cdn.fontshare.com/wf/ATKS7EHYU4PKFTXRA4UFAHPY7XS75QMY/OYTCFLQCR7FVKK7FIO7TCJPY4YG22I3S/GKSURDSYOFIC3Y6F5SMWSENDSAB2YMKC.woff2') format('woff2'),
-       url('https://cdn.fontshare.com/wf/ATKS7EHYU4PKFTXRA4UFAHPY7XS75QMY/OYTCFLQCR7FVKK7FIO7TCJPY4YG22I3S/GKSURDSYOFIC3Y6F5SMWSENDSAB2YMKC.woff') format('woff'),
-       url('https://cdn.fontshare.com/wf/ATKS7EHYU4PKFTXRA4UFAHPY7XS75QMY/OYTCFLQCR7FVKK7FIO7TCJPY4YG22I3S/GKSURDSYOFIC3Y6F5SMWSENDSAB2YMKC.ttf') format('truetype');
+  src: url('/fonts/Tanker-Regular.woff2') format('woff2'),
+       url('/fonts/Tanker-Regular.woff') format('woff'),
+       url('/fonts/Tanker-Regular.ttf') format('truetype'),
+       url('https://cdn.fontshare.com/wf/ATKS7EHYU4PKFTXRA4UFAHPY7XS75QMY/OYTCFLQCR7FVKK7FIO7TCJPY4YG22I3S/GKSURDSYOFIC3Y6F5SMWSENDSAB2YMKC.woff2') format('woff2');
   font-weight: 400;
   font-display: swap;
   font-style: normal;
