@@ -8,7 +8,7 @@
        url('/fonts/Tanker-Regular.woff') format('woff'),
        url('/fonts/Tanker-Regular.ttf') format('truetype'),
        url('https://cdn.fontshare.com/wf/ATKS7EHYU4PKFTXRA4UFAHPY7XS75QMY/OYTCFLQCR7FVKK7FIO7TCJPY4YG22I3S/GKSURDSYOFIC3Y6F5SMWSENDSAB2YMKC.woff2') format('woff2');
-  font-weight: 400;
+  font-weight: 100 900;
   font-display: swap;
   font-style: normal;
 }
@@ -16,13 +16,35 @@
 :root {
   --background: #0D0E11;
   --foreground: #F3F4F6;
+  --font-tanker: 'Tanker', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+*,
+*::before,
+*::after,
+html,
+body,
+button,
+input,
+optgroup,
+select,
+textarea,
+code,
+kbd,
+samp,
+pre,
+.font-sans,
+.font-mono,
+.font-serif,
+.font-tanker {
+  font-family: 'Tanker', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
   font-family: 'Tanker', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.03em;
   min-height: 100vh;
   overflow-x: hidden;
   text-rendering: optimizeLegibility;

@@ -19,15 +19,22 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" className="dark">
+    <html lang="es" className="dark font-tanker">
       <head>
+        <link
+          rel="preload"
+          href="/fonts/Tanker-Regular.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
         <link rel="preconnect" href="https://api.fontshare.com" />
         <link
           rel="stylesheet"
           href="https://api.fontshare.com/v2/css?f[]=tanker@400&display=swap"
         />
       </head>
-      <body className="relative flex min-h-screen flex-col bg-black text-[#F3F4F6] font-sans antialiased selection:bg-white/20 selection:text-white">
+      <body className="relative flex min-h-screen flex-col bg-black text-[#F3F4F6] font-tanker font-sans antialiased selection:bg-white/20 selection:text-white">
         <TargetCursor
           targetSelector='.cursor-target, a, button, [role="button"]'
           spinDuration={2.2}

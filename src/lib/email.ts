@@ -37,7 +37,7 @@ function buildEmailContent(params: SendEventEmailParams): {
       return {
         subject: "Bienvenido a Privae Textil — Tu prueba gratuita de 5 días ha comenzado",
         html: `
-          <div style="font-family:sans-serif;background:#0D0E11;color:#F3F4F6;padding:32px;border-radius:16px;">
+          <div style="font-family:'Tanker',-apple-system,BlinkMacSystemFont,sans-serif;background:#0D0E11;color:#F3F4F6;padding:32px;border-radius:16px;">
             <h2 style="color:#FFFFFF;margin-top:0;">PRIVAE TEXTIL · PLATAFORMA DTF</h2>
             <p>${greeting}</p>
             <p>Tu cuenta ha sido creada exitosamente y tu <strong>prueba gratuita de 5 días</strong> ya está activa.</p>
@@ -51,7 +51,7 @@ function buildEmailContent(params: SendEventEmailParams): {
       return {
         subject: "Privae Textil — Tu prueba gratuita de 5 días ha finalizado",
         html: `
-          <div style="font-family:sans-serif;background:#0D0E11;color:#F3F4F6;padding:32px;border-radius:16px;">
+          <div style="font-family:'Tanker',-apple-system,BlinkMacSystemFont,sans-serif;background:#0D0E11;color:#F3F4F6;padding:32px;border-radius:16px;">
             <h2 style="color:#FFFFFF;margin-top:0;">FIN DE PRUEBA GRATUITA (5 DÍAS)</h2>
             <p>${greeting}</p>
             <p>Tu periodo de prueba de 5 días ha concluido. Para continuar utilizando los 5 módulos de preparación y exportación DTF a 300 DPI, activa tu <strong>Suscripción Premium</strong> desde tu cuenta.</p>
@@ -64,7 +64,7 @@ function buildEmailContent(params: SendEventEmailParams): {
       return {
         subject: "Privae Textil — Recordatorio: Tu suscripción se renovará en 3 días",
         html: `
-          <div style="font-family:sans-serif;background:#0D0E11;color:#F3F4F6;padding:32px;border-radius:16px;">
+          <div style="font-family:'Tanker',-apple-system,BlinkMacSystemFont,sans-serif;background:#0D0E11;color:#F3F4F6;padding:32px;border-radius:16px;">
             <h2 style="color:#FFFFFF;margin-top:0;">RECORDATORIO DE PRÓXIMA RENOVACIÓN</h2>
             <p>${greeting}</p>
             <p>Te informamos que tu suscripción mensual a la plataforma <strong>Privae Textil DTF</strong> se renovará automáticamente en aproximadamente <strong>3 días</strong>.</p>
@@ -78,7 +78,7 @@ function buildEmailContent(params: SendEventEmailParams): {
       return {
         subject: "Privae Textil — Pago confirmado y acceso Premium renovado",
         html: `
-          <div style="font-family:sans-serif;background:#0D0E11;color:#F3F4F6;padding:32px;border-radius:16px;">
+          <div style="font-family:'Tanker',-apple-system,BlinkMacSystemFont,sans-serif;background:#0D0E11;color:#F3F4F6;padding:32px;border-radius:16px;">
             <h2 style="color:#FFFFFF;margin-top:0;">PAGO APROBADO · ACCESO CONTINUO</h2>
             <p>${greeting}</p>
             <p>Hemos recibido correctamente tu pago${
@@ -97,7 +97,7 @@ function buildEmailContent(params: SendEventEmailParams): {
       return {
         subject: "Aviso Importante Privae Textil — Pago pendiente (3 días de gracia activos)",
         html: `
-          <div style="font-family:sans-serif;background:#0D0E11;color:#F3F4F6;padding:32px;border-radius:16px;">
+          <div style="font-family:'Tanker',-apple-system,BlinkMacSystemFont,sans-serif;background:#0D0E11;color:#F3F4F6;padding:32px;border-radius:16px;">
             <h2 style="color:#FBBF24;margin-top:0;">PAGO FALLIDO · INICIO DE 3 DÍAS DE GRACIA</h2>
             <p>${greeting}</p>
             <p>No pudimos procesar el cobro de renovación de tu suscripción Premium. Te hemos otorgado <strong>3 días naturales de gracia</strong> para que no detengas tu producción mientras actualizas tu método de pago.</p>
@@ -110,7 +110,7 @@ function buildEmailContent(params: SendEventEmailParams): {
       return {
         subject: "Privae Textil — Suscripción suspendida por falta de pago (Reactiva aquí)",
         html: `
-          <div style="font-family:sans-serif;background:#0D0E11;color:#F3F4F6;padding:32px;border-radius:16px;">
+          <div style="font-family:'Tanker',-apple-system,BlinkMacSystemFont,sans-serif;background:#0D0E11;color:#F3F4F6;padding:32px;border-radius:16px;">
             <h2 style="color:#F87171;margin-top:0;">FIN DEL PERIODO DE GRACIA · ACCESO SUSPENDIDO</h2>
             <p>${greeting}</p>
             <p>El plazo de 3 días naturales de gracia ha finalizado sin que se regularizara el pago, por lo que el acceso a las herramientas Premium ha quedado suspendido. Tu cuenta sigue conservada para que puedas reactivarla en cualquier momento.</p>
@@ -123,7 +123,7 @@ function buildEmailContent(params: SendEventEmailParams): {
       return {
         subject: "Privae Textil — Recuperación de contraseña",
         html: `
-          <div style="font-family:sans-serif;background:#0D0E11;color:#F3F4F6;padding:32px;border-radius:16px;">
+          <div style="font-family:'Tanker',-apple-system,BlinkMacSystemFont,sans-serif;background:#0D0E11;color:#F3F4F6;padding:32px;border-radius:16px;">
             <h2 style="color:#FFFFFF;margin-top:0;">RECUPERACIÓN DE CONTRASEÑA</h2>
             <p>${greeting}</p>
             <p>Solicitaste restablecer tu contraseña en la plataforma Privae Textil DTF. Haz clic en el siguiente botón para crear una nueva contraseña (válido por 1 hora):</p>
