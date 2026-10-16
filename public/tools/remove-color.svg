@@ -1,53 +1,49 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="100%" height="100%">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 720" width="100%" height="100%">
   <defs>
-    <linearGradient id="bgGrad5" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#16181D" />
-      <stop offset="100%" stop-color="#0A0B0E" />
+    <linearGradient id="cardBg5" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#181B22" stop-opacity="0.92" />
+      <stop offset="100%" stop-color="#0B0D11" stop-opacity="0.96" />
     </linearGradient>
-    <pattern id="gridAlpha2" width="24" height="24" patternUnits="userSpaceOnUse">
-      <rect width="12" height="12" fill="#1A1C23" />
-      <rect x="12" y="12" width="12" height="12" fill="#1A1C23" />
-      <rect x="12" width="12" height="12" fill="#12141A" />
-      <rect y="12" width="12" height="12" fill="#12141A" />
+    <radialGradient id="glow5" cx="50%" cy="45%" r="50%">
+      <stop offset="0%" stop-color="#EC4899" stop-opacity="0.22" />
+      <stop offset="100%" stop-color="#EC4899" stop-opacity="0" />
+    </radialGradient>
+    <pattern id="alphaGrid5" width="28" height="28" patternUnits="userSpaceOnUse">
+      <rect width="14" height="14" fill="#252934" />
+      <rect x="14" y="14" width="14" height="14" fill="#252934" />
+      <rect x="14" width="14" height="14" fill="#151820" />
+      <rect y="14" width="14" height="14" fill="#151820" />
     </pattern>
   </defs>
 
-  <rect width="600" height="600" fill="url(#bgGrad5)" />
+  <!-- Card Base -->
+  <rect x="4" y="4" width="592" height="712" rx="28" fill="url(#cardBg5)" stroke="#FFFFFF" stroke-opacity="0.22" stroke-width="3" />
+  <circle cx="300" cy="340" r="240" fill="url(#glow5)" />
 
-  <rect x="40" y="40" width="520" height="520" rx="20" fill="#0D0E11" stroke="#20232A" stroke-width="2" />
+  <!-- Top Category Pill -->
+  <rect x="155" y="38" width="290" height="38" rx="19" fill="#EC4899" fill-opacity="0.15" stroke="#F472B6" stroke-opacity="0.6" stroke-width="1.5" />
+  <circle cx="184" cy="57" r="6" fill="#F472B6" />
+  <text x="312" y="63" font-family="sans-serif" font-weight="800" font-size="16" fill="#FBCFE8" text-anchor="middle" letter-spacing="1.5">GOTERO QUITA-COLOR</text>
 
-  <!-- Showcase Box -->
-  <rect x="60" y="60" width="480" height="380" rx="14" fill="#16181D" stroke="#262A36" stroke-width="1.5" />
+  <!-- Giant Title -->
+  <text x="300" y="132" font-family="sans-serif" font-weight="900" font-size="45" fill="#FFFFFF" text-anchor="middle" letter-spacing="1">BORRAR UN COLOR</text>
+  <text x="300" y="168" font-family="sans-serif" font-weight="600" font-size="21" fill="#9CA3AF" text-anchor="middle">Toca cualquier color para volverlo transparente</text>
 
-  <!-- Targeted Color Swatches -->
-  <circle cx="170" cy="190" r="55" fill="#EF4444" stroke="#FFFFFF" stroke-width="2" />
-  <circle cx="300" cy="160" r="55" fill="#000000" stroke="#FFFFFF" stroke-width="2" />
-  <circle cx="430" cy="190" r="55" fill="#3B82F6" stroke="#FFFFFF" stroke-width="2" />
+  <!-- Central Visual Illustration: Target Crosshair & Color Extraction -->
+  <rect x="65" y="200" width="470" height="350" rx="20" fill="url(#alphaGrid5)" stroke="#FFFFFF" stroke-opacity="0.25" stroke-width="2" />
 
-  <!-- Target Dropper Ring on Center Circle -->
-  <circle cx="300" cy="160" r="75" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-dasharray="6,4" />
-  
-  <!-- Dropper Pipette Icon pointing down-right -->
-  <g transform="translate(250, 110)">
-    <line x1="80" y1="20" x2="50" y2="50" stroke="#FFFFFF" stroke-width="10" stroke-linecap="round" />
-    <polygon points="50,50 35,65 30,85 50,80 65,65" fill="#FFFFFF" />
-    <circle cx="85" cy="15" r="12" fill="#FFFFFF" />
-  </g>
+  <!-- Target Ring -->
+  <circle cx="300" cy="345" r="88" fill="#14171F" stroke="#F472B6" stroke-width="3.5" />
+  <circle cx="300" cy="345" r="52" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-dasharray="8,6" />
+  <line x1="190" y1="345" x2="410" y2="345" stroke="#F472B6" stroke-width="2" />
+  <line x1="300" y1="235" x2="300" y2="455" stroke="#F472B6" stroke-width="2" />
+  <circle cx="300" cy="345" r="14" fill="#F472B6" />
 
-  <!-- Output Arrow to Transparent Cutout -->
-  <path d="M 300 245 L 300 280" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" />
-  <polygon points="300,295 292,278 308,278" fill="#FFFFFF" />
+  <!-- Tolerance Bar at Bottom of Canvas -->
+  <rect x="105" y="468" width="390" height="54" rx="12" fill="#111318" stroke="#FFFFFF" stroke-opacity="0.2" stroke-width="1.5" />
+  <text x="300" y="501" font-family="monospace" font-weight="800" font-size="17" fill="#FFFFFF" text-anchor="middle">1 CLIC = COLOR ELIMINADO AL 100%</text>
 
-  <!-- Result Alpha Pocket -->
-  <rect x="180" y="305" width="240" height="100" rx="12" fill="url(#gridAlpha2)" stroke="#FFFFFF" stroke-width="2" />
-  <text x="300" y="352" font-family="sans-serif" font-weight="900" font-size="16" fill="#FFFFFF" text-anchor="middle">FONDO EXTRAÍDO</text>
-  <text x="300" y="375" font-family="monospace" font-size="11" fill="#8E95A5" text-anchor="middle">Tolerancia de matiz calibrable</text>
-
-  <!-- Technical Overlay Footer -->
-  <rect x="60" y="460" width="480" height="80" rx="12" fill="#16181D" stroke="#20232A" stroke-width="1.5" />
-  <text x="85" y="495" font-family="sans-serif" font-weight="900" font-size="20" fill="#FFFFFF" letter-spacing="1">BORRADO POR GOTERO DIRECTO</text>
-  <text x="85" y="522" font-family="monospace" font-size="12" fill="#8E95A5">ELIMINA COLORES MOLESTOS (NEGRO, BLANCO O ROJO)</text>
-
-  <rect x="420" y="478" width="105" height="42" rx="8" fill="#FFFFFF" />
-  <text x="472" y="504" font-family="sans-serif" font-weight="900" font-size="13" fill="#000000" text-anchor="middle">GOTERO</text>
+  <!-- Bottom CTA Button -->
+  <rect x="90" y="595" width="420" height="76" rx="20" fill="#FFFFFF" />
+  <text x="300" y="642" font-family="sans-serif" font-weight="900" font-size="24" fill="#0A0B0E" text-anchor="middle" letter-spacing="1">USAR GOTERO AHORA →</text>
 </svg>

@@ -1,48 +1,42 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="100%" height="100%">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 720" width="100%" height="100%">
   <defs>
-    <linearGradient id="bgGrad6" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#16181D" />
-      <stop offset="100%" stop-color="#0A0B0E" />
+    <linearGradient id="cardBg6" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#181B22" stop-opacity="0.92" />
+      <stop offset="100%" stop-color="#0B0D11" stop-opacity="0.96" />
     </linearGradient>
-    <pattern id="gridAlpha3" width="24" height="24" patternUnits="userSpaceOnUse">
-      <rect width="12" height="12" fill="#1A1C23" />
-      <rect x="12" y="12" width="12" height="12" fill="#1A1C23" />
-      <rect x="12" width="12" height="12" fill="#12141A" />
-      <rect y="12" width="12" height="12" fill="#12141A" />
-    </pattern>
+    <radialGradient id="glow6" cx="50%" cy="45%" r="50%">
+      <stop offset="0%" stop-color="#06B6D4" stop-opacity="0.22" />
+      <stop offset="100%" stop-color="#06B6D4" stop-opacity="0" />
+    </radialGradient>
   </defs>
 
-  <rect width="600" height="600" fill="url(#bgGrad6)" />
+  <!-- Card Base -->
+  <rect x="4" y="4" width="592" height="712" rx="28" fill="url(#cardBg6)" stroke="#FFFFFF" stroke-opacity="0.22" stroke-width="3" />
+  <circle cx="300" cy="340" r="240" fill="url(#glow6)" />
 
-  <rect x="40" y="40" width="520" height="520" rx="20" fill="#0D0E11" stroke="#20232A" stroke-width="2" />
+  <!-- Top Category Pill -->
+  <rect x="145" y="38" width="310" height="38" rx="19" fill="#06B6D4" fill-opacity="0.15" stroke="#22D3EE" stroke-opacity="0.6" stroke-width="1.5" />
+  <circle cx="176" cy="57" r="6" fill="#22D3EE" />
+  <text x="312" y="63" font-family="sans-serif" font-weight="800" font-size="16" fill="#67E8F9" text-anchor="middle" letter-spacing="1.5">ANTI-HALO DE TINTA BLANCA</text>
 
-  <!-- Showcase Box -->
-  <rect x="60" y="60" width="480" height="380" rx="14" fill="#16181D" stroke="#262A36" stroke-width="1.5" />
+  <!-- Giant Title -->
+  <text x="300" y="132" font-family="sans-serif" font-weight="900" font-size="45" fill="#FFFFFF" text-anchor="middle" letter-spacing="1">LIMPIAR BORDES</text>
+  <text x="300" y="168" font-family="sans-serif" font-weight="600" font-size="21" fill="#9CA3AF" text-anchor="middle">Elimina orillas blancas y manchas fantasma</text>
 
-  <!-- Bad Edge vs Clean Edge comparison -->
-  <rect x="80" y="90" width="200" height="240" rx="12" fill="#0D0E11" stroke="#333" />
-  <!-- Fuzzy Milky White Aura -->
-  <circle cx="180" cy="190" r="58" fill="#FFFFFF" fill-opacity="0.35" filter="blur(8px)" />
-  <circle cx="180" cy="190" r="42" fill="#FFFFFF" />
-  <text x="180" y="275" font-family="monospace" font-size="12" fill="#EF4444" text-anchor="middle" font-weight="bold">HALO LECHOSO SUCIO</text>
-  <text x="180" y="295" font-family="monospace" font-size="10" fill="#8E95A5" text-anchor="middle">Desborda base blanca</text>
+  <!-- Central Visual Illustration: Edge Contraction -->
+  <rect x="65" y="200" width="470" height="350" rx="20" fill="#12151C" stroke="#FFFFFF" stroke-opacity="0.22" stroke-width="2" />
 
-  <!-- Clean Cut Edge -->
-  <rect x="320" y="90" width="200" height="240" rx="12" fill="#0D0E11" stroke="#FFFFFF" stroke-width="2" />
-  <circle cx="420" cy="190" r="44" fill="#FFFFFF" />
-  <circle cx="420" cy="190" r="48" fill="none" stroke="#10B981" stroke-width="3" />
-  <text x="420" y="275" font-family="sans-serif" font-weight="900" font-size="13" fill="#10B981" text-anchor="middle">BORDE RECORTE PURO</text>
-  <text x="420" y="295" font-family="monospace" font-size="10" fill="#FFFFFF" text-anchor="middle">0 sombras fantasma</text>
+  <!-- Outer Halo Dashed Ring -->
+  <circle cx="300" cy="340" r="105" fill="none" stroke="#6B7280" stroke-width="3" stroke-dasharray="10,8" />
+  <!-- Inner Clean Solid Ring -->
+  <circle cx="300" cy="340" r="76" fill="#22D3EE" fill-opacity="0.18" stroke="#FFFFFF" stroke-width="4" />
+  <text x="300" y="348" font-family="sans-serif" font-weight="900" font-size="24" fill="#FFFFFF" text-anchor="middle">BORDE PURO</text>
 
-  <!-- Clean Alpha Badge in Center -->
-  <rect x="230" y="345" width="140" height="40" rx="8" fill="#16181D" stroke="#FFFFFF" />
-  <text x="300" y="370" font-family="sans-serif" font-weight="800" font-size="12" fill="#FFFFFF" text-anchor="middle">TOLERANCIA ALFA</text>
+  <!-- Bottom Info Pill -->
+  <rect x="95" y="472" width="410" height="50" rx="12" fill="#181C24" stroke="#22D3EE" stroke-opacity="0.5" stroke-width="1.5" />
+  <text x="300" y="503" font-family="monospace" font-weight="800" font-size="16" fill="#67E8F9" text-anchor="middle">✓ CERO FILTRACIÓN DE BASE BLANCA DTF</text>
 
-  <!-- Technical Overlay Footer -->
-  <rect x="60" y="460" width="480" height="80" rx="12" fill="#16181D" stroke="#20232A" stroke-width="1.5" />
-  <text x="85" y="495" font-family="sans-serif" font-weight="900" font-size="20" fill="#FFFFFF" letter-spacing="1">LIMPIAR BORDES BLANCOS</text>
-  <text x="85" y="522" font-family="monospace" font-size="12" fill="#8E95A5">ELIMINA SOMBRAS TRANSPARENTES Y HALOS LECHOSOS</text>
-
-  <rect x="420" y="478" width="105" height="42" rx="8" fill="#FFFFFF" />
-  <text x="472" y="504" font-family="sans-serif" font-weight="900" font-size="13" fill="#000000" text-anchor="middle">LIMPIAR</text>
+  <!-- Bottom CTA Button -->
+  <rect x="90" y="595" width="420" height="76" rx="20" fill="#FFFFFF" />
+  <text x="300" y="642" font-family="sans-serif" font-weight="900" font-size="24" fill="#0A0B0E" text-anchor="middle" letter-spacing="1">LIMPIAR BORDES AHORA →</text>
 </svg>

@@ -1,50 +1,56 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="100%" height="100%">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 720" width="100%" height="100%">
   <defs>
-    <linearGradient id="bgGrad4" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#16181D" />
-      <stop offset="100%" stop-color="#0A0B0E" />
+    <linearGradient id="cardBg4" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#181B22" stop-opacity="0.92" />
+      <stop offset="100%" stop-color="#0B0D11" stop-opacity="0.96" />
     </linearGradient>
+    <radialGradient id="glow4" cx="50%" cy="45%" r="50%">
+      <stop offset="0%" stop-color="#F59E0B" stop-opacity="0.22" />
+      <stop offset="100%" stop-color="#F59E0B" stop-opacity="0" />
+    </radialGradient>
   </defs>
 
-  <rect width="600" height="600" fill="url(#bgGrad4)" />
+  <!-- Card Base -->
+  <rect x="4" y="4" width="592" height="712" rx="28" fill="url(#cardBg4)" stroke="#FFFFFF" stroke-opacity="0.22" stroke-width="3" />
+  <circle cx="300" cy="340" r="240" fill="url(#glow4)" />
 
-  <rect x="40" y="40" width="520" height="520" rx="20" fill="#0D0E11" stroke="#20232A" stroke-width="2" />
+  <!-- Top Category Pill -->
+  <rect x="155" y="38" width="290" height="38" rx="19" fill="#F59E0B" fill-opacity="0.15" stroke="#FBBF24" stroke-opacity="0.6" stroke-width="1.5" />
+  <circle cx="184" cy="57" r="6" fill="#FBBF24" />
+  <text x="312" y="63" font-family="sans-serif" font-weight="800" font-size="16" fill="#FDE68A" text-anchor="middle" letter-spacing="1.5">SUPERRESOLUCIÓN 300 DPI</text>
 
-  <!-- Showcase Box -->
-  <rect x="60" y="60" width="480" height="380" rx="14" fill="#16181D" stroke="#262A36" stroke-width="1.5" />
+  <!-- Giant Title -->
+  <text x="300" y="132" font-family="sans-serif" font-weight="900" font-size="46" fill="#FFFFFF" text-anchor="middle" letter-spacing="1">SUBIR CALIDAD 4X</text>
+  <text x="300" y="168" font-family="sans-serif" font-weight="600" font-size="21" fill="#9CA3AF" text-anchor="middle">Convierte fotos borrosas en alta definición</text>
 
-  <!-- Comparison Split -->
-  <!-- Left: Pixelated Grid simulation -->
-  <rect x="80" y="100" width="200" height="230" rx="10" fill="#0D0E11" stroke="#333" />
-  <rect x="110" y="130" width="28" height="28" fill="#555" />
-  <rect x="138" y="130" width="28" height="28" fill="#777" />
-  <rect x="166" y="130" width="28" height="28" fill="#333" />
-  <rect x="110" y="158" width="28" height="28" fill="#888" />
-  <rect x="138" y="158" width="28" height="28" fill="#FFF" />
-  <rect x="166" y="158" width="28" height="28" fill="#666" />
-  <rect x="110" y="186" width="28" height="28" fill="#444" />
-  <rect x="138" y="186" width="28" height="28" fill="#999" />
-  <rect x="166" y="186" width="28" height="28" fill="#222" />
-  <text x="180" y="275" font-family="monospace" font-size="13" fill="#EF4444" text-anchor="middle" font-weight="bold">72 DPI BORROSO</text>
-  <text x="180" y="295" font-family="monospace" font-size="10" fill="#8E95A5" text-anchor="middle">Pixelado en tela</text>
+  <!-- Central Visual Illustration: Low Res vs High Res -->
+  <rect x="65" y="200" width="215" height="350" rx="18" fill="#13161C" stroke="#FFFFFF" stroke-opacity="0.2" stroke-width="2" />
+  <rect x="320" y="200" width="215" height="350" rx="18" fill="#151922" stroke="#FBBF24" stroke-width="2.5" />
 
-  <!-- Right: Sharp 4X HD simulation -->
-  <rect x="320" y="100" width="200" height="230" rx="10" fill="#0D0E11" stroke="#FFFFFF" stroke-width="2" />
-  <circle cx="420" cy="180" r="45" fill="#FFFFFF" fill-opacity="0.15" stroke="#FFFFFF" stroke-width="3" />
-  <!-- Crisp Sparkle Star -->
-  <path d="M 420 145 Q 420 180 385 180 Q 420 180 420 215 Q 420 180 455 180 Q 420 180 420 145 Z" fill="#FFFFFF" />
-  <text x="420" y="275" font-family="sans-serif" font-weight="900" font-size="15" fill="#10B981" text-anchor="middle">300 DPI NÍTIDO</text>
-  <text x="420" y="295" font-family="monospace" font-size="10" fill="#FFFFFF" text-anchor="middle">Resolución certificada</text>
+  <!-- Arrow Between -->
+  <circle cx="300" cy="375" r="24" fill="#FBBF24" />
+  <text x="300" y="383" font-family="sans-serif" font-weight="900" font-size="22" fill="#0B0D11" text-anchor="middle">→</text>
 
-  <!-- Multiplier Badge in Center -->
-  <circle cx="300" cy="215" r="30" fill="#FFFFFF" stroke="#0D0E11" stroke-width="4" />
-  <text x="300" y="222" font-family="sans-serif" font-weight="900" font-size="16" fill="#000000" text-anchor="middle">4X</text>
+  <!-- Left Pixelated Blocks -->
+  <g fill="#6B7280" opacity="0.65">
+    <rect x="130" y="265" width="40" height="40" />
+    <rect x="175" y="265" width="40" height="40" />
+    <rect x="105" y="310" width="40" height="40" />
+    <rect x="150" y="310" width="40" height="40" />
+    <rect x="195" y="310" width="40" height="40" />
+    <rect x="130" y="355" width="40" height="40" />
+    <rect x="175" y="355" width="40" height="40" />
+  </g>
+  <text x="172" y="458" font-family="sans-serif" font-weight="800" font-size="22" fill="#9CA3AF" text-anchor="middle">BORROSO</text>
+  <text x="172" y="490" font-family="monospace" font-weight="700" font-size="16" fill="#6B7280" text-anchor="middle">72 DPI • Pixeleado</text>
 
-  <!-- Technical Overlay Footer -->
-  <rect x="60" y="460" width="480" height="80" rx="12" fill="#16181D" stroke="#20232A" stroke-width="1.5" />
-  <text x="85" y="495" font-family="sans-serif" font-weight="900" font-size="20" fill="#FFFFFF" letter-spacing="1">MEJORAR CALIDAD (SUPER-RES)</text>
-  <text x="85" y="522" font-family="monospace" font-size="12" fill="#8E95A5">MULTIPLICA RESOLUCIÓN A 2X Y 4X • SIN PIXELACIÓN</text>
+  <!-- Right Ultra Sharp Vector Star/Circle -->
+  <circle cx="427" cy="330" r="64" fill="#FBBF24" fill-opacity="0.18" stroke="#FFFFFF" stroke-width="4" />
+  <text x="427" y="346" font-family="sans-serif" font-weight="900" font-size="44" fill="#FFFFFF" text-anchor="middle">4X</text>
+  <text x="427" y="458" font-family="sans-serif" font-weight="900" font-size="22" fill="#FFFFFF" text-anchor="middle">ULTRA NÍTIDO</text>
+  <text x="427" y="490" font-family="monospace" font-weight="700" font-size="16" fill="#FBBF24" text-anchor="middle">300 DPI • HD Textil</text>
 
-  <rect x="420" y="478" width="105" height="42" rx="8" fill="#FFFFFF" />
-  <text x="472" y="504" font-family="sans-serif" font-weight="900" font-size="13" fill="#000000" text-anchor="middle">MEJORAR</text>
+  <!-- Bottom CTA Button -->
+  <rect x="90" y="595" width="420" height="76" rx="20" fill="#FFFFFF" />
+  <text x="300" y="642" font-family="sans-serif" font-weight="900" font-size="24" fill="#0A0B0E" text-anchor="middle" letter-spacing="1">MEJORAR CALIDAD AHORA →</text>
 </svg>

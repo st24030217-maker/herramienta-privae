@@ -204,6 +204,7 @@ const CircularCarousel = ({
   captions = false,
   onChange,
   onItemClick,
+  apiRef,
   className = '',
   style
 }) => {
@@ -704,6 +705,11 @@ const CircularCarousel = ({
     wakeRef.current();
   }, []);
 
+  useEffect(() => {
+    if (!apiRef) return;
+    apiRef.current = { focusIndex, stepBy };
+  }, [apiRef, focusIndex, stepBy]);
+
   const updatePointer = event => {
     const rect = rootRef.current.getBoundingClientRect();
     const pointer = stateRef.current.pointer;
@@ -812,8 +818,9 @@ const CircularCarousel = ({
     const card = event.target.closest?.('[data-cc-index]');
     if (!card) return;
     const index = Number(card.getAttribute('data-cc-index'));
+    const wasActive = index === activeRef.current;
     if (focusOnClick) focusIndex(index);
-    onItemClick?.(list[index], index);
+    onItemClick?.(list[index], index, wasActive);
   };
 
   const handleKeyDown = event => {

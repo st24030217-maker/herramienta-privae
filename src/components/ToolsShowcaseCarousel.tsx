@@ -1,236 +1,312 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { 
-  ArrowRight, 
-  Sparkles, 
-  LayoutGrid, 
-  ScanSearch, 
-  Scissors, 
-  Pipette, 
-  Layers, 
+import {
+  ArrowRight,
+  Sparkles,
+  LayoutGrid,
+  ScanSearch,
+  Scissors,
+  Pipette,
+  Layers,
   Rotate3d,
   ChevronLeft,
   ChevronRight,
-  ExternalLink
+  MousePointerClick,
 } from "lucide-react";
-import CircularCarousel from "@/components/CircularCarousel";
+import CircularCarousel, { CircularCarouselApi } from "@/components/CircularCarousel";
+import { AnimatedContent } from "@/components/AnimatedContent";
 
 export interface WorkshopToolItem {
   id: string;
   src: string;
   alt: string;
+  shortName: string;
   title: string;
   subtitle: string;
   desc: string;
   href: string;
   badge: string;
   action: string;
+  accent: string;
+  icon: React.ComponentType<{ className?: string }>;
 }
 
 export const WORKSHOP_TOOLS: WorkshopToolItem[] = [
   {
     id: "dtf-builder",
     src: "/tools/dtf-builder.svg",
-    alt: "Armador de Metros DTF",
-    title: "Armador de Metros DTF",
-    subtitle: "Bobina 58.0 cm • Pliegos de 1m y 2m",
-    desc: "Acomoda y organiza múltiples diseños en un lienzo calibrado de 58 cm de ancho. Duplica con 1 clic, calcula metros reales y exporta a 300 DPI con transparencia real.",
+    alt: "Armar Metro DTF",
+    shortName: "Armar Metro DTF",
+    title: "Armar Metro DTF (Bobina 58 cm)",
+    subtitle: "Pliegos de 1 metro y 2 metros • 300 DPI",
+    desc: "Acomoda varios diseños en tu lienzo de 58 cm de ancho, duplica logos con 1 clic y descarga tu archivo listo para imprimir.",
     href: "/tools/dtf-builder",
-    badge: "MÓDULO PRINCIPAL",
-    action: "Armar Metro DTF",
+    badge: "SERVICIO #1 • MÓDULO PRINCIPAL",
+    action: "Abrir Armador de Metros DTF",
+    accent: "border-emerald-400/50 text-emerald-300 bg-emerald-500/10",
+    icon: LayoutGrid,
   },
   {
     id: "scanner",
     src: "/tools/scanner.svg",
-    alt: "Checador & Escáner de Calidad",
-    title: "Checador & Escáner de Calidad",
-    subtitle: "Diagnóstico Preventivo • Calificación 0-100%",
-    desc: "Revisa si el fondo está 100% transparente, detecta si hay manchas o halos que harían salir tinta blanca de más y calcula medidas máximas en centímetros para evitar estampados pixelados.",
+    alt: "Checar Calidad DTF",
+    shortName: "Checar Calidad",
+    title: "Checador & Escáner de Calidad DTF",
+    subtitle: "Semáforo Preventivo 0 a 100%",
+    desc: "Revisa en segundos si tu imagen tiene fondo 100% transparente, si tiene buena resolución (300 DPI) y qué medida máxima aguanta sin pixelarse.",
     href: "/tools/scanner",
-    badge: "CONTROL PREVENTIVO",
-    action: "Escanear Diseño",
+    badge: "SERVICIO #2 • DIAGNÓSTICO",
+    action: "Escanear mi Diseño Ahora",
+    accent: "border-blue-400/50 text-blue-300 bg-blue-500/10",
+    icon: ScanSearch,
   },
   {
     id: "remove-bg",
     src: "/tools/remove-bg.svg",
-    alt: "Quitar Fondo Inteligente",
+    alt: "Quitar Fondo",
+    shortName: "Quitar Fondo",
     title: "Quitar Fondo Inteligente",
-    subtitle: "Canal RGBA Puro para DTF",
-    desc: "Elimina fondos de fotos y logotipos preservando las tipografías blancas y los detalles finos dentro del arte para que queden listos para imprimir directo en film.",
+    subtitle: "Transparencia Pura RGBA",
+    desc: "Borra el fondo de cualquier foto o logotipo cuidando las letras blancas y los detalles internos para que quede listo para DTF.",
     href: "/tools/remove-bg",
-    badge: "FONDO TRANSPARENTE",
-    action: "Quitar Fondo",
+    badge: "SERVICIO #3 • TRANSPARENCIA",
+    action: "Quitar Fondo a mi Imagen",
+    accent: "border-purple-400/50 text-purple-300 bg-purple-500/10",
+    icon: Scissors,
   },
   {
     id: "enhance",
     src: "/tools/enhance.svg",
-    alt: "Mejorar Calidad (Superresolución)",
-    title: "Mejorar Calidad (Superresolución)",
-    subtitle: "Nitidez 2X y 4X a 300 DPI",
-    desc: "Multiplica la resolución y nitidez de imágenes de baja calidad para que tus fotos y logos no salgan borrosos ni con bordes dentados en la prenda.",
+    alt: "Subir Calidad 4X",
+    shortName: "Subir Calidad 4X",
+    title: "Mejorar Calidad y Nitidez (4X)",
+    subtitle: "Superresolución a 300 DPI",
+    desc: "Convierte imágenes borrosas o bajadas de WhatsApp en archivos ultra nítidos a 300 DPI para que tu estampado salga perfecto.",
     href: "/tools/enhance",
-    badge: "SUPERRESOLUCIÓN",
-    action: "Mejorar Nitidez",
+    badge: "SERVICIO #4 • SUPERRESOLUCIÓN",
+    action: "Subir Calidad 4X Ahora",
+    accent: "border-amber-400/50 text-amber-300 bg-amber-500/10",
+    icon: Sparkles,
   },
   {
     id: "remove-color",
     src: "/tools/remove-color.svg",
-    alt: "Borrar un Color Específico (Gotero)",
+    alt: "Borrar un Color",
+    shortName: "Borrar un Color",
     title: "Borrar un Color Específico (Gotero)",
-    subtitle: "Extracción Quirúrgica",
-    desc: "Toca con el gotero cualquier color que te estorbe (fondos negros, blancos o manchas contaminantes) para volverlo 100% transparente con tolerancia regulable.",
+    subtitle: "Extracción Directa con 1 Clic",
+    desc: "Toca con el gotero cualquier color que te estorbe (fondos negros, blancos o manchas) para volverlo 100% transparente al instante.",
     href: "/tools/remove-color",
-    badge: "GOTERO DIRECTO",
-    action: "Borrar Color",
+    badge: "SERVICIO #5 • GOTERO DIRECTO",
+    action: "Usar Gotero Quita-Color",
+    accent: "border-pink-400/50 text-pink-300 bg-pink-500/10",
+    icon: Pipette,
   },
   {
     id: "clean-alpha",
     src: "/tools/clean-alpha.svg",
-    alt: "Limpiar Bordes Blancos",
-    title: "Limpiar Bordes Blancos",
-    subtitle: "Anti-Halo Lechoso",
-    desc: "Elimina sombras transparentes y halos lechosos alrededor de tu diseño para evitar que la base blanca del cabezal de impresión se desborde por los lados.",
+    alt: "Limpiar Bordes",
+    shortName: "Limpiar Bordes",
+    title: "Limpiar Bordes y Halos Blancos",
+    subtitle: "Cero Filtración de Base Blanca",
+    desc: "Elimina las orillas blancas y manchas fantasma alrededor de tu recorte para que la tinta blanca de la máquina no se asome.",
     href: "/tools/clean-alpha",
-    badge: "SIN MANCHAS DE TINTA",
-    action: "Limpiar Bordes",
+    badge: "SERVICIO #6 • ANTI-HALO",
+    action: "Limpiar Bordes de mi Diseño",
+    accent: "border-cyan-400/50 text-cyan-300 bg-cyan-500/10",
+    icon: Layers,
   },
 ];
 
+// Duplicamos los 6 servicios (12 tarjetas en el anillo 360°) para que el cilindro 3D tenga gran diámetro y amplitud visual
+const CAROUSEL_RING_ITEMS = [...WORKSHOP_TOOLS, ...WORKSHOP_TOOLS];
+
 export function ToolsShowcaseCarousel() {
   const router = useRouter();
-  const [activeIndex, setActiveIndex] = useState(0);
+  const carouselApiRef = useRef<CircularCarouselApi | null>(null);
+  const [rawIndex, setRawIndex] = useState(0);
   const [preset, setPreset] = useState<"cylinder" | "orbit" | "wheel" | "panorama">("cylinder");
 
-  const currentTool = WORKSHOP_TOOLS[activeIndex] || WORKSHOP_TOOLS[0];
+  const activeToolIndex = ((rawIndex % WORKSHOP_TOOLS.length) + WORKSHOP_TOOLS.length) % WORKSHOP_TOOLS.length;
+  const currentTool = WORKSHOP_TOOLS[activeToolIndex] || WORKSHOP_TOOLS[0];
 
-  const handleSelectTool = (item: any) => {
-    if (item?.href) {
+  const handleSelectPill = (toolIdx: number) => {
+    if (toolIdx === activeToolIndex) {
+      router.push(WORKSHOP_TOOLS[toolIdx].href);
+      return;
+    }
+    // Buscamos la copia más cercana en el anillo de 12 elementos para un giro corto y fluido
+    const candidateA = toolIdx;
+    const candidateB = toolIdx + WORKSHOP_TOOLS.length;
+    const distA = Math.abs(rawIndex - candidateA);
+    const distB = Math.abs(rawIndex - candidateB);
+    const targetRingIndex = distA <= distB ? candidateA : candidateB;
+    carouselApiRef.current?.focusIndex(targetRingIndex);
+    setRawIndex(targetRingIndex);
+  };
+
+  const handleCardClick = (item: WorkshopToolItem, _index: number, wasActive?: boolean) => {
+    // Si la tarjeta ya estaba al frente o el usuario hace clic directo sobre la tarjeta frontal, abre la herramienta
+    if (wasActive && item?.href) {
       router.push(item.href);
-    } else if (currentTool?.href) {
-      router.push(currentTool.href);
     }
   };
 
   return (
-    <div className="relative rounded-3xl border border-[#20232A] bg-gradient-to-b from-[#16181D]/90 via-[#0D0E11] to-[#0A0B0E] p-6 sm:p-10 overflow-hidden shadow-2xl space-y-6">
-      {/* Encabezado del Carrusel 3D */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#20232A] pb-5">
-        <div>
-          <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-mono font-bold text-white uppercase tracking-wider mb-2">
-            <Rotate3d className="h-3.5 w-3.5 animate-spin-slow" />
-            <span>Selector 3D Circular de Herramientas</span>
-          </div>
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-[#F3F4F6] tracking-tight">
-            Gira y Elige la Función para tu Taller
-          </h2>
-          <p className="mt-1 text-xs sm:text-sm text-[#8E95A5]">
-            Arrastra el carrusel en 3D, selecciona cualquiera de las funciones oficiales y entra directo a trabajar.
-          </p>
+    <div className="relative w-full bg-transparent py-2 space-y-6">
+      {/* PRESENTACIÓN HERO ABIERTA Y TRANSPARENTE (SIN RECUADROS) */}
+      <AnimatedContent distance={35} trigger="mount" className="text-center max-w-4xl mx-auto px-2 space-y-3">
+        <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 backdrop-blur-md px-4 py-1.5 text-xs font-mono font-bold text-white uppercase tracking-widest">
+          <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+          <span>TALLER DTF PRIVAE • BOBINA 58 CM • 300 DPI</span>
         </div>
 
-        {/* Selector de Perspectiva 3D */}
-        <div className="flex flex-wrap items-center gap-1.5 bg-[#0D0E11] border border-[#20232A] p-1.5 rounded-xl self-start sm:self-auto">
-          {(
-            [
-              { key: "cylinder", label: "Cilindro" },
-              { key: "orbit", label: "Órbita" },
-              { key: "wheel", label: "Rueda" },
-              { key: "panorama", label: "Panorama" },
-            ] as const
-          ).map((p) => (
-            <button
-              key={p.key}
-              onClick={() => setPreset(p.key)}
-              className={`rounded-lg px-2.5 py-1 text-xs font-mono font-bold transition-all ${
-                preset === p.key
-                  ? "bg-white text-black shadow-glow-white"
-                  : "text-[#8E95A5] hover:text-white hover:bg-[#16181D]"
-              }`}
-            >
-              {p.label}
-            </button>
-          ))}
+        <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black text-white tracking-wide leading-none drop-shadow-[0_6px_30px_rgba(0,0,0,0.8)]">
+          ELIGE EL SERVICIO PARA TU DISEÑO
+        </h1>
+
+        <p className="text-sm sm:text-base text-neutral-300 max-w-2xl mx-auto font-normal">
+          Gira el carrusel 3D, usa las flechas o toca cualquier servicio para preparar e imprimir tus archivos al instante.
+        </p>
+      </AnimatedContent>
+
+      {/* BARRA INTUITIVA DE ACCESO RÁPIDO A LOS 6 SERVICIOS */}
+      <AnimatedContent distance={25} delay={0.08} trigger="mount">
+        <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-2.5 max-w-5xl mx-auto px-2">
+          {WORKSHOP_TOOLS.map((tool, idx) => {
+            const Icon = tool.icon;
+            const isSelected = idx === activeToolIndex;
+            return (
+              <button
+                key={tool.id}
+                type="button"
+                onClick={() => handleSelectPill(idx)}
+                className={`group inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs sm:text-sm font-mono font-bold transition-all duration-200 backdrop-blur-md ${
+                  isSelected
+                    ? "bg-white text-black shadow-[0_0_25px_rgba(255,255,255,0.45)] scale-105"
+                    : "bg-white/5 text-neutral-300 border border-white/15 hover:border-white/40 hover:bg-white/10 hover:text-white"
+                }`}
+              >
+                <Icon className={`h-4 w-4 ${isSelected ? "text-black" : "text-white/80"}`} />
+                <span>{tool.shortName}</span>
+              </button>
+            );
+          })}
         </div>
-      </div>
+      </AnimatedContent>
 
-      {/* Contenedor del Carrusel Circular */}
-      <div className="relative h-[380px] sm:h-[430px] w-full rounded-2xl bg-black/60 border border-[#20232A] overflow-hidden flex items-center justify-center">
-        <CircularCarousel
-          items={WORKSHOP_TOOLS}
-          preset={preset}
-          cardWidth={240}
-          aspectRatio={1}
-          gap={20}
-          tilt={preset === "orbit" ? -14 : -4}
-          speed={10}
-          autoplay="drift"
-          pauseOnHover={true}
-          draggable={true}
-          onChange={(index: number) => setActiveIndex(index)}
-          onItemClick={(item: any) => handleSelectTool(item)}
-          className="w-full h-full"
-        />
+      {/* ESCENARIO 3D GIGANTE Y 100% TRANSPARENTE (SIN BORDES NI CAJAS) */}
+      <AnimatedContent distance={40} delay={0.14} trigger="mount">
+        <div className="relative w-full h-[460px] sm:h-[560px] lg:h-[600px] bg-transparent flex items-center justify-center select-none">
+          {/* Botón Flotante Izquierdo */}
+          <button
+            type="button"
+            onClick={() => carouselApiRef.current?.stepBy(-1)}
+            aria-label="Servicio anterior"
+            className="absolute left-1 sm:left-4 z-20 flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full border border-white/25 bg-black/50 text-white backdrop-blur-md transition-all hover:scale-110 hover:border-white hover:bg-white hover:text-black active:scale-95 shadow-2xl"
+          >
+            <ChevronLeft className="h-6 w-6 sm:h-7 sm:w-7" />
+          </button>
 
-        {/* Indicador de Ayuda / Arrastre */}
-        <div className="absolute top-3 right-3 pointer-events-none rounded-lg border border-white/10 bg-black/70 px-2.5 py-1 text-[11px] font-mono text-neutral-400 backdrop-blur-sm hidden sm:block">
-          Arrastra • Clic en tarjeta para abrir
+          {/* Carrusel Circular 3D Transparente */}
+          <CircularCarousel
+            apiRef={carouselApiRef}
+            items={CAROUSEL_RING_ITEMS}
+            preset={preset}
+            intro="spin"
+            cardWidth={295}
+            aspectRatio={600 / 720}
+            gap={22}
+            tilt={preset === "orbit" ? -12 : -4}
+            speed={8}
+            autoplay="drift"
+            pauseOnHover={true}
+            draggable={true}
+            depthFade={0.42}
+            innerShade={0.45}
+            cornerRadius={22}
+            onChange={(index: number) => setRawIndex(index)}
+            onItemClick={handleCardClick}
+            className="w-full h-full bg-transparent"
+          />
+
+          {/* Botón Flotante Derecho */}
+          <button
+            type="button"
+            onClick={() => carouselApiRef.current?.stepBy(1)}
+            aria-label="Siguiente servicio"
+            className="absolute right-1 sm:right-4 z-20 flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full border border-white/25 bg-black/50 text-white backdrop-blur-md transition-all hover:scale-110 hover:border-white hover:bg-white hover:text-black active:scale-95 shadow-2xl"
+          >
+            <ChevronRight className="h-6 w-6 sm:h-7 sm:w-7" />
+          </button>
         </div>
-      </div>
+      </AnimatedContent>
 
-      {/* Tarjeta de Control & Selección Activa */}
-      <div className="rounded-2xl border border-white/20 bg-[#16181D] p-5 sm:p-6 shadow-xl transition-all">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-5">
-          <div className="space-y-2 flex-1">
-            <div className="flex flex-wrap items-center gap-2.5">
-              <span className="font-mono text-xs font-bold text-white border border-white/30 bg-white/10 px-2.5 py-0.5 rounded-full">
-                {currentTool.badge}
-              </span>
-              <span className="font-mono text-xs text-[#8E95A5]">
-                {currentTool.subtitle}
-              </span>
+      {/* PANEL FLOTANTE DE ACCIÓN DIRECTA DEL SERVICIO SELECCIONADO */}
+      <AnimatedContent distance={30} delay={0.2} trigger="mount">
+        <div className="max-w-4xl mx-auto px-2">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-5 rounded-2xl border border-white/20 bg-black/55 backdrop-blur-xl px-6 py-5 shadow-[0_20px_60px_rgba(0,0,0,0.6)]">
+            <div className="space-y-1.5 text-center md:text-left flex-1">
+              <div className="flex flex-wrap items-center justify-center md:justify-start gap-2.5">
+                <span className={`font-mono text-xs font-bold border px-3 py-0.5 rounded-full ${currentTool.accent}`}>
+                  {currentTool.badge}
+                </span>
+                <span className="font-mono text-xs text-neutral-400">
+                  {currentTool.subtitle}
+                </span>
+              </div>
+
+              <h2 className="text-2xl sm:text-3xl font-black text-white tracking-wide">
+                {currentTool.title}
+              </h2>
+
+              <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed max-w-2xl">
+                {currentTool.desc}
+              </p>
             </div>
 
-            <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight">
-              {currentTool.title}
-            </h3>
+            <div className="flex flex-col items-center md:items-end gap-3 shrink-0 w-full md:w-auto">
+              <Link
+                href={currentTool.href}
+                className="w-full md:w-auto inline-flex items-center justify-center gap-3 rounded-xl bg-white hover:bg-neutral-200 px-7 py-4 text-sm sm:text-base font-black text-black transition-all shadow-[0_0_30px_rgba(255,255,255,0.4)] hover:scale-[1.03] active:scale-95"
+              >
+                <span>{currentTool.action}</span>
+                <ArrowRight className="h-5 w-5" />
+              </Link>
 
-            <p className="text-xs sm:text-sm text-[#8E95A5] leading-relaxed max-w-3xl">
-              {currentTool.desc}
-            </p>
-          </div>
-
-          {/* Botón de Entrada Directa a la Herramienta Seleccionada */}
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 shrink-0">
-            <Link
-              href={currentTool.href}
-              className="inline-flex items-center justify-center gap-2.5 rounded-xl bg-white hover:bg-neutral-200 px-6 py-3.5 text-xs sm:text-sm font-black text-black transition-all shadow-glow-white active:scale-95"
-            >
-              <span>{currentTool.action}</span>
-              <ArrowRight className="h-4 w-4" />
-            </Link>
+              {/* Selector compacto de vista 3D */}
+              <div className="flex items-center gap-1.5 text-[11px] font-mono text-neutral-400">
+                <Rotate3d className="h-3.5 w-3.5 text-white/70 mr-1" />
+                <span>Vista 3D:</span>
+                {(
+                  [
+                    { key: "cylinder", label: "Cilindro" },
+                    { key: "orbit", label: "Órbita" },
+                    { key: "wheel", label: "Rueda" },
+                    { key: "panorama", label: "Panorama" },
+                  ] as const
+                ).map((p) => (
+                  <button
+                    key={p.key}
+                    type="button"
+                    onClick={() => setPreset(p.key)}
+                    className={`rounded-md px-2 py-0.5 transition-all ${
+                      preset === p.key
+                        ? "bg-white/20 text-white font-bold"
+                        : "text-neutral-400 hover:text-white"
+                    }`}
+                  >
+                    {p.label}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
-
-        {/* Mini Paginador de Herramientas */}
-        <div className="mt-5 pt-4 border-t border-[#20232A] flex flex-wrap items-center justify-between gap-2 text-xs font-mono text-[#8E95A5]">
-          <div className="flex items-center gap-1.5">
-            {WORKSHOP_TOOLS.map((t, idx) => (
-              <span
-                key={t.id}
-                className={`h-2 rounded-full transition-all ${
-                  idx === activeIndex ? "w-6 bg-white" : "w-2 bg-neutral-700"
-                }`}
-              />
-            ))}
-          </div>
-          <span>
-            Herramienta <strong>{activeIndex + 1}</strong> de <strong>{WORKSHOP_TOOLS.length}</strong>
-          </span>
-        </div>
-      </div>
+      </AnimatedContent>
     </div>
   );
 }

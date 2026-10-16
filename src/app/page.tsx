@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { 
   Scissors, 
   Sparkles, 
@@ -7,11 +6,9 @@ import {
   LayoutGrid, 
   ScanSearch,
   ArrowRight,
-  ShieldCheck
 } from "lucide-react";
 import { CornerButton } from "@/components/ui/corner-button";
 import { GlareCard } from "@/components/ui/glare-card";
-import LampDemo from "@/components/lamp-demo";
 import { AnimatedContent } from "@/components/AnimatedContent";
 import { ToolsShowcaseCarousel } from "@/components/ToolsShowcaseCarousel";
 
@@ -56,40 +53,8 @@ export default function HomePage() {
   ];
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-10">
-      {/* HERO CON ANIMACIÓN ACETERNITY LAMP */}
-      <section>
-        <LampDemo />
-      </section>
-
-      {/* Ficha de Calibración Técnica de Taller */}
-      <AnimatedContent distance={30} delay={0.1} trigger="mount">
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-xs text-[#8E95A5] bg-[#16181D] border border-[#20232A] px-6 py-3.5 rounded-xl shadow-inner">
-          <div className="flex items-center gap-2">
-            <span className="inline-block h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span className="text-[#F3F4F6] font-bold">TALLER DTF LISTO:</span>
-            <span className="text-[#8E95A5]">Archivos listos para imprimir directo en tela</span>
-          </div>
-          <div className="flex items-center gap-6">
-            <div>
-              <span className="text-[#8E95A5]/60 block text-[10px]">ANCHO BOBINA</span>
-              <span className="text-[#F3F4F6] font-semibold">58.0 cm</span>
-            </div>
-            <div className="h-6 w-px bg-[#20232A]" />
-            <div>
-              <span className="text-[#8E95A5]/60 block text-[10px]">RESOLUCIÓN</span>
-              <span className="text-[#F3F4F6] font-semibold">300 DPI</span>
-            </div>
-            <div className="h-6 w-px bg-[#20232A]" />
-            <div>
-              <span className="text-[#8E95A5]/60 block text-[10px]">CALIFICACIÓN</span>
-              <span className="text-white font-semibold">Semáforo DTF</span>
-            </div>
-          </div>
-        </div>
-      </AnimatedContent>
-
-      {/* CARRUSEL CIRCULAR 3D DE HERRAMIENTAS REACT BITS */}
+    <div className="mx-auto max-w-7xl px-3 py-6 sm:px-6 lg:px-8 space-y-12">
+      {/* PRESENTACIÓN PRINCIPAL: CARRUSEL CIRCULAR 3D GRANDE Y TRANSPARENTE */}
       <section>
         <ToolsShowcaseCarousel />
       </section>
@@ -204,10 +169,10 @@ export default function HomePage() {
         <AnimatedContent distance={30}>
           <div className="mb-4 flex items-center justify-between border-b border-[#20232A] pb-2">
             <h3 className="font-mono text-xs uppercase tracking-wider text-[#8E95A5]">
-              Herramientas Rápidas para tus Diseños
+              Acceso Directo en Cuadrícula
             </h3>
             <span className="font-mono text-xs text-[#8E95A5]/60">
-              4 opciones para dejar tus archivos al tiro
+              4 herramientas de preparación rápida
             </span>
           </div>
         </AnimatedContent>

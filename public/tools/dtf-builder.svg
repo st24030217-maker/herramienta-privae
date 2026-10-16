@@ -1,56 +1,62 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="100%" height="100%">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 720" width="100%" height="100%">
   <defs>
-    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#16181D" />
-      <stop offset="100%" stop-color="#0A0B0E" />
+    <linearGradient id="cardBg1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#181B22" stop-opacity="0.92" />
+      <stop offset="100%" stop-color="#0B0D11" stop-opacity="0.96" />
     </linearGradient>
-    <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
-      <rect width="10" height="10" fill="#1A1C23" />
-      <rect x="10" y="10" width="10" height="10" fill="#1A1C23" />
-      <rect x="10" width="10" height="10" fill="#12141A" />
-      <rect y="10" width="10" height="10" fill="#12141A" />
+    <radialGradient id="glow1" cx="50%" cy="45%" r="50%">
+      <stop offset="0%" stop-color="#10B981" stop-opacity="0.22" />
+      <stop offset="100%" stop-color="#10B981" stop-opacity="0" />
+    </radialGradient>
+    <pattern id="dtfGrid1" width="28" height="28" patternUnits="userSpaceOnUse">
+      <rect width="14" height="14" fill="#1D2028" />
+      <rect x="14" y="14" width="14" height="14" fill="#1D2028" />
+      <rect x="14" width="14" height="14" fill="#13161C" />
+      <rect y="14" width="14" height="14" fill="#13161C" />
     </pattern>
-    <linearGradient id="cyanLine" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.8" />
-      <stop offset="100%" stop-color="#8E95A5" stop-opacity="0.2" />
-    </linearGradient>
   </defs>
 
-  <!-- Background -->
-  <rect width="600" height="600" fill="url(#bgGrad)" />
+  <!-- Card Base -->
+  <rect x="4" y="4" width="592" height="712" rx="28" fill="url(#cardBg1)" stroke="#FFFFFF" stroke-opacity="0.22" stroke-width="3" />
+  <circle cx="300" cy="340" r="240" fill="url(#glow1)" />
 
-  <!-- Technical Canvas Area with Grid -->
-  <rect x="40" y="40" width="520" height="520" rx="20" fill="#0D0E11" stroke="#20232A" stroke-width="2" />
-  <rect x="60" y="60" width="480" height="380" rx="14" fill="url(#grid)" stroke="#262A36" stroke-width="1.5" />
+  <!-- Top Category Pill -->
+  <rect x="170" y="38" width="260" height="38" rx="19" fill="#10B981" fill-opacity="0.15" stroke="#10B981" stroke-opacity="0.6" stroke-width="1.5" />
+  <circle cx="196" cy="57" r="6" fill="#10B981" />
+  <text x="310" y="63" font-family="sans-serif" font-weight="800" font-size="16" fill="#34D399" text-anchor="middle" letter-spacing="1.5">BOBINA 58 CM • 300 DPI</text>
 
-  <!-- DTF Platen Sheet (58 cm gang sheet preview) -->
-  <rect x="90" y="90" width="420" height="320" rx="10" fill="#0D0E11" fill-opacity="0.85" stroke="#FFFFFF" stroke-opacity="0.4" stroke-width="1.5" stroke-dasharray="6,4" />
+  <!-- Giant Title -->
+  <text x="300" y="132" font-family="sans-serif" font-weight="900" font-size="46" fill="#FFFFFF" text-anchor="middle" letter-spacing="1">ARMAR METRO DTF</text>
+  <text x="300" y="168" font-family="sans-serif" font-weight="600" font-size="21" fill="#9CA3AF" text-anchor="middle">Acomoda varios diseños en 1m o 2m</text>
 
-  <!-- Layout items placed on film -->
-  <rect x="110" y="110" width="170" height="130" rx="8" fill="#16181D" stroke="#FFFFFF" stroke-width="1.5" />
-  <circle cx="160" cy="175" r="32" fill="#FFFFFF" fill-opacity="0.1" stroke="#FFFFFF" stroke-width="2" />
-  <text x="160" y="180" font-family="sans-serif" font-weight="900" font-size="12" fill="#FFFFFF" text-anchor="middle">PECHO</text>
-  <text x="235" y="170" font-family="monospace" font-size="10" fill="#8E95A5">300 DPI</text>
-  <text x="235" y="190" font-family="monospace" font-size="10" fill="#FFFFFF">10×10 cm</text>
+  <!-- Central Visual Illustration: 58cm Gang Sheet -->
+  <rect x="65" y="200" width="470" height="350" rx="20" fill="url(#dtfGrid1)" stroke="#FFFFFF" stroke-opacity="0.3" stroke-width="2" stroke-dasharray="10,6" />
 
-  <!-- Item 2 on film -->
-  <rect x="300" y="110" width="190" height="280" rx="8" fill="#16181D" stroke="#FFFFFF" stroke-width="1.5" />
-  <rect x="320" y="130" width="150" height="190" rx="6" fill="#0D0E11" stroke="#20232A" />
-  <path d="M 395 190 L 430 250 L 360 250 Z" fill="#FFFFFF" fill-opacity="0.15" stroke="#FFFFFF" stroke-width="2" />
-  <text x="395" y="300" font-family="sans-serif" font-weight="900" font-size="14" fill="#FFFFFF" text-anchor="middle">ESPALDA A3</text>
-  <text x="395" y="318" font-family="monospace" font-size="10" fill="#8E95A5" text-anchor="middle">28 × 38 cm</text>
+  <!-- Top Ruler Bar -->
+  <rect x="65" y="200" width="470" height="32" rx="8" fill="#0D0E11" fill-opacity="0.9" />
+  <text x="300" y="221" font-family="monospace" font-weight="700" font-size="15" fill="#10B981" text-anchor="middle">◄─── ANCHO REAL DE IMPRESIÓN: 58.0 CM ───►</text>
 
-  <!-- Item 3 on film -->
-  <rect x="110" y="260" width="170" height="130" rx="8" fill="#16181D" stroke="#FFFFFF" stroke-width="1.5" />
-  <text x="195" y="325" font-family="sans-serif" font-weight="900" font-size="13" fill="#FFFFFF" text-anchor="middle">GORRA / MANGA</text>
-  <text x="195" y="345" font-family="monospace" font-size="10" fill="#8E95A5" text-anchor="middle">12 × 5 cm</text>
+  <!-- Design Block 1: Pecho -->
+  <rect x="90" y="250" width="195" height="135" rx="14" fill="#161920" stroke="#10B981" stroke-width="2.5" />
+  <circle cx="145" cy="317" r="34" fill="#10B981" fill-opacity="0.2" stroke="#10B981" stroke-width="2.5" />
+  <text x="145" y="323" font-family="sans-serif" font-weight="900" font-size="15" fill="#FFFFFF" text-anchor="middle">LOGO</text>
+  <text x="232" y="308" font-family="sans-serif" font-weight="800" font-size="18" fill="#FFFFFF" text-anchor="middle">PECHO</text>
+  <text x="232" y="332" font-family="monospace" font-weight="700" font-size="15" fill="#34D399" text-anchor="middle">10×10 cm</text>
 
-  <!-- Technical Overlay Footer -->
-  <rect x="60" y="460" width="480" height="80" rx="12" fill="#16181D" stroke="#20232A" stroke-width="1.5" />
-  <text x="85" y="495" font-family="sans-serif" font-weight="900" font-size="20" fill="#FFFFFF" letter-spacing="1">ARMADOR DE METROS DTF</text>
-  <text x="85" y="522" font-family="monospace" font-size="12" fill="#8E95A5">BOBINA 58.0 CM • METRO (100 CM) Y DOBLE METRO (200 CM)</text>
+  <!-- Design Block 2: Espalda Grande -->
+  <rect x="305" y="250" width="205" height="275" rx="14" fill="#161920" stroke="#FFFFFF" stroke-width="2.5" />
+  <polygon points="407,285 460,375 355,375" fill="#FFFFFF" fill-opacity="0.15" stroke="#FFFFFF" stroke-width="3" stroke-linejoin="round" />
+  <text x="407" y="425" font-family="sans-serif" font-weight="900" font-size="24" fill="#FFFFFF" text-anchor="middle">ESPALDA A3</text>
+  <text x="407" y="455" font-family="monospace" font-weight="700" font-size="17" fill="#9CA3AF" text-anchor="middle">28 × 38 cm</text>
+  <rect x="347" y="475" width="120" height="30" rx="8" fill="#FFFFFF" fill-opacity="0.12" />
+  <text x="407" y="495" font-family="monospace" font-weight="700" font-size="14" fill="#FFFFFF" text-anchor="middle">DUPLICAR ×10</text>
 
-  <!-- Badge 300 DPI -->
-  <rect x="420" y="478" width="105" height="42" rx="8" fill="#FFFFFF" />
-  <text x="472" y="504" font-family="sans-serif" font-weight="900" font-size="13" fill="#000000" text-anchor="middle">300 DPI</text>
+  <!-- Design Block 3: Gorras / Mangas -->
+  <rect x="90" y="400" width="195" height="125" rx="14" fill="#161920" stroke="#FFFFFF" stroke-opacity="0.6" stroke-width="2" />
+  <text x="187" y="458" font-family="sans-serif" font-weight="900" font-size="20" fill="#FFFFFF" text-anchor="middle">GORRA / MANGA</text>
+  <text x="187" y="486" font-family="monospace" font-weight="700" font-size="16" fill="#9CA3AF" text-anchor="middle">12 × 6 cm</text>
+
+  <!-- Bottom CTA Button -->
+  <rect x="90" y="595" width="420" height="76" rx="20" fill="#FFFFFF" />
+  <text x="300" y="642" font-family="sans-serif" font-weight="900" font-size="24" fill="#0A0B0E" text-anchor="middle" letter-spacing="1">ARMAR MI METRO AHORA →</text>
 </svg>

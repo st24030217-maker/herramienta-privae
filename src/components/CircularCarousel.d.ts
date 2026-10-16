@@ -8,6 +8,11 @@ export interface CircularCarouselItem {
   [key: string]: any;
 }
 
+export interface CircularCarouselApi {
+  focusIndex: (index: number) => void;
+  stepBy: (delta: number) => void;
+}
+
 export interface CircularCarouselProps {
   items?: CircularCarouselItem[];
   preset?: 'cylinder' | 'orbit' | 'wheel' | 'panorama';
@@ -35,7 +40,8 @@ export interface CircularCarouselProps {
   cornerRadius?: number;
   captions?: boolean;
   onChange?: (index: number) => void;
-  onItemClick?: (item: any, index: number) => void;
+  onItemClick?: (item: any, index: number, wasActive?: boolean) => void;
+  apiRef?: React.MutableRefObject<CircularCarouselApi | null>;
   className?: string;
   style?: React.CSSProperties;
 }

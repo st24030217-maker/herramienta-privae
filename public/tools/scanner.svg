@@ -1,57 +1,55 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="100%" height="100%">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 720" width="100%" height="100%">
   <defs>
-    <linearGradient id="bgGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#16181D" />
-      <stop offset="100%" stop-color="#0A0B0E" />
+    <linearGradient id="cardBg2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#181B22" stop-opacity="0.92" />
+      <stop offset="100%" stop-color="#0B0D11" stop-opacity="0.96" />
     </linearGradient>
-    <radialGradient id="radarGrad" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.25" />
-      <stop offset="70%" stop-color="#FFFFFF" stop-opacity="0.05" />
-      <stop offset="100%" stop-color="#000000" stop-opacity="0" />
+    <radialGradient id="glow2" cx="50%" cy="45%" r="50%">
+      <stop offset="0%" stop-color="#3B82F6" stop-opacity="0.22" />
+      <stop offset="100%" stop-color="#3B82F6" stop-opacity="0" />
     </radialGradient>
   </defs>
 
-  <rect width="600" height="600" fill="url(#bgGrad2)" />
+  <!-- Card Base -->
+  <rect x="4" y="4" width="592" height="712" rx="28" fill="url(#cardBg2)" stroke="#FFFFFF" stroke-opacity="0.22" stroke-width="3" />
+  <circle cx="300" cy="340" r="240" fill="url(#glow2)" />
 
-  <rect x="40" y="40" width="520" height="520" rx="20" fill="#0D0E11" stroke="#20232A" stroke-width="2" />
-  
-  <!-- Radar Display Target -->
-  <rect x="60" y="60" width="480" height="380" rx="14" fill="#0D0E11" stroke="#262A36" stroke-width="1.5" />
-  <circle cx="300" cy="250" r="150" fill="url(#radarGrad)" stroke="#20232A" stroke-width="1.5" />
-  <circle cx="300" cy="250" r="105" fill="none" stroke="#262A36" stroke-width="1.5" />
-  <circle cx="300" cy="250" r="60" fill="none" stroke="#333846" stroke-width="1.5" />
-  <circle cx="300" cy="250" r="15" fill="#FFFFFF" fill-opacity="0.2" stroke="#FFFFFF" stroke-width="2" />
+  <!-- Top Category Pill -->
+  <rect x="155" y="38" width="290" height="38" rx="19" fill="#3B82F6" fill-opacity="0.15" stroke="#60A5FA" stroke-opacity="0.6" stroke-width="1.5" />
+  <circle cx="184" cy="57" r="6" fill="#60A5FA" />
+  <text x="312" y="63" font-family="sans-serif" font-weight="800" font-size="16" fill="#93C5FD" text-anchor="middle" letter-spacing="1.5">DIAGNÓSTICO 0 - 100%</text>
 
-  <!-- Laser Crosshairs -->
-  <line x1="150" y1="250" x2="450" y2="250" stroke="#FFFFFF" stroke-opacity="0.4" stroke-width="1.5" stroke-dasharray="4,4" />
-  <line x1="300" y1="100" x2="300" y2="400" stroke="#FFFFFF" stroke-opacity="0.4" stroke-width="1.5" stroke-dasharray="4,4" />
+  <!-- Giant Title -->
+  <text x="300" y="132" font-family="sans-serif" font-weight="900" font-size="44" fill="#FFFFFF" text-anchor="middle" letter-spacing="1">CHECAR CALIDAD DTF</text>
+  <text x="300" y="168" font-family="sans-serif" font-weight="600" font-size="21" fill="#9CA3AF" text-anchor="middle">Revisa fondo, bordes y 300 DPI al instante</text>
 
-  <!-- Score Gauge Pill -->
-  <rect x="200" y="90" width="200" height="48" rx="24" fill="#16181D" stroke="#FFFFFF" stroke-width="2" />
-  <circle cx="225" cy="114" r="7" fill="#10B981" />
-  <text x="310" y="121" font-family="sans-serif" font-weight="900" font-size="16" fill="#FFFFFF" text-anchor="middle">CALIDAD 100%</text>
+  <!-- Central Visual Illustration: Radar & Gauge -->
+  <rect x="65" y="200" width="470" height="350" rx="20" fill="#111318" stroke="#FFFFFF" stroke-opacity="0.22" stroke-width="2" />
 
-  <!-- Diagnostic Metrics -->
-  <rect x="90" y="320" width="130" height="90" rx="8" fill="#16181D" stroke="#20232A" />
-  <text x="105" y="348" font-family="monospace" font-size="11" fill="#8E95A5">FONDO ALFA</text>
-  <text x="105" y="375" font-family="sans-serif" font-weight="800" font-size="15" fill="#10B981">LIMPIO</text>
-  <text x="105" y="395" font-family="monospace" font-size="9" fill="#8E95A5">0% Opaco residual</text>
+  <!-- Score Ring -->
+  <circle cx="205" cy="345" r="92" fill="none" stroke="#1F2430" stroke-width="16" />
+  <circle cx="205" cy="345" r="92" fill="none" stroke="#10B981" stroke-width="16" stroke-dasharray="510 580" stroke-linecap="round" transform="rotate(-90 205 345)" />
+  <text x="205" y="352" font-family="sans-serif" font-weight="900" font-size="52" fill="#FFFFFF" text-anchor="middle">98%</text>
+  <text x="205" y="384" font-family="monospace" font-weight="800" font-size="15" fill="#34D399" text-anchor="middle">LISTO PARA IMPRIMIR</text>
 
-  <rect x="235" y="320" width="130" height="90" rx="8" fill="#16181D" stroke="#20232A" />
-  <text x="250" y="348" font-family="monospace" font-size="11" fill="#8E95A5">DENSIDAD</text>
-  <text x="250" y="375" font-family="sans-serif" font-weight="800" font-size="15" fill="#FFFFFF">300 DPI</text>
-  <text x="250" y="395" font-family="monospace" font-size="9" fill="#8E95A5">Calibrado taller</text>
+  <!-- 3 Check Pills on Right -->
+  <rect x="325" y="242" width="185" height="62" rx="12" fill="#171B22" stroke="#10B981" stroke-opacity="0.6" stroke-width="2" />
+  <text x="417" y="270" font-family="sans-serif" font-weight="800" font-size="16" fill="#FFFFFF" text-anchor="middle">FONDO LIMPIO</text>
+  <text x="417" y="292" font-family="monospace" font-weight="700" font-size="14" fill="#34D399" text-anchor="middle">✓ 100% Transparente</text>
 
-  <rect x="380" y="320" width="130" height="90" rx="8" fill="#16181D" stroke="#20232A" />
-  <text x="395" y="348" font-family="monospace" font-size="11" fill="#8E95A5">MEDIDA MAX</text>
-  <text x="395" y="375" font-family="sans-serif" font-weight="800" font-size="15" fill="#FFFFFF">32.4 cm</text>
-  <text x="395" y="395" font-family="monospace" font-size="9" fill="#8E95A5">Sin pixelación</text>
+  <rect x="325" y="318" width="185" height="62" rx="12" fill="#171B22" stroke="#60A5FA" stroke-opacity="0.6" stroke-width="2" />
+  <text x="417" y="346" font-family="sans-serif" font-weight="800" font-size="16" fill="#FFFFFF" text-anchor="middle">NITIDEZ REAL</text>
+  <text x="417" y="368" font-family="monospace" font-weight="700" font-size="14" fill="#93C5FD" text-anchor="middle">✓ 300 DPI Óptimo</text>
 
-  <!-- Technical Overlay Footer -->
-  <rect x="60" y="460" width="480" height="80" rx="12" fill="#16181D" stroke="#20232A" stroke-width="1.5" />
-  <text x="85" y="495" font-family="sans-serif" font-weight="900" font-size="20" fill="#FFFFFF" letter-spacing="1">REVISIÓN &amp; ESCÁNER DTF</text>
-  <text x="85" y="522" font-family="monospace" font-size="12" fill="#8E95A5">DIAGNÓSTICO PREVENTIVO • EVITA GASTAR FILM Y TINTA</text>
+  <rect x="325" y="394" width="185" height="62" rx="12" fill="#171B22" stroke="#FFFFFF" stroke-opacity="0.35" stroke-width="2" />
+  <text x="417" y="422" font-family="sans-serif" font-weight="800" font-size="16" fill="#FFFFFF" text-anchor="middle">SIN HALOS</text>
+  <text x="417" y="444" font-family="monospace" font-weight="700" font-size="14" fill="#E5E7EB" text-anchor="middle">✓ Sin tinta blanca extra</text>
 
-  <rect x="420" y="478" width="105" height="42" rx="8" fill="#FFFFFF" />
-  <text x="472" y="504" font-family="sans-serif" font-weight="900" font-size="13" fill="#000000" text-anchor="middle">ESCANEAR</text>
+  <!-- Bottom Max Size Bar -->
+  <rect x="95" y="482" width="415" height="44" rx="10" fill="#181C24" stroke="#262B36" stroke-width="1.5" />
+  <text x="302" y="510" font-family="monospace" font-weight="700" font-size="16" fill="#E5E7EB" text-anchor="middle">MEDIDA MÁXIMA SUGERIDA: 28.5 × 36.0 CM</text>
+
+  <!-- Bottom CTA Button -->
+  <rect x="90" y="595" width="420" height="76" rx="20" fill="#FFFFFF" />
+  <text x="300" y="642" font-family="sans-serif" font-weight="900" font-size="24" fill="#0A0B0E" text-anchor="middle" letter-spacing="1">ESCANEAR MI DISEÑO →</text>
 </svg>
