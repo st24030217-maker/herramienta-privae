@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "node prisma/sync-provider.mjs && next dev",
-    "build": "node prisma/sync-provider.mjs && prisma generate && prisma db push --accept-data-loss && next build",
+    "build": "node prisma/build.mjs",
     "start": "next start",
     "lint": "next lint",
     "postinstall": "node prisma/sync-provider.mjs && prisma generate",
