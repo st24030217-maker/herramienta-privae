@@ -4,6 +4,7 @@ import "./globals.css";
 import { Navbar } from "@/components/Navbar";
 import { LightLines } from "@/components/ui/light-lines";
 import { UserGuideModal } from "@/components/UserGuideModal";
+import TargetCursor from "@/components/TargetCursor";
 import Link from "next/link";
 
 export const metadata: Metadata = {
@@ -27,6 +28,13 @@ export default function RootLayout({
         />
       </head>
       <body className="relative flex min-h-screen flex-col bg-black text-[#F3F4F6] font-sans antialiased selection:bg-white/20 selection:text-white">
+        <TargetCursor
+          targetSelector='.cursor-target, a, button, [role="button"]'
+          spinDuration={2.2}
+          hoverDuration={0.18}
+          hideDefaultCursor={true}
+          parallaxOn={true}
+        />
         <div className="fixed inset-0 -z-10 pointer-events-none overflow-hidden">
           <LightLines
             className="w-full h-full"
