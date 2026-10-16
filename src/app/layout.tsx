@@ -1,17 +1,10 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import { Montserrat } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/Navbar";
 import { LightLines } from "@/components/ui/light-lines";
 import { UserGuideModal } from "@/components/UserGuideModal";
 import Link from "next/link";
-
-const montserrat = Montserrat({
-  subsets: ["latin"],
-  variable: "--font-montserrat",
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   title: "Privae Textil - Herramientas Profesionales de Preparación de Imágenes y DTF",
@@ -25,7 +18,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" className={`dark ${montserrat.variable}`}>
+    <html lang="es" className="dark">
       <head>
         <link rel="preconnect" href="https://api.fontshare.com" />
         <link

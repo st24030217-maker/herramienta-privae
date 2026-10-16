@@ -21,7 +21,7 @@
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: 'Tanker', var(--font-montserrat), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: 'Tanker', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   letter-spacing: 0.02em;
   min-height: 100vh;
   overflow-x: hidden;

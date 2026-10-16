@@ -28,7 +28,7 @@ export default function AccountPage() {
   const [user, setUser] = useState<UserAccountData | null>(null);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
-  const [feedback, setFeedback] = useState<{ text: string; type: "success" | "error" } | null>(null);
+  const [feedback, setFeedback] = useState<{ text: string; type: "success" | "error" | "info" } | null>(null);
 
   const fetchUserData = () => {
     fetch("/api/auth/me")
@@ -43,26 +43,61 @@ export default function AccountPage() {
 
   useEffect(() => {
     fetchUserData();
+
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get("payment") === "success") {
+        setFeedback({
+          text: "¡Pago completado con éxito en Stripe! Tu membresía Premium está activa.",
+          type: "success",
+        });
+        window.history.replaceState({}, "", "/account");
+      } else if (params.get("payment") === "cancelled") {
+        setFeedback({
+          text: "El proceso de suscripción en Stripe fue cancelado.",
+          type: "info",
+        });
+        window.history.replaceState({}, "", "/account");
+      }
+    }
   }, []);
 
-  const handleSimulateSubscription = async (action: string) => {
+  const handleStripeCheckout = async () => {
     setActionLoading(true);
     setFeedback(null);
     try {
-      const res = await fetch("/api/subscription/simulate-action", {
+      const res = await fetch("/api/stripe/checkout", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action }),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
-        throw new Error(data.error || "Error al actualizar la suscripción.");
+        throw new Error(data.error || "No se pudo iniciar el checkout de Stripe.");
       }
-      setFeedback({ text: "¡Operación completada con éxito!", type: "success" });
-      fetchUserData();
+      if (data.url) {
+        window.location.href = data.url;
+      }
     } catch (err: any) {
-      setFeedback({ text: err.message || "Error al realizar la acción.", type: "error" });
-    } finally {
+      setFeedback({ text: err.message || "Error al conectar con Stripe.", type: "error" });
+      setActionLoading(false);
+    }
+  };
+
+  const handleStripePortal = async () => {
+    setActionLoading(true);
+    setFeedback(null);
+    try {
+      const res = await fetch("/api/stripe/portal", {
+        method: "POST",
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        throw new Error(data.error || "No se pudo abrir el portal de facturación.");
+      }
+      if (data.url) {
+        window.location.href = data.url;
+      }
+    } catch (err: any) {
+      setFeedback({ text: err.message || "Error al conectar con el portal de Stripe.", type: "error" });
       setActionLoading(false);
     }
   };
@@ -193,29 +228,29 @@ export default function AccountPage() {
           <div className="pt-2 flex flex-wrap items-center gap-3">
             {user.subscription.status !== "ACTIVE" ? (
               <button
-                onClick={() => handleSimulateSubscription("SUBSCRIBE_MONTHLY")}
+                onClick={handleStripeCheckout}
                 disabled={actionLoading}
-                className="inline-flex items-center gap-2 rounded-lg bg-white px-5 py-2.5 text-xs font-bold text-black hover:bg-neutral-200 transition-all shadow-glow-white"
+                className="inline-flex items-center gap-2 rounded-lg bg-white px-5 py-2.5 text-xs font-bold text-black hover:bg-neutral-200 transition-all shadow-glow-white disabled:opacity-50"
               >
-                <Sparkles className="h-4 w-4" /> Suscribirme al Plan Premium ($19.99/mes)
+                {actionLoading ? (
+                  <RefreshCw className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Sparkles className="h-4 w-4" />
+                )}
+                Suscribirme al Plan Premium ($19.99/mes con Stripe)
               </button>
             ) : (
               <button
-                onClick={() => handleSimulateSubscription("CANCEL_SUBSCRIPTION")}
+                onClick={handleStripePortal}
                 disabled={actionLoading}
-                className="rounded-lg border border-neutral-700 bg-neutral-900 px-4 py-2 text-xs font-bold text-white hover:bg-neutral-800"
+                className="inline-flex items-center gap-2 rounded-lg bg-white px-5 py-2.5 text-xs font-bold text-black hover:bg-neutral-200 transition-all disabled:opacity-50"
               >
-                Cancelar Suscripción
-              </button>
-            )}
-
-            {user.role === "ADMIN" && (
-              <button
-                onClick={() => handleSimulateSubscription("RESET_TRIAL")}
-                disabled={actionLoading}
-                className="rounded-lg border border-neutral-800 bg-neutral-900 px-3.5 py-2 text-xs font-semibold text-neutral-300 hover:bg-neutral-800 hover:text-white"
-              >
-                Reiniciar 5 Días de Prueba (Admin Demo)
+                {actionLoading ? (
+                  <RefreshCw className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Crown className="h-4 w-4" />
+                )}
+                Administrar Suscripción y Facturas (Stripe)
               </button>
             )}
           </div>

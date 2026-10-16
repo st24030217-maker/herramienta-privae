@@ -40,9 +40,8 @@ module.exports = {
         'white-focus': '0 0 0 2px rgba(255, 255, 255, 0.4)',
       },
       fontFamily: {
-        sans: ["Tanker", "var(--font-montserrat)", "sans-serif"],
+        sans: ["Tanker", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "sans-serif"],
         tanker: ["Tanker", "sans-serif"],
-        montserrat: ["var(--font-montserrat)", "sans-serif"],
       },
       backgroundImage: {
         'gradient-conic': 'conic-gradient(var(--conic-position), var(--tw-gradient-stops))',
