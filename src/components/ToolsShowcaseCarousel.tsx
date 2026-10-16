@@ -38,7 +38,7 @@ export interface WorkshopToolItem {
 export const WORKSHOP_TOOLS: WorkshopToolItem[] = [
   {
     id: "remove-bg",
-    src: "/tools/remove-bg.svg",
+    src: "/tools/dtf_01_remover_fondo_minimalista.png",
     alt: "01 Remover Fondo",
     shortName: "01 · Remover Fondo",
     title: "01 · Remover Fondo (PNG 300 DPI)",
@@ -47,12 +47,12 @@ export const WORKSHOP_TOOLS: WorkshopToolItem[] = [
     href: "/tools/remove-bg",
     badge: "MÓDULO 01 • REMOVER FONDO",
     action: "Abrir 01 · Remover Fondo",
-    accent: "border-purple-400/50 text-purple-300 bg-purple-500/10",
+    accent: "border-white/40 text-white bg-white/10",
     icon: Scissors,
   },
   {
     id: "enhance",
-    src: "/tools/enhance.svg",
+    src: "/tools/dtf_02_mejorar_calidad_minimalista.png",
     alt: "02 Mejorar Calidad / Resolución",
     shortName: "02 · Mejorar Calidad",
     title: "02 · Mejorar Calidad / Resolución",
@@ -61,12 +61,12 @@ export const WORKSHOP_TOOLS: WorkshopToolItem[] = [
     href: "/tools/enhance",
     badge: "MÓDULO 02 • MEJORAR RESOLUCIÓN",
     action: "Abrir 02 · Mejorar Calidad",
-    accent: "border-amber-400/50 text-amber-300 bg-amber-500/10",
+    accent: "border-white/40 text-white bg-white/10",
     icon: Sparkles,
   },
   {
     id: "remove-color",
-    src: "/tools/remove-color.svg",
+    src: "/tools/dtf_03_eliminar_color_minimalista.png",
     alt: "03 Eliminar un Color",
     shortName: "03 · Eliminar un Color",
     title: "03 · Eliminar un Color (Cuentagotas)",
@@ -75,12 +75,12 @@ export const WORKSHOP_TOOLS: WorkshopToolItem[] = [
     href: "/tools/remove-color",
     badge: "MÓDULO 03 • ELIMINAR COLOR",
     action: "Abrir 03 · Eliminar un Color",
-    accent: "border-pink-400/50 text-pink-300 bg-pink-500/10",
+    accent: "border-white/40 text-white bg-white/10",
     icon: Pipette,
   },
   {
     id: "clean-alpha",
-    src: "/tools/clean-alpha.svg",
+    src: "/tools/dtf_04_quitar_semitransparencias_minimalista.png",
     alt: "04 Quitar Semitransparencias",
     shortName: "04 · Quitar Semitransparencias",
     title: "04 · Quitar Semitransparencias (Hasta 58×200 cm)",
@@ -89,12 +89,12 @@ export const WORKSHOP_TOOLS: WorkshopToolItem[] = [
     href: "/tools/clean-alpha",
     badge: "MÓDULO 04 • SEMITRANSPARENCIAS",
     action: "Abrir 04 · Quitar Semitransparencias",
-    accent: "border-cyan-400/50 text-cyan-300 bg-cyan-500/10",
+    accent: "border-white/40 text-white bg-white/10",
     icon: Layers,
   },
   {
     id: "dtf-builder",
-    src: "/tools/dtf-builder.svg",
+    src: "/tools/dtf_05_armador_archivos_minimalista.png",
     alt: "05 Armador de Archivos DTF",
     shortName: "05 · Armador DTF",
     title: "05 · Armador de Archivos DTF (58×100 y 58×200 cm)",
@@ -103,21 +103,21 @@ export const WORKSHOP_TOOLS: WorkshopToolItem[] = [
     href: "/tools/dtf-builder",
     badge: "MÓDULO 05 • ARMADOR DTF",
     action: "Abrir 05 · Armador de Archivos DTF",
-    accent: "border-emerald-400/50 text-emerald-300 bg-emerald-500/10",
+    accent: "border-white/40 text-white bg-white/10",
     icon: LayoutGrid,
   },
   {
     id: "scanner",
-    src: "/tools/scanner.svg",
+    src: "/tools/dtf_06_escaner_calidad_minimalista.png",
     alt: "Escáner de Calidad DTF",
-    shortName: "Checar Calidad DTF",
-    title: "Diagnóstico & Escáner Preventivo DTF",
+    shortName: "06 · Escáner DTF",
+    title: "06 · Escáner de Calidad DTF",
     subtitle: "Revisión de Transparencia, Halos y Resolución 300 DPI",
     desc: "Verifica antes de imprimir si tu archivo cumple con transparencia real, ausencia de semitransparencias y resolución efectiva en centímetros.",
     href: "/tools/scanner",
-    badge: "CONTROL DE CALIDAD",
-    action: "Abrir Escáner de Calidad",
-    accent: "border-blue-400/50 text-blue-300 bg-blue-500/10",
+    badge: "MÓDULO 06 • CONTROL DE CALIDAD",
+    action: "Abrir 06 · Escáner de Calidad",
+    accent: "border-white/40 text-white bg-white/10",
     icon: ScanSearch,
   },
 ];
@@ -254,7 +254,7 @@ export function ToolsShowcaseCarousel() {
 
       {/* ESCENARIO 3D GIGANTE Y 100% TRANSPARENTE (60-120 FPS) */}
       <AnimatedContent distance={28} delay={0.08} trigger="mount">
-        <div className="relative w-full h-[460px] sm:h-[560px] lg:h-[600px] bg-transparent flex items-center justify-center select-none">
+        <div className="relative w-full h-[500px] sm:h-[580px] lg:h-[620px] bg-transparent flex items-center justify-center select-none">
           <button
             type="button"
             onClick={() => carouselApiRef.current?.stepBy(-1)}
@@ -269,9 +269,9 @@ export function ToolsShowcaseCarousel() {
             items={CAROUSEL_RING_ITEMS}
             preset={preset}
             intro="spin"
-            cardWidth={295}
-            aspectRatio={600 / 720}
-            gap={22}
+            cardWidth={250}
+            aspectRatio={1600 / 2848}
+            gap={24}
             tilt={preset === "orbit" ? -12 : -4}
             speed={9.5}
             momentum={0.82}
