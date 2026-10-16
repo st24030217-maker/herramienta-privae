@@ -123,9 +123,13 @@ export async function runSubscriptionLifecycleChecks() {
       now.getTime() - config.fileRetentionMinutes * 60 * 1000
     );
 
-    const purgedTokens = await prisma.passwordResetToken.deleteMany({
+    const purgedTokens = await prisma.user.updateMany({
       where: {
-        OR: [{ expiresAt: { lt: now } }, { usedAt: { not: null } }],
+        resetTokenExpiry: { lt: now },
+      },
+      data: {
+        resetToken: null,
+        resetTokenExpiry: null,
       },
     });
     expiredTokensPurged = purgedTokens.count;
