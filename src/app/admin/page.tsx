@@ -169,7 +169,7 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 text-white space-y-6">
+    <div className="mx-auto max-w-7xl px-4 pt-32 sm:pt-36 pb-16 sm:px-6 lg:px-8 text-white space-y-8">
       {/* Header */}
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-neutral-800 pb-5">
         <div>
@@ -186,7 +186,7 @@ export default function AdminPage() {
 
         <button
           onClick={loadData}
-          className="flex items-center gap-1.5 rounded-xl border border-neutral-800 bg-neutral-900 px-4 py-2 text-xs font-bold text-white hover:bg-neutral-800"
+          className="flex items-center gap-1.5 rounded-xl border border-neutral-800 bg-neutral-900 px-4 py-2 text-xs font-bold text-white hover:bg-neutral-800 transition-colors"
         >
           <RefreshCw className="h-3.5 w-3.5" /> Actualizar Panel
         </button>
@@ -206,13 +206,13 @@ export default function AdminPage() {
 
       {/* Tarjetas de Métricas con MagicBento */}
       {stats && (
-        <div className="space-y-4">
-          <div className="flex items-center justify-between border-b border-neutral-800/60 pb-2">
+        <div className="space-y-3">
+          <div className="flex items-center justify-between border-b border-neutral-800/80 pb-2">
             <span className="text-[11px] font-black uppercase tracking-widest text-neutral-400">
-              Métricas Operativas · MagicBento Interactivo
+              Métricas Operativas · MagicBento Privae
             </span>
             <span className="text-[10px] text-neutral-500 hidden sm:inline">
-              Haz clic en cualquier tarjeta para navegar a su panel correspondiente
+              Haz clic en cualquier tarjeta para saltar a su sección correspondiente
             </span>
           </div>
 
@@ -220,62 +220,231 @@ export default function AdminPage() {
             items={[
               {
                 id: "bento-users",
-                title: `${stats.totalUsers} Usuarios · ${stats.trialUsers} en Prueba 5D`,
-                description: `${stats.suspendedUsers} cuentas suspendidas. Haz clic para gestionar accesos.`,
-                label: "MÉTRICAS DE USUARIOS",
-                icon: <Users className="h-4 w-4 text-sky-400" />,
-                visual: "analytics",
                 colSpan: 2,
                 rowSpan: 1,
                 onClick: () => setActiveTab("users"),
+                content: (
+                  <div className="flex h-full flex-col justify-between select-none">
+                    <div className="flex items-center justify-between text-xs">
+                      <div className="flex items-center gap-2 text-neutral-400 font-semibold tracking-wide uppercase text-[11px]">
+                        <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-sky-500/10 text-sky-400 border border-sky-500/20">
+                          <Users className="h-3.5 w-3.5" />
+                        </span>
+                        <span>Control de Usuarios</span>
+                      </div>
+                      <span className="rounded-full bg-neutral-900 border border-neutral-700/80 px-2 py-0.5 text-[10px] text-sky-300 font-mono">
+                        {stats.trialUsers} en prueba 5D
+                      </span>
+                    </div>
+
+                    <div className="my-auto py-2">
+                      <div className="flex items-baseline gap-2">
+                        <span className="text-4xl font-black tracking-tight text-white">{stats.totalUsers}</span>
+                        <span className="text-xs uppercase tracking-wider text-neutral-400 font-bold">Cuentas Registradas</span>
+                      </div>
+                      <div className="mt-2.5 flex flex-wrap items-center gap-2 text-[11px] text-neutral-400">
+                        <span className="inline-flex items-center gap-1 rounded-md bg-emerald-500/10 px-2 py-0.5 text-emerald-400 font-medium border border-emerald-500/20">
+                          <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" /> {stats.activeSubscriptions} activos
+                        </span>
+                        <span className="inline-flex items-center gap-1 rounded-md bg-sky-500/10 px-2 py-0.5 text-sky-400 font-medium border border-sky-500/20">
+                          <Clock className="h-3 w-3" /> {stats.trialUsers} prueba activa
+                        </span>
+                        {stats.suspendedUsers > 0 && (
+                          <span className="inline-flex items-center gap-1 rounded-md bg-rose-500/10 px-2 py-0.5 text-rose-400 font-medium border border-rose-500/20">
+                            <ShieldAlert className="h-3 w-3" /> {stats.suspendedUsers} suspendidos
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between pt-2 border-t border-neutral-800/80 text-[11px] text-neutral-400 font-medium">
+                      <span>Ver directorio y accesos</span>
+                      <span className="text-sky-400 font-semibold">Gestionar →</span>
+                    </div>
+                  </div>
+                ),
               },
               {
                 id: "bento-subs",
-                title: `${stats.activeSubscriptions} Suscriptores Activos`,
-                description: `Cuota mensual $${planPriceUsd} USD administrada por pasarela Stripe.`,
-                label: "INGRESOS & COBROS",
-                icon: <CreditCard className="h-4 w-4 text-emerald-400" />,
-                visual: "dashboard",
                 colSpan: 1,
                 rowSpan: 1,
                 onClick: () => setActiveTab("payments"),
+                content: (
+                  <div className="flex h-full flex-col justify-between select-none">
+                    <div className="flex items-center justify-between text-xs">
+                      <div className="flex items-center gap-2 text-neutral-400 font-semibold tracking-wide uppercase text-[11px]">
+                        <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                          <CreditCard className="h-3.5 w-3.5" />
+                        </span>
+                        <span>Suscripciones</span>
+                      </div>
+                      <span className="rounded-full bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 text-[10px] text-emerald-400 font-bold">
+                        Stripe
+                      </span>
+                    </div>
+
+                    <div className="my-auto py-2">
+                      <div className="flex items-baseline gap-1.5">
+                        <span className="text-3xl sm:text-4xl font-black tracking-tight text-emerald-400">{stats.activeSubscriptions}</span>
+                        <span className="text-xs uppercase tracking-wider text-neutral-400 font-bold">Activas</span>
+                      </div>
+                      <div className="mt-1.5 text-xs text-neutral-400 font-medium">
+                        Cuota: <span className="font-semibold text-white">${planPriceUsd} USD</span> / mes
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between pt-2 border-t border-neutral-800/80 text-[11px] text-neutral-400 font-medium">
+                      <span>Auditoría de cobros</span>
+                      <span className="text-emerald-400 font-semibold">Ver →</span>
+                    </div>
+                  </div>
+                ),
               },
               {
                 id: "bento-security",
-                title: `${stats.graceUsers} en Gracia (3 Días)`,
-                description: "Corte automático de servicio tras 72 hrs de cobro no resuelto.",
-                label: "CONTROL DE ACCESOS",
-                icon: <ShieldAlert className="h-4 w-4 text-amber-400" />,
-                visual: "security",
                 colSpan: 1,
                 rowSpan: 1,
                 onClick: () => setActiveTab("users"),
+                content: (
+                  <div className="flex h-full flex-col justify-between select-none">
+                    <div className="flex items-center justify-between text-xs">
+                      <div className="flex items-center gap-2 text-neutral-400 font-semibold tracking-wide uppercase text-[11px]">
+                        <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                          <AlertTriangle className="h-3.5 w-3.5" />
+                        </span>
+                        <span>Accesos</span>
+                      </div>
+                      <span className="rounded-full bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 text-[10px] text-amber-300 font-mono">
+                        Regla 3D
+                      </span>
+                    </div>
+
+                    <div className="my-auto py-2">
+                      <div className="flex items-baseline gap-1.5">
+                        <span className="text-3xl sm:text-4xl font-black tracking-tight text-amber-300">{stats.graceUsers}</span>
+                        <span className="text-xs uppercase tracking-wider text-neutral-400 font-bold">En Gracia</span>
+                      </div>
+                      <div className="mt-1.5 text-xs text-neutral-400 font-medium">
+                        {stats.suspendedUsers} cuentas suspendidas por pago
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between pt-2 border-t border-neutral-800/80 text-[11px] text-neutral-400 font-medium">
+                      <span>Corte automático</span>
+                      <span className="text-amber-400 font-semibold">Ver →</span>
+                    </div>
+                  </div>
+                ),
               },
               {
                 id: "bento-pipeline",
-                title: `${stats.totalProcessings} Archivos DTF Procesados`,
-                description: `${stats.errorProcessings} errores en bitácora · Automatización de semitonos y limpieza.`,
-                label: "PIPELINE DTF PREPRESS",
-                icon: <Activity className="h-4 w-4 text-purple-400" />,
-                visual: "automation",
                 colSpan: 2,
                 rowSpan: 1,
                 onClick: () => setActiveTab("support"),
+                content: (
+                  <div className="flex h-full flex-col justify-between select-none">
+                    <div className="flex items-center justify-between text-xs">
+                      <div className="flex items-center gap-2 text-neutral-400 font-semibold tracking-wide uppercase text-[11px]">
+                        <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-purple-500/10 text-purple-400 border border-purple-500/20">
+                          <Activity className="h-3.5 w-3.5" />
+                        </span>
+                        <span>Pipeline DTF Prepress</span>
+                      </div>
+                      <span className="inline-flex items-center gap-1 rounded-full bg-neutral-900 border border-neutral-700/80 px-2 py-0.5 text-[10px] text-purple-300 font-mono">
+                        <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" /> Motor 300 DPI
+                      </span>
+                    </div>
+
+                    <div className="my-auto py-1.5 space-y-2">
+                      <div className="flex items-baseline gap-2">
+                        <span className="text-3xl font-black tracking-tight text-white">{stats.totalProcessings}</span>
+                        <span className="text-xs uppercase tracking-wider text-neutral-400 font-bold">Archivos Procesados</span>
+                        {stats.errorProcessings > 0 ? (
+                          <span className="text-xs text-rose-400 font-semibold">({stats.errorProcessings} fallos)</span>
+                        ) : (
+                          <span className="text-xs text-emerald-400 font-semibold">(0 errores)</span>
+                        )}
+                      </div>
+
+                      {/* Steps del motor DTF reales */}
+                      <div className="grid grid-cols-4 gap-2 text-[10px] text-center font-medium">
+                        <div className="rounded-lg bg-neutral-900/90 border border-neutral-800 p-1.5">
+                          <div className="text-emerald-400 font-bold">✓ Subida</div>
+                          <div className="text-neutral-500 text-[9px]">PNG / PDF</div>
+                        </div>
+                        <div className="rounded-lg bg-neutral-900/90 border border-neutral-800 p-1.5">
+                          <div className="text-emerald-400 font-bold">✓ Alfa</div>
+                          <div className="text-neutral-500 text-[9px]">Limpieza</div>
+                        </div>
+                        <div className="rounded-lg bg-neutral-900/90 border border-neutral-800 p-1.5">
+                          <div className="text-emerald-400 font-bold">✓ Semitono</div>
+                          <div className="text-neutral-500 text-[9px]">Trama DTF</div>
+                        </div>
+                        <div className="rounded-lg bg-neutral-900/90 border border-neutral-800 p-1.5">
+                          <div className="text-purple-400 font-bold">✓ 300 DPI</div>
+                          <div className="text-neutral-500 text-[9px]">Exportación</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between pt-2 border-t border-neutral-800/80 text-[11px] text-neutral-400 font-medium">
+                      <span>Bitácora técnica y diagnóstico</span>
+                      <span className="text-purple-400 font-semibold">Ver logs →</span>
+                    </div>
+                  </div>
+                ),
               },
               {
                 id: "bento-settings",
-                title: "Pasarela & Configuración",
-                description: "Stripe Price ID, retención de archivos y webhook sin tocar código.",
-                label: "INTEGRACIONES & API",
-                icon: <Settings className="h-4 w-4 text-cyan-400" />,
-                visual: "integration",
                 colSpan: 2,
                 rowSpan: 1,
                 onClick: () => setActiveTab("settings"),
+                content: (
+                  <div className="flex h-full flex-col justify-between select-none">
+                    <div className="flex items-center justify-between text-xs">
+                      <div className="flex items-center gap-2 text-neutral-400 font-semibold tracking-wide uppercase text-[11px]">
+                        <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+                          <Settings className="h-3.5 w-3.5" />
+                        </span>
+                        <span>Pasarela & Parámetros</span>
+                      </div>
+                      <span className="rounded-full bg-cyan-500/10 border border-cyan-500/20 px-2 py-0.5 text-[10px] text-cyan-300 font-bold">
+                        Live Config
+                      </span>
+                    </div>
+
+                    <div className="my-auto py-1.5">
+                      <div className="grid grid-cols-3 gap-2">
+                        <div className="rounded-xl bg-neutral-900/90 border border-neutral-800 p-2 text-left">
+                          <div className="text-[10px] uppercase font-bold text-neutral-400">Precio Plan</div>
+                          <div className="text-sm sm:text-base font-black text-white mt-0.5">${planPriceUsd} USD</div>
+                          <div className="text-[9px] text-neutral-500">Recurrente</div>
+                        </div>
+                        <div className="rounded-xl bg-neutral-900/90 border border-neutral-800 p-2 text-left">
+                          <div className="text-[10px] uppercase font-bold text-neutral-400">Retención</div>
+                          <div className="text-sm sm:text-base font-black text-white mt-0.5">{fileRetentionMinutes || 60} min</div>
+                          <div className="text-[9px] text-neutral-500">Auto-purga</div>
+                        </div>
+                        <div className="rounded-xl bg-neutral-900/90 border border-neutral-800 p-2 text-left">
+                          <div className="text-[10px] uppercase font-bold text-neutral-400">Stripe Price ID</div>
+                          <div className="text-xs sm:text-sm font-black text-white mt-0.5 truncate font-mono">
+                            {stripePriceId ? stripePriceId.slice(0, 10) + "..." : "Enlazado"}
+                          </div>
+                          <div className="text-[9px] text-neutral-500">Sincronizado</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between pt-2 border-t border-neutral-800/80 text-[11px] text-neutral-400 font-medium">
+                      <span>Ajustar precio, retención y webhook</span>
+                      <span className="text-cyan-400 font-semibold">Configurar →</span>
+                    </div>
+                  </div>
+                ),
               },
             ]}
             columns={4}
-            rowHeight={210}
+            rowHeight={215}
             gap={14}
             radius={18}
             theme="dark"

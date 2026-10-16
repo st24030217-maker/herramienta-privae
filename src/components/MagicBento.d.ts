@@ -1,7 +1,7 @@
 import React from 'react';
 
 export interface MagicBentoItem {
-  title: string;
+  title?: string;
   description?: string;
   visual?: string | React.ReactNode;
   colSpan?: number;
