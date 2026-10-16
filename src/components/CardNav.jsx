@@ -389,7 +389,14 @@ const CardNav = ({
   };
 
   const anchor = (target, props, children) => {
-    if (!target.href) {
+    if (target.href && target.href.startsWith('http')) {
+      return (
+        <a href={target.href} target="_blank" rel="noopener noreferrer" {...props}>
+          {children}
+        </a>
+      );
+    }
+    if (!target.href || target.href === '#') {
       return (
         <button type="button" {...props}>
           {children}
@@ -491,6 +498,7 @@ const CardNav = ({
                           'aria-label': link.ariaLabel,
                           tabIndex: open ? undefined : -1,
                           onClick: event => {
+                            link.onClick?.(event);
                             onLinkClick?.(link, item, event);
                             setOpen(false);
                           }

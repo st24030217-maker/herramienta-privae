@@ -17,6 +17,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import CircularCarousel, { CircularCarouselApi } from "@/components/CircularCarousel";
+import GlassSurface from "@/components/GlassSurface";
 import { AnimatedContent } from "@/components/AnimatedContent";
 
 export interface WorkshopToolItem {
@@ -297,76 +298,87 @@ export function ToolsShowcaseCarousel() {
         </div>
       </AnimatedContent>
 
-      {/* PANEL FLOTANTE CON TRANSICIÓN SUAVE ENTRE MÓDULOS */}
+      {/* PANEL FLOTANTE CON EFECTO GLASS SURFACE Y TRANSICIÓN SUAVE */}
       <AnimatedContent distance={24} delay={0.12} trigger="mount">
         <div className="max-w-4xl mx-auto px-2">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-5 rounded-2xl border border-white/20 bg-black/60 backdrop-blur-xl px-6 py-5 shadow-[0_20px_60px_rgba(0,0,0,0.6)]">
-            <div className="flex-1 min-h-[104px] flex flex-col justify-center">
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={currentTool.id}
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -8 }}
-                  transition={{ duration: 0.18, ease: "easeOut" }}
-                  className="space-y-1.5 text-center md:text-left"
-                >
-                  <div className="flex flex-wrap items-center justify-center md:justify-start gap-2.5">
-                    <span className={`font-mono text-xs font-bold border px-3 py-0.5 rounded-full ${currentTool.accent}`}>
-                      {currentTool.badge}
-                    </span>
-                    <span className="font-mono text-xs text-neutral-400">
-                      {currentTool.subtitle}
-                    </span>
-                  </div>
-
-                  <h2 className="text-2xl sm:text-3xl font-black text-white tracking-wide">
-                    {currentTool.title}
-                  </h2>
-
-                  <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed max-w-2xl">
-                    {currentTool.desc}
-                  </p>
-                </motion.div>
-              </AnimatePresence>
-            </div>
-
-            <div className="flex flex-col items-center md:items-end gap-3 shrink-0 w-full md:w-auto">
-              <Link
-                href={currentTool.href}
-                className="w-full md:w-auto inline-flex items-center justify-center gap-3 rounded-xl bg-white hover:bg-neutral-200 px-7 py-4 text-sm sm:text-base font-black text-black transition-all duration-200 shadow-[0_0_30px_rgba(255,255,255,0.4)] hover:scale-[1.03] active:scale-95"
-              >
-                <span>{currentTool.action}</span>
-                <ArrowRight className="h-5 w-5" />
-              </Link>
-
-              <div className="flex items-center gap-1.5 text-[11px] font-mono text-neutral-400">
-                <Rotate3d className="h-3.5 w-3.5 text-white/70 mr-1" />
-                <span>Vista 3D:</span>
-                {(
-                  [
-                    { key: "cylinder", label: "Cilindro" },
-                    { key: "orbit", label: "Órbita" },
-                    { key: "wheel", label: "Rueda" },
-                    { key: "panorama", label: "Panorama" },
-                  ] as const
-                ).map((p) => (
-                  <button
-                    key={p.key}
-                    type="button"
-                    onClick={() => setPreset(p.key)}
-                    className={`rounded-md px-2 py-0.5 transition-all ${
-                      preset === p.key
-                        ? "bg-white/20 text-white font-bold"
-                        : "text-neutral-400 hover:text-white"
-                    }`}
+          <GlassSurface
+            width="100%"
+            height="auto"
+            borderRadius={20}
+            borderWidth={0.08}
+            brightness={45}
+            opacity={0.88}
+            blur={14}
+            className="w-full rounded-2xl border border-white/20 shadow-[0_20px_60px_rgba(0,0,0,0.65)]"
+          >
+            <div className="flex flex-col md:flex-row items-center justify-between gap-5 w-full p-2 sm:p-3">
+              <div className="flex-1 min-h-[104px] flex flex-col justify-center">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={currentTool.id}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -8 }}
+                    transition={{ duration: 0.18, ease: "easeOut" }}
+                    className="space-y-1.5 text-center md:text-left"
                   >
-                    {p.label}
-                  </button>
-                ))}
+                    <div className="flex flex-wrap items-center justify-center md:justify-start gap-2.5">
+                      <span className={`font-mono text-xs font-bold border px-3 py-0.5 rounded-full ${currentTool.accent}`}>
+                        {currentTool.badge}
+                      </span>
+                      <span className="font-mono text-xs text-neutral-400">
+                        {currentTool.subtitle}
+                      </span>
+                    </div>
+
+                    <h2 className="text-2xl sm:text-3xl font-black text-white tracking-wide">
+                      {currentTool.title}
+                    </h2>
+
+                    <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed max-w-2xl">
+                      {currentTool.desc}
+                    </p>
+                  </motion.div>
+                </AnimatePresence>
+              </div>
+
+              <div className="flex flex-col items-center md:items-end gap-3 shrink-0 w-full md:w-auto">
+                <Link
+                  href={currentTool.href}
+                  className="w-full md:w-auto inline-flex items-center justify-center gap-3 rounded-xl bg-white hover:bg-neutral-200 px-7 py-4 text-sm sm:text-base font-black text-black transition-all duration-200 shadow-[0_0_30px_rgba(255,255,255,0.4)] hover:scale-[1.03] active:scale-95"
+                >
+                  <span>{currentTool.action}</span>
+                  <ArrowRight className="h-5 w-5" />
+                </Link>
+
+                <div className="flex items-center gap-1.5 text-[11px] font-mono text-neutral-400">
+                  <Rotate3d className="h-3.5 w-3.5 text-white/70 mr-1" />
+                  <span>Vista 3D:</span>
+                  {(
+                    [
+                      { key: "cylinder", label: "Cilindro" },
+                      { key: "orbit", label: "Órbita" },
+                      { key: "wheel", label: "Rueda" },
+                      { key: "panorama", label: "Panorama" },
+                    ] as const
+                  ).map((p) => (
+                    <button
+                      key={p.key}
+                      type="button"
+                      onClick={() => setPreset(p.key)}
+                      className={`rounded-md px-2 py-0.5 transition-all ${
+                        preset === p.key
+                          ? "bg-white/20 text-white font-bold"
+                          : "text-neutral-400 hover:text-white"
+                      }`}
+                    >
+                      {p.label}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
+          </GlassSurface>
         </div>
       </AnimatedContent>
     </div>

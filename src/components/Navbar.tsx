@@ -1,25 +1,10 @@
 "use client";
 
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState, useRef } from "react";
-import { 
-  Sparkles, 
-  Layers, 
-  Pipette, 
-  Scissors, 
-  LayoutGrid, 
-  User, 
-  ShieldAlert, 
-  LogOut, 
-  Crown,
-  ChevronDown,
-  ScanSearch,
-  BookOpen
-} from "lucide-react";
+import CardNav from "@/components/CardNav";
 import { SubscriptionBanner } from "./SubscriptionBanner";
-import { NotchNavbar, type NotchNavItem } from "./ui/notch-navbar";
 
 interface UserData {
   id: string;
@@ -40,9 +25,6 @@ export function Navbar() {
   const router = useRouter();
   const [userData, setUserData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [menuOpen, setMenuOpen] = useState(false);
-
-  const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     fetch("/api/auth/me")
@@ -58,19 +40,6 @@ export function Navbar() {
       .finally(() => setLoading(false));
   }, [pathname]);
 
-  // Cerrar dropdown al hacer clic fuera
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setMenuOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
   const handleLogout = async () => {
     await fetch("/api/auth/logout", { method: "POST" });
     setUserData(null);
@@ -78,317 +47,137 @@ export function Navbar() {
     router.refresh();
   };
 
-  // Herramientas divididas a la izquierda y derecha del centro del Notch
-  const leftNavItems: NotchNavItem[] = [
-    { 
-      label: "Checar Calidad", 
-      href: "/tools/scanner", 
-      icon: ScanSearch, 
-      isActive: pathname === "/tools/scanner" 
-    },
-    { 
-      label: "Quitar Fondo", 
-      href: "/tools/remove-bg", 
-      icon: Scissors, 
-      isActive: pathname === "/tools/remove-bg" 
-    },
-    { 
-      label: "+Calidad", 
-      href: "/tools/enhance", 
-      icon: Sparkles, 
-      isActive: pathname === "/tools/enhance" 
-    },
-  ];
-
-  const rightNavItems: NotchNavItem[] = [
-    { 
-      label: "Borrar Color", 
-      href: "/tools/remove-color", 
-      icon: Pipette, 
-      isActive: pathname === "/tools/remove-color" 
-    },
-    { 
-      label: "Bordes Blancos", 
-      href: "/tools/clean-alpha", 
-      icon: Layers, 
-      isActive: pathname === "/tools/clean-alpha" 
-    },
-    { 
-      label: "Armar Metros", 
-      href: "/tools/dtf-builder", 
-      icon: LayoutGrid, 
-      isActive: pathname === "/tools/dtf-builder",
-      highlight: true 
-    },
-  ];
-
-  const allNavItems = [...leftNavItems, ...rightNavItems];
-
-  // Contenido para el ala izquierda (Left Wing) — Incluye navegación clara de regreso a la tienda oficial Privae Textil (Sección 06)
   const storeUrl = process.env.NEXT_PUBLIC_STORE_URL || "https://privaetextil.com";
-  const leftWingContent = (
-    <div className="flex items-center gap-2 font-mono text-[11px] text-neutral-400 shrink-0 select-none">
-      <a
-        href={storeUrl}
-        className="inline-flex items-center gap-1.5 rounded-lg border border-neutral-800 bg-[#16181D] px-2.5 py-1 text-[11px] font-mono font-bold text-neutral-200 hover:border-white/50 hover:text-white transition-all"
-        title="Regresar a la Tienda Oficial de Privae Textil"
-      >
-        <span>← Tienda Privae</span>
-      </a>
-      <span className="text-neutral-600 hidden xl:inline shrink-0">·</span>
-      <span className="hidden xl:inline shrink-0 text-neutral-300 font-semibold">300 DPI</span>
-      <span className="text-neutral-600 hidden 2xl:inline shrink-0">·</span>
-      <span className="text-neutral-400 hidden 2xl:inline shrink-0">58 CM</span>
-    </div>
-  );
 
-  // Logo central para el Notch
-  const centerLogo = (
-    <Link href="/" className="flex items-center gap-2 group px-2 py-0.5 rounded-md hover:opacity-85 transition-opacity shrink-0">
-      <Image
+  // Estructura de tarjetas con animación Spring de CardNav (@react-bits)
+  const cardNavItems = [
+    {
+      label: "01 & 02 Preparación",
+      description: "Remoción de fondo y superresolución 300 DPI.",
+      links: [
+        { label: "01 · Remover Fondo", href: "/tools/remove-bg" },
+        { label: "02 · Mejorar Calidad", href: "/tools/enhance" },
+      ],
+    },
+    {
+      label: "03 & 04 Alfa & Color",
+      description: "Cuentagotas selector y eliminación de semitransparencias.",
+      links: [
+        { label: "03 · Eliminar Color", href: "/tools/remove-color" },
+        { label: "04 · Quitar Semitransparencias", href: "/tools/clean-alpha" },
+      ],
+    },
+    {
+      label: "05 & 06 Taller DTF",
+      description: "Armador de pliegos 58cm, escáner y tienda oficial.",
+      links: [
+        { label: "05 · Armador de Pliegos DTF", href: "/tools/dtf-builder" },
+        { label: "06 · Escáner de Calidad DTF", href: "/tools/scanner" },
+        { label: "← Tienda Oficial Privae Textil", href: storeUrl },
+        { label: "Manual y Guía de Uso", href: "/guia" },
+      ],
+    },
+    {
+      label: userData ? (userData.name || "Usuario DTF") : "Cuenta Privae",
+      description: userData
+        ? `${userData.email} · ${
+            userData.role === "ADMIN"
+              ? "Administrador"
+              : userData.subscription.status === "ACTIVE"
+              ? "Plan Premium Activo"
+              : `Prueba (${userData.subscription.daysRemaining} días)`
+          }`
+        : "Acceso técnico y registro gratuito.",
+      links: userData
+        ? [
+            { label: "Mi Cuenta & Suscripción", href: "/account" },
+            ...(userData.role === "ADMIN"
+              ? [{ label: "Panel Administrador", href: "/admin" }]
+              : []),
+            { label: "Cerrar Sesión", href: "#", onClick: handleLogout },
+          ]
+        : [
+            { label: "Iniciar Sesión", href: "/auth/login" },
+            { label: "Registrarse (5 Días Gratis)", href: "/auth/register" },
+          ],
+    },
+  ];
+
+  const ctaConfig = userData
+    ? {
+        label: userData.role === "ADMIN" ? "Admin" : "Mi Cuenta",
+        href: userData.role === "ADMIN" ? "/admin" : "/account",
+      }
+    : {
+        label: "Prueba 5 Días",
+        href: "/auth/register",
+      };
+
+  const navLogo = (
+    <span className="flex items-center gap-2 select-none">
+      <img
         src="/logo.png"
         alt="Privae Textil"
-        width={96}
-        height={48}
-        className="h-7 w-auto object-contain"
-        priority
+        className="h-6 w-auto object-contain brightness-110"
       />
-    </Link>
-  );
-
-  // Contenido para el ala derecha (Right Wing) - Alineación perfecta, altura uniforme y sin saltos de línea
-  const rightWingContent = (
-    <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 select-none">
-      {/* Botón de Guía de Uso Rápida */}
-      <Link
-        href="/guia"
-        className="inline-flex items-center gap-1.5 h-8 px-2.5 sm:px-3 rounded-lg border border-neutral-800 bg-[#16181D] text-xs font-medium text-neutral-300 hover:text-white hover:border-neutral-600 hover:bg-[#20232A] transition-all shrink-0 whitespace-nowrap active:scale-95 shadow-sm"
-        title="Manual de Uso para Nuevos Usuarios y Talleres"
-      >
-        <BookOpen className="h-3.5 w-3.5 text-white shrink-0" />
-        <span className="text-xs font-mono font-medium">Guía</span>
-      </Link>
-
-      {userData ? (
-        <div className="flex items-center gap-1.5 shrink-0">
-          {/* Badge de rol / suscripción */}
-          {userData.role === "ADMIN" ? (
-            <span className="hidden xl:inline-flex items-center gap-1 h-8 rounded-lg border border-neutral-800 bg-neutral-900 text-neutral-300 px-2 font-mono text-[10px] shrink-0 whitespace-nowrap">
-              <Crown className="h-3 w-3 text-neutral-400" /> ADMIN
-            </span>
-          ) : userData.subscription.status === "ACTIVE" ? (
-            <span className="hidden xl:inline-flex items-center gap-1 h-8 rounded-lg border border-neutral-800 bg-neutral-900 text-neutral-300 px-2 font-mono text-[10px] shrink-0 whitespace-nowrap">
-              <Crown className="h-3 w-3 text-neutral-400" /> PREMIUM
-            </span>
-          ) : userData.subscription.status === "GRACE_PERIOD" ? (
-            <span className="hidden xl:inline-flex items-center gap-1 h-8 rounded-lg border border-amber-900/40 bg-amber-950/20 text-amber-400 px-2 font-mono text-[10px] shrink-0 whitespace-nowrap">
-              <ShieldAlert className="h-3 w-3" /> {userData.subscription.daysRemaining}D
-            </span>
-          ) : userData.subscription.status === "TRIAL" ? (
-            <span className="hidden xl:inline-flex items-center gap-1 h-8 rounded-lg border border-neutral-800 bg-neutral-900 px-2 font-mono text-[10px] text-neutral-400 shrink-0 whitespace-nowrap">
-              PRUEBA {userData.subscription.daysRemaining}D
-            </span>
-          ) : null}
-
-          {/* Menú Usuario con Dropdown */}
-          <div className="relative" ref={dropdownRef}>
-            <button
-              onClick={() => setMenuOpen(!menuOpen)}
-              className="flex items-center gap-1.5 h-8 rounded-lg border border-neutral-800 bg-neutral-900 px-2.5 text-xs font-medium text-neutral-300 hover:border-neutral-700 active:scale-98 transition-all shrink-0 whitespace-nowrap"
-            >
-              <User className="h-3.5 w-3.5 text-neutral-400 shrink-0" />
-              <span className="max-w-[80px] sm:max-w-[120px] truncate text-xs">
-                {userData.name || userData.email.split("@")[0]}
-              </span>
-              <ChevronDown className={`h-3 w-3 text-neutral-500 transition-transform ${menuOpen ? "rotate-180" : ""}`} />
-            </button>
-
-            {menuOpen && (
-              <div className="absolute right-0 mt-2 w-56 rounded-xl border border-neutral-800 bg-[#111216] py-2 shadow-xl z-50 animate-in fade-in duration-100">
-                <div className="px-4 py-2 border-b border-neutral-800">
-                  <p className="text-[10px] font-mono text-neutral-500">Usuario DTF:</p>
-                  <p className="text-xs font-medium text-neutral-200 truncate">{userData.email}</p>
-                  <p className="text-[11px] text-neutral-400 mt-0.5">
-                    {userData.role === "ADMIN" 
-                      ? "Administrador" 
-                      : userData.subscription.status === "ACTIVE" 
-                      ? "Plan Premium Activo" 
-                      : `Prueba: ${userData.subscription.daysRemaining} días restantes`}
-                  </p>
-                </div>
-
-                <Link
-                  href="/account"
-                  onClick={() => setMenuOpen(false)}
-                  className="flex items-center gap-2.5 px-4 py-2 text-xs text-neutral-300 hover:bg-neutral-800/60 transition-colors"
-                >
-                  <User className="h-3.5 w-3.5 text-neutral-400" /> Mi Cuenta & Suscripción
-                </Link>
-
-                <Link
-                  href="/guia"
-                  onClick={() => setMenuOpen(false)}
-                  className="flex items-center gap-2.5 px-4 py-2 text-xs text-neutral-300 hover:bg-neutral-800/60 transition-colors"
-                >
-                  <BookOpen className="h-3.5 w-3.5 text-neutral-400" /> Manual & Guía de Uso
-                </Link>
-
-                {userData.role === "ADMIN" && (
-                  <Link
-                    href="/admin"
-                    onClick={() => setMenuOpen(false)}
-                    className="flex items-center gap-2.5 px-4 py-2 text-xs text-white font-medium hover:bg-neutral-800/60 transition-colors"
-                  >
-                    <Crown className="h-3.5 w-3.5 text-neutral-400" /> Panel Administrador
-                  </Link>
-                )}
-
-                <hr className="my-1 border-neutral-800" />
-
-                <button
-                  onClick={() => {
-                    setMenuOpen(false);
-                    handleLogout();
-                  }}
-                  className="flex w-full items-center gap-2.5 px-4 py-2 text-xs text-neutral-400 hover:text-red-400 hover:bg-neutral-800/60 transition-colors"
-                >
-                  <LogOut className="h-3.5 w-3.5" /> Cerrar Sesión
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
-      ) : !loading ? (
-        <div className="flex items-center gap-1 sm:gap-1.5 shrink-0 whitespace-nowrap">
-          <Link
-            href="/auth/login"
-            className="inline-flex items-center h-8 px-2 sm:px-2.5 rounded-lg text-xs font-medium text-neutral-400 hover:text-white hover:bg-white/5 transition-colors shrink-0 whitespace-nowrap"
-          >
-            Ingresar
-          </Link>
-          <Link
-            href="/auth/register"
-            className="inline-flex items-center justify-center h-8 px-3 rounded-lg bg-white text-black text-xs font-bold hover:bg-neutral-200 active:scale-95 transition-all shrink-0 whitespace-nowrap shadow-sm"
-          >
-            Prueba 5 Días
-          </Link>
-        </div>
-      ) : null}
-    </div>
-  );
-
-  // Render del menú móvil
-  const renderMobileContent = (onClose: () => void) => (
-    <div className="space-y-4">
-      <div>
-        <p className="font-mono text-[10px] uppercase tracking-wider text-[#8E95A5] mb-2 px-1">
-          Herramientas de Preparación DTF
-        </p>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
-          {allNavItems.map((item) => {
-            const Icon = item.icon;
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={onClose}
-                className={`flex items-center gap-2.5 p-2.5 rounded-lg text-xs font-medium transition-colors ${
-                  item.isActive
-                    ? "bg-white/10 text-white"
-                    : item.highlight
-                    ? "text-white bg-neutral-800 hover:bg-neutral-700"
-                    : "text-neutral-300 hover:bg-neutral-800/60"
-                }`}
-              >
-                {item.icon && <item.icon className="h-4 w-4 shrink-0 text-neutral-400" />}
-                <span>{item.label}</span>
-              </Link>
-            );
-          })}
-        </div>
-
-        {/* Acceso a Guía de Uso en Móvil */}
-        <Link
-          href="/guia"
-          onClick={onClose}
-          className="mt-2 flex items-center gap-2.5 p-2.5 rounded-lg border border-[#20232A] bg-[#0D0E11] text-xs font-medium text-white hover:bg-white/10 transition-colors"
-        >
-          <BookOpen className="h-4 w-4 text-white shrink-0" />
-          <span>Manual y Guía de Uso (Primera Vez)</span>
-        </Link>
-      </div>
-
-      <div className="border-t border-neutral-800 pt-3">
-        {userData ? (
-          <div className="space-y-2">
-            <div className="flex items-center justify-between px-1">
-              <span className="font-mono text-xs text-neutral-400 truncate max-w-[200px]">{userData.email}</span>
-              <span className="font-mono text-[10px] text-neutral-300 font-semibold">
-                {userData.role === "ADMIN" ? "ADMIN" : userData.subscription.status}
-              </span>
-            </div>
-            <div className="flex gap-2">
-              <Link
-                href="/account"
-                onClick={onClose}
-                className="flex-1 text-center py-2 rounded-lg bg-neutral-900 border border-neutral-800 text-xs font-medium text-neutral-200"
-              >
-                Mi Cuenta
-              </Link>
-              {userData.role === "ADMIN" && (
-                <Link
-                  href="/admin"
-                  onClick={onClose}
-                  className="flex-1 text-center py-2 rounded-lg bg-neutral-900 border border-neutral-800 text-xs font-medium text-white"
-                >
-                  Admin
-                </Link>
-              )}
-              <button
-                onClick={() => {
-                  onClose();
-                  handleLogout();
-                }}
-                className="px-3 py-2 rounded-lg bg-red-950/30 border border-red-900/40 text-xs font-medium text-red-400"
-              >
-                Salir
-              </button>
-            </div>
-          </div>
-        ) : (
-          <div className="flex gap-2">
-            <Link
-              href="/auth/login"
-              onClick={onClose}
-              className="flex-1 text-center py-2 rounded-lg bg-neutral-900 border border-neutral-800 text-xs font-medium text-neutral-200"
-            >
-              Iniciar Sesión
-            </Link>
-            <Link
-              href="/auth/register"
-              onClick={onClose}
-              className="flex-1 text-center py-2 rounded-lg bg-white text-black text-xs font-semibold hover:bg-neutral-200"
-            >
-              Prueba Gratuita
-            </Link>
-          </div>
-        )}
-      </div>
-    </div>
+    </span>
   );
 
   return (
     <>
-      <NotchNavbar
-        logo={centerLogo}
-        leftItems={leftNavItems}
-        rightItems={rightNavItems}
-        leftWing={leftWingContent}
-        rightWing={rightWingContent}
-        mobileContent={renderMobileContent}
-        bgClassName="bg-[#0A0B0E]/95 backdrop-blur-md"
-        strokeColor="#22242A"
-      />
+      {/* Barra de utilidades superior discreta */}
+      <div className="w-full bg-[#0A0B0E]/80 border-b border-white/5 py-1 px-4 text-center select-none text-[10px] font-mono text-neutral-400 flex items-center justify-between max-w-7xl mx-auto">
+        <div className="flex items-center gap-2">
+          <a
+            href={storeUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-white transition-colors"
+          >
+            ← Ir a Tienda Oficial Privae Textil
+          </a>
+        </div>
+        <div className="hidden sm:flex items-center gap-3">
+          <span>Estándar DTF: 58 cm</span>
+          <span className="text-neutral-600">·</span>
+          <span>Resolución: 300 DPI</span>
+          <span className="text-neutral-600">·</span>
+          <span>Transparencia Real</span>
+        </div>
+        <div className="flex items-center gap-2">
+          {userData ? (
+            <span className="text-neutral-300">
+              {userData.role === "ADMIN" ? "ADMINISTRADOR" : "USUARIO DTF"}
+            </span>
+          ) : (
+            <Link href="/auth/login" className="hover:text-white transition-colors">
+              Ingresar
+            </Link>
+          )}
+        </div>
+      </div>
+
+      {/* HEADER PRINCIPAL FLOTANTE CON CARDNAV (@react-bits) */}
+      <header className="sticky top-2 z-50 w-full px-3 sm:px-6 pointer-events-none">
+        <div className="pointer-events-auto max-w-5xl mx-auto">
+          <CardNav
+            logo={navLogo}
+            logoHref="/"
+            items={cardNavItems}
+            cta={ctaConfig}
+            theme="dark"
+            surface="glass"
+            cardEffect="rise"
+            stagger={0.08}
+            bounce={0.16}
+            speed={1.05}
+            cardHeight={210}
+            maxWidth={980}
+            linkComponent={Link}
+            ariaLabel="Navegación Privae DTF"
+          />
+        </div>
+      </header>
 
       {/* Banner de Estado de Suscripción si aplica */}
       {userData?.subscription && (

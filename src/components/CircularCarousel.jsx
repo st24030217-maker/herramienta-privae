@@ -366,10 +366,11 @@ const CircularCarousel = ({
     const measure = () => {
       const s = settingsRef.current;
       const rect = root.getBoundingClientRect();
-      if (!rect.width || !rect.height) return;
+      const clientW = rect.width > 0 ? rect.width : (typeof window !== 'undefined' ? Math.min(window.innerWidth * 0.95, 1200) : 1000);
+      const clientH = rect.height > 0 ? rect.height : 500;
       const room = s.captions ? CAPTION_SPACE : 0;
-      const width = rect.width * 0.94;
-      const height = (rect.height - room) * 0.92;
+      const width = clientW * 0.94;
+      const height = Math.max(280, (clientH - room) * 0.92);
       const P = s.perspective;
       let minX = Infinity;
       let maxX = -Infinity;
@@ -414,7 +415,7 @@ const CircularCarousel = ({
       const fit = Math.min(1, width / spanX, height / spanY);
       state.fit = fit;
       state.shift = -((minY + maxY) / 2) * fit - room / 2;
-      state.drop = s.axis === 'x' ? (rect.width / fit) * 0.55 + s.cardW : (rect.height / fit) * 0.55 + s.cardH;
+      state.drop = s.axis === 'x' ? (clientW / fit) * 0.55 + s.cardW : (clientH / fit) * 0.55 + s.cardH;
       stage.style.perspective = `${P}px`;
       stage.style.transform = `translate3d(0, ${state.shift}px, 0) scale(${fit})`;
       lastTransformRefs.current = [];
@@ -612,13 +613,8 @@ const CircularCarousel = ({
     resize.observe(root);
 
     const io = new IntersectionObserver(([entry]) => {
-      visible = entry.isIntersecting;
+      visible = entry ? entry.isIntersecting : true;
       if (visible) wake();
-      else {
-        cancelAnimationFrame(raf);
-        raf = 0;
-        state.last = 0;
-      }
     });
     io.observe(root);
 
