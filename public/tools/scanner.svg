@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#16181D" />
+      <stop offset="100%" stop-color="#0A0B0E" />
+    </linearGradient>
+    <radialGradient id="radarGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.25" />
+      <stop offset="70%" stop-color="#FFFFFF" stop-opacity="0.05" />
+      <stop offset="100%" stop-color="#000000" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <rect width="600" height="600" fill="url(#bgGrad2)" />
+
+  <rect x="40" y="40" width="520" height="520" rx="20" fill="#0D0E11" stroke="#20232A" stroke-width="2" />
+  
+  <!-- Radar Display Target -->
+  <rect x="60" y="60" width="480" height="380" rx="14" fill="#0D0E11" stroke="#262A36" stroke-width="1.5" />
+  <circle cx="300" cy="250" r="150" fill="url(#radarGrad)" stroke="#20232A" stroke-width="1.5" />
+  <circle cx="300" cy="250" r="105" fill="none" stroke="#262A36" stroke-width="1.5" />
+  <circle cx="300" cy="250" r="60" fill="none" stroke="#333846" stroke-width="1.5" />
+  <circle cx="300" cy="250" r="15" fill="#FFFFFF" fill-opacity="0.2" stroke="#FFFFFF" stroke-width="2" />
+
+  <!-- Laser Crosshairs -->
+  <line x1="150" y1="250" x2="450" y2="250" stroke="#FFFFFF" stroke-opacity="0.4" stroke-width="1.5" stroke-dasharray="4,4" />
+  <line x1="300" y1="100" x2="300" y2="400" stroke="#FFFFFF" stroke-opacity="0.4" stroke-width="1.5" stroke-dasharray="4,4" />
+
+  <!-- Score Gauge Pill -->
+  <rect x="200" y="90" width="200" height="48" rx="24" fill="#16181D" stroke="#FFFFFF" stroke-width="2" />
+  <circle cx="225" cy="114" r="7" fill="#10B981" />
+  <text x="310" y="121" font-family="sans-serif" font-weight="900" font-size="16" fill="#FFFFFF" text-anchor="middle">CALIDAD 100%</text>
+
+  <!-- Diagnostic Metrics -->
+  <rect x="90" y="320" width="130" height="90" rx="8" fill="#16181D" stroke="#20232A" />
+  <text x="105" y="348" font-family="monospace" font-size="11" fill="#8E95A5">FONDO ALFA</text>
+  <text x="105" y="375" font-family="sans-serif" font-weight="800" font-size="15" fill="#10B981">LIMPIO</text>
+  <text x="105" y="395" font-family="monospace" font-size="9" fill="#8E95A5">0% Opaco residual</text>
+
+  <rect x="235" y="320" width="130" height="90" rx="8" fill="#16181D" stroke="#20232A" />
+  <text x="250" y="348" font-family="monospace" font-size="11" fill="#8E95A5">DENSIDAD</text>
+  <text x="250" y="375" font-family="sans-serif" font-weight="800" font-size="15" fill="#FFFFFF">300 DPI</text>
+  <text x="250" y="395" font-family="monospace" font-size="9" fill="#8E95A5">Calibrado taller</text>
+
+  <rect x="380" y="320" width="130" height="90" rx="8" fill="#16181D" stroke="#20232A" />
+  <text x="395" y="348" font-family="monospace" font-size="11" fill="#8E95A5">MEDIDA MAX</text>
+  <text x="395" y="375" font-family="sans-serif" font-weight="800" font-size="15" fill="#FFFFFF">32.4 cm</text>
+  <text x="395" y="395" font-family="monospace" font-size="9" fill="#8E95A5">Sin pixelación</text>
+
+  <!-- Technical Overlay Footer -->
+  <rect x="60" y="460" width="480" height="80" rx="12" fill="#16181D" stroke="#20232A" stroke-width="1.5" />
+  <text x="85" y="495" font-family="sans-serif" font-weight="900" font-size="20" fill="#FFFFFF" letter-spacing="1">REVISIÓN &amp; ESCÁNER DTF</text>
+  <text x="85" y="522" font-family="monospace" font-size="12" fill="#8E95A5">DIAGNÓSTICO PREVENTIVO • EVITA GASTAR FILM Y TINTA</text>
+
+  <rect x="420" y="478" width="105" height="42" rx="8" fill="#FFFFFF" />
+  <text x="472" y="504" font-family="sans-serif" font-weight="900" font-size="13" fill="#000000" text-anchor="middle">ESCANEAR</text>
+</svg>

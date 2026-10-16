@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGrad4" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#16181D" />
+      <stop offset="100%" stop-color="#0A0B0E" />
+    </linearGradient>
+  </defs>
+
+  <rect width="600" height="600" fill="url(#bgGrad4)" />
+
+  <rect x="40" y="40" width="520" height="520" rx="20" fill="#0D0E11" stroke="#20232A" stroke-width="2" />
+
+  <!-- Showcase Box -->
+  <rect x="60" y="60" width="480" height="380" rx="14" fill="#16181D" stroke="#262A36" stroke-width="1.5" />
+
+  <!-- Comparison Split -->
+  <!-- Left: Pixelated Grid simulation -->
+  <rect x="80" y="100" width="200" height="230" rx="10" fill="#0D0E11" stroke="#333" />
+  <rect x="110" y="130" width="28" height="28" fill="#555" />
+  <rect x="138" y="130" width="28" height="28" fill="#777" />
+  <rect x="166" y="130" width="28" height="28" fill="#333" />
+  <rect x="110" y="158" width="28" height="28" fill="#888" />
+  <rect x="138" y="158" width="28" height="28" fill="#FFF" />
+  <rect x="166" y="158" width="28" height="28" fill="#666" />
+  <rect x="110" y="186" width="28" height="28" fill="#444" />
+  <rect x="138" y="186" width="28" height="28" fill="#999" />
+  <rect x="166" y="186" width="28" height="28" fill="#222" />
+  <text x="180" y="275" font-family="monospace" font-size="13" fill="#EF4444" text-anchor="middle" font-weight="bold">72 DPI BORROSO</text>
+  <text x="180" y="295" font-family="monospace" font-size="10" fill="#8E95A5" text-anchor="middle">Pixelado en tela</text>
+
+  <!-- Right: Sharp 4X HD simulation -->
+  <rect x="320" y="100" width="200" height="230" rx="10" fill="#0D0E11" stroke="#FFFFFF" stroke-width="2" />
+  <circle cx="420" cy="180" r="45" fill="#FFFFFF" fill-opacity="0.15" stroke="#FFFFFF" stroke-width="3" />
+  <!-- Crisp Sparkle Star -->
+  <path d="M 420 145 Q 420 180 385 180 Q 420 180 420 215 Q 420 180 455 180 Q 420 180 420 145 Z" fill="#FFFFFF" />
+  <text x="420" y="275" font-family="sans-serif" font-weight="900" font-size="15" fill="#10B981" text-anchor="middle">300 DPI NÍTIDO</text>
+  <text x="420" y="295" font-family="monospace" font-size="10" fill="#FFFFFF" text-anchor="middle">Resolución certificada</text>
+
+  <!-- Multiplier Badge in Center -->
+  <circle cx="300" cy="215" r="30" fill="#FFFFFF" stroke="#0D0E11" stroke-width="4" />
+  <text x="300" y="222" font-family="sans-serif" font-weight="900" font-size="16" fill="#000000" text-anchor="middle">4X</text>
+
+  <!-- Technical Overlay Footer -->
+  <rect x="60" y="460" width="480" height="80" rx="12" fill="#16181D" stroke="#20232A" stroke-width="1.5" />
+  <text x="85" y="495" font-family="sans-serif" font-weight="900" font-size="20" fill="#FFFFFF" letter-spacing="1">MEJORAR CALIDAD (SUPER-RES)</text>
+  <text x="85" y="522" font-family="monospace" font-size="12" fill="#8E95A5">MULTIPLICA RESOLUCIÓN A 2X Y 4X • SIN PIXELACIÓN</text>
+
+  <rect x="420" y="478" width="105" height="42" rx="8" fill="#FFFFFF" />
+  <text x="472" y="504" font-family="sans-serif" font-weight="900" font-size="13" fill="#000000" text-anchor="middle">MEJORAR</text>
+</svg>

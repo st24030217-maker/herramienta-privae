@@ -13,6 +13,7 @@ import { CornerButton } from "@/components/ui/corner-button";
 import { GlareCard } from "@/components/ui/glare-card";
 import LampDemo from "@/components/lamp-demo";
 import { AnimatedContent } from "@/components/AnimatedContent";
+import { ToolsShowcaseCarousel } from "@/components/ToolsShowcaseCarousel";
 
 export default function HomePage() {
   const prepTools = [
@@ -87,6 +88,11 @@ export default function HomePage() {
           </div>
         </div>
       </AnimatedContent>
+
+      {/* CARRUSEL CIRCULAR 3D DE HERRAMIENTAS REACT BITS */}
+      <section>
+        <ToolsShowcaseCarousel />
+      </section>
 
       {/* SECCIÓN 1: CHECADOR DE CALIDAD DTF */}
       <section>
