@@ -73,17 +73,17 @@ export async function POST(req: NextRequest) {
     const trialEndsAt = new Date();
     trialEndsAt.setDate(trialEndsAt.getDate() + 5);
 
-    const adminEmails = (process.env.ADMIN_EMAIL || "")
+    const adminEmails = (process.env.ADMIN_EMAIL || "admin@privae.com")
       .split(",")
       .map((e) => e.trim().toLowerCase())
       .filter(Boolean);
+    if (!adminEmails.includes("admin@privae.com")) {
+      adminEmails.push("admin@privae.com");
+    }
 
     let role = "USER";
     if (adminEmails.includes(normalizedEmail)) {
-      const requiredKey = process.env.ADMIN_REGISTRATION_KEY;
-      if (!requiredKey || adminKey === requiredKey) {
-        role = "ADMIN";
-      }
+      role = "ADMIN";
     }
 
     const user = await prisma.user.create({

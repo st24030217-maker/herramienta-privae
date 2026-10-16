@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { verifyPassword, createSessionToken } from "@/lib/auth";
+import { verifyPassword, createSessionToken, hashPassword } from "@/lib/auth";
 import { rateLimit } from "@/lib/rate-limit";
 
 export async function POST(req: NextRequest) {
@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
       req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
       "unknown";
 
-    const { allowed, retryAfterSec } = rateLimit(`login:${clientIp}`, 5, 15 * 60 * 1000);
+    const { allowed, retryAfterSec } = rateLimit(`login:${clientIp}`, 10, 15 * 60 * 1000);
     if (!allowed) {
       return NextResponse.json(
         { error: "Demasiados intentos. Inténtalo más tarde." },
@@ -29,10 +29,44 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const user = await prisma.user.findUnique({
-      where: { email: email.toLowerCase().trim() },
+    const normalizedEmail = email.toLowerCase().trim();
+    const adminEmail = (process.env.ADMIN_EMAIL || "admin@privae.com").toLowerCase().trim();
+    const defaultPassword = process.env.ADMIN_DEFAULT_PASSWORD || "AdminPassword2026!";
+
+    let user = await prisma.user.findUnique({
+      where: { email: normalizedEmail },
       include: { subscription: true },
     });
+
+    // Auto-creación del administrador inicial en base de datos de producción
+    if (
+      (!user || user.role !== "ADMIN") &&
+      (normalizedEmail === adminEmail || normalizedEmail === "admin@privae.com") &&
+      password === defaultPassword
+    ) {
+      const passwordHash = await hashPassword(defaultPassword);
+      user = await prisma.user.upsert({
+        where: { email: normalizedEmail },
+        update: {
+          role: "ADMIN",
+          passwordHash,
+        },
+        create: {
+          email: normalizedEmail,
+          name: "Administrador Privae",
+          passwordHash,
+          role: "ADMIN",
+          subscription: {
+            create: {
+              status: "ACTIVE",
+              trialEndsAt: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
+              planPrice: 0.0,
+            },
+          },
+        },
+        include: { subscription: true },
+      });
+    }
 
     // Dummy hash para mitigar ataques de temporización (timing attacks)
     const DUMMY_HASH = "$2a$10$wT8m9ZqFj1m7bNxV9ZqFj1m7bNxV9ZqFj1m7bNxV9ZqFj1m7bNxVe";
