@@ -145,18 +145,25 @@
 .card-nav__logo {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   justify-self: center;
-  height: var(--cn-logo);
+  height: 32px;
+  max-height: 32px;
+  max-width: 140px;
   color: var(--cn-text);
   text-decoration: none;
   outline: none;
+  overflow: hidden;
 }
 
 .card-nav__logo img,
 .card-nav__logo svg {
   display: block;
-  height: 100%;
-  width: auto;
+  height: 28px !important;
+  max-height: 28px !important;
+  width: auto !important;
+  max-width: 130px !important;
+  object-fit: contain !important;
 }
 
 .card-nav__cta {

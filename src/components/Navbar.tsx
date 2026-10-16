@@ -113,16 +113,6 @@ export function Navbar() {
         href: "/auth/register",
       };
 
-  const navLogo = (
-    <span className="flex items-center gap-2 select-none">
-      <img
-        src="/logo.png"
-        alt="Privae Textil"
-        className="h-6 w-auto object-contain brightness-110"
-      />
-    </span>
-  );
-
   return (
     <>
       {/* Barra de utilidades superior discreta */}
@@ -161,7 +151,8 @@ export function Navbar() {
       <header className="sticky top-2 z-50 w-full px-3 sm:px-6 pointer-events-none">
         <div className="pointer-events-auto max-w-5xl mx-auto">
           <CardNav
-            logo={navLogo}
+            logo="/logo.png"
+            logoAlt="Privae Textil"
             logoHref="/"
             items={cardNavItems}
             cta={ctaConfig}

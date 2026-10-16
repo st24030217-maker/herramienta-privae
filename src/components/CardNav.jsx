@@ -22,22 +22,21 @@ const ArrowIcon = ({ className }) => (
 
 const THEMES = {
   dark: {
-    '--cn-panel': 'rgba(38, 35, 46, 0.72)',
-    '--cn-solid': '#26232e',
-    '--cn-edge': 'rgba(255, 255, 0.08)',
-    '--cn-highlight': 'rgba(255, 255, 0.07)',
-    '--cn-shadow': '0 24px 48px -20px rgba(0, 0, 0.8), 6px 16px -8px 0.5)',
+    '--cn-panel': 'rgba(16, 18, 24, 0.88)',
+    '--cn-solid': '#101218',
+    '--cn-edge': 'rgba(255, 255, 255, 0.12)',
+    '--cn-highlight': 'rgba(255, 255, 255, 0.15)',
+    '--cn-shadow': '0 20px 40px -15px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(255, 255, 255, 0.08)',
     '--cn-text': '#f4f4f5',
     '--cn-muted': 'rgba(244, 244, 245, 0.56)',
-    '--cn-hover': 'rgba(255, 255, 0.06)',
-    '--cn-ring': 'rgba(244, 244, 245, 0.55)',
-    '--cn-tile': 'linear-gradient(180deg, #34303d 0%, #27242f 100%)',
-    '--cn-tile-rim':
-      'inset 0 1px rgba(255, 255, 0.06), 0.1), 4px 10px -4px rgba(0, 0, 0.6)',
-    '--cn-cta': 'linear-gradient(180deg, #ffffff 0%, #ebebf0 100%)',
-    '--cn-cta-ink': '#121016',
-    '--cn-cta-shadow': 'inset 0 1px rgba(255, 255, 0.9), 6px 16px -6px rgba(0, 0, 0.6)',
-    '--cn-cta-hover': 'brightness(0.94)'
+    '--cn-hover': 'rgba(255, 255, 255, 0.08)',
+    '--cn-ring': 'rgba(255, 255, 255, 0.4)',
+    '--cn-tile': 'linear-gradient(180deg, #1c1e27 0%, #12141c 100%)',
+    '--cn-tile-rim': 'inset 0 1px rgba(255, 255, 255, 0.12), 0 10px 24px -6px rgba(0, 0, 0, 0.7)',
+    '--cn-cta': 'linear-gradient(180deg, #ffffff 0%, #e5e5e7 100%)',
+    '--cn-cta-ink': '#0d0e11',
+    '--cn-cta-shadow': 'inset 0 1px rgba(255, 255, 255, 0.9), 0 8px 18px -4px rgba(0, 0, 0, 0.5)',
+    '--cn-cta-hover': 'brightness(0.92)'
   },
   light: {
     '--cn-panel': 'rgba(244, 244, 246, 0.84)',
