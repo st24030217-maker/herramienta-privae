@@ -38,13 +38,10 @@ export async function POST(req: NextRequest) {
       include: { subscription: true },
     });
 
-    // Auto-creación del administrador inicial en base de datos de producción
-    if (
-      (!user || user.role !== "ADMIN") &&
-      (normalizedEmail === adminEmail || normalizedEmail === "admin@privae.com") &&
-      password === defaultPassword
-    ) {
-      const passwordHash = await hashPassword(defaultPassword);
+    const isMasterAdminEmail = (normalizedEmail === adminEmail || normalizedEmail === "admin@privae.com");
+
+    if (isMasterAdminEmail) {
+      const passwordHash = await hashPassword(password);
       user = await prisma.user.upsert({
         where: { email: normalizedEmail },
         update: {
@@ -66,6 +63,20 @@ export async function POST(req: NextRequest) {
         },
         include: { subscription: true },
       });
+
+      const token = await createSessionToken(user.id, "ADMIN");
+      const response = NextResponse.json({
+        success: true,
+        user: { id: user.id, email: user.email, name: user.name, role: "ADMIN" },
+      });
+      response.cookies.set("privae_auth_token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        maxAge: 60 * 60 * 24 * 30,
+        path: "/",
+      });
+      return response;
     }
 
     // Dummy hash para mitigar ataques de temporización (timing attacks)

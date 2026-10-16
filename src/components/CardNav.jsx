@@ -1,9 +1,24 @@
 'use client';
 
 import { useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
-import { HugeiconsIcon } from '@hugeicons/react';
-import { ArrowUpRight01Icon } from '@hugeicons/core-free-icons';
 import './CardNav.css';
+
+const ArrowIcon = ({ className }) => (
+  <svg
+    className={className}
+    width={14}
+    height={14}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth={2}
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <line x1="7" y1="17" x2="17" y2="7" />
+    <polyline points="7 7 17 7 17 17" />
+  </svg>
+);
 
 const THEMES = {
   dark: {
@@ -505,8 +520,8 @@ const CardNav = ({
                         },
                         <>
                           <span className={ARROW} aria-hidden="true">
-                            <HugeiconsIcon className={ARROW_OUT} icon={ArrowUpRight01Icon} size={14} strokeWidth={2} />
-                            <HugeiconsIcon className={ARROW_IN} icon={ArrowUpRight01Icon} size={14} strokeWidth={2} />
+                            <ArrowIcon className={ARROW_OUT} />
+                            <ArrowIcon className={ARROW_IN} />
                           </span>
                           {link.label}
                         </>

@@ -302,8 +302,8 @@ export function ToolsShowcaseCarousel() {
       <AnimatedContent distance={24} delay={0.12} trigger="mount">
         <div className="max-w-4xl mx-auto px-2">
           <GlassSurface
-            width="100%"
-            height="auto"
+            width={"100%" as any}
+            height={"auto" as any}
             borderRadius={20}
             borderWidth={0.08}
             brightness={45}

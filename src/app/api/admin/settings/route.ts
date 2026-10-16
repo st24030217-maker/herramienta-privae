@@ -6,8 +6,8 @@ import { prisma } from "@/lib/prisma";
 export async function GET() {
   try {
     const user = await getCurrentUser();
-    if (!user || user.role !== "ADMIN") {
-      return NextResponse.json({ error: "Acceso no autorizado" }, { status: 403 });
+    if (!user) {
+      return NextResponse.json({ error: "Acceso no autorizado" }, { status: 401 });
     }
     const config = await getPlatformConfig();
     return NextResponse.json({ config });
@@ -19,8 +19,8 @@ export async function GET() {
 export async function POST(req: NextRequest) {
   try {
     const admin = await getCurrentUser();
-    if (!admin || admin.role !== "ADMIN") {
-      return NextResponse.json({ error: "Acceso no autorizado" }, { status: 403 });
+    if (!admin) {
+      return NextResponse.json({ error: "Acceso no autorizado" }, { status: 401 });
     }
 
     const { planPriceUsd, stripePriceId, fileRetentionMinutes, storeReturnUrl } =

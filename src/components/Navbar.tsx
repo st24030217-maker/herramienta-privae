@@ -173,7 +173,7 @@ export function Navbar() {
             speed={1.05}
             cardHeight={210}
             maxWidth={980}
-            linkComponent={Link}
+            linkComponent={Link as any}
             ariaLabel="Navegación Privae DTF"
           />
         </div>
