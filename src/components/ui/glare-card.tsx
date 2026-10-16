@@ -21,6 +21,8 @@ export const GlareCard = ({
 }: GlareCardProps) => {
   const isPointerInside = useRef(false);
   const refElement = useRef<HTMLDivElement>(null);
+  const rectRef = useRef<DOMRect | null>(null);
+  const rafRef = useRef<number>(0);
   const state = useRef({
     glare: { x: 50, y: 50 },
     background: { x: 50, y: 50 },
@@ -28,20 +30,22 @@ export const GlareCard = ({
   });
 
   const updateStyles = () => {
+    rafRef.current = 0;
     if (refElement.current) {
       const { background, rotate, glare } = state.current;
-      refElement.current.style.setProperty("--m-x", `${glare.x}%`);
-      refElement.current.style.setProperty("--m-y", `${glare.y}%`);
-      refElement.current.style.setProperty("--r-x", `${rotate.x}deg`);
-      refElement.current.style.setProperty("--r-y", `${rotate.y}deg`);
-      refElement.current.style.setProperty("--bg-x", `${background.x}%`);
-      refElement.current.style.setProperty("--bg-y", `${background.y}%`);
+      refElement.current.style.setProperty("--m-x", `${glare.x.toFixed(1)}%`);
+      refElement.current.style.setProperty("--m-y", `${glare.y.toFixed(1)}%`);
+      refElement.current.style.setProperty("--r-x", `${rotate.x.toFixed(2)}deg`);
+      refElement.current.style.setProperty("--r-y", `${rotate.y.toFixed(2)}deg`);
+      refElement.current.style.setProperty("--bg-x", `${background.x.toFixed(1)}%`);
+      refElement.current.style.setProperty("--bg-y", `${background.y.toFixed(1)}%`);
     }
   };
 
   const handlePointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
     const rotateFactor = maxTilt / 15;
-    const rect = event.currentTarget.getBoundingClientRect();
+    const rect = rectRef.current || event.currentTarget.getBoundingClientRect();
+    rectRef.current = rect;
     const position = {
       x: event.clientX - rect.left,
       y: event.clientY - rect.top,
@@ -63,23 +67,31 @@ export const GlareCard = ({
     glare.x = percentage.x;
     glare.y = percentage.y;
 
-    updateStyles();
+    if (!rafRef.current) {
+      rafRef.current = requestAnimationFrame(updateStyles);
+    }
   };
 
-  const handlePointerEnter = () => {
+  const handlePointerEnter = (event: React.PointerEvent<HTMLDivElement>) => {
     isPointerInside.current = true;
+    rectRef.current = event.currentTarget.getBoundingClientRect();
     if (refElement.current) {
       setTimeout(() => {
         if (isPointerInside.current) {
-          refElement.current?.style.setProperty("--duration", "0s");
+          refElement.current?.style.setProperty("--duration", "60ms");
         }
-      }, 250);
+      }, 200);
       refElement.current.style.setProperty("--opacity", "1");
     }
   };
 
   const handlePointerLeave = () => {
     isPointerInside.current = false;
+    rectRef.current = null;
+    if (rafRef.current) {
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = 0;
+    }
     if (refElement.current) {
       refElement.current.style.removeProperty("--duration");
       refElement.current.style.setProperty("--r-x", `0deg`);

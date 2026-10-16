@@ -47,97 +47,47 @@ export function LightLines({
     const frameRef = useRef<number | null>(null);
 
     useEffect(() => {
-        // Light elements configuration
         const lightsDown = [
-            { selector: ".light4", from: -1080, to: 1080 },
-            { selector: ".light5", from: -1080, to: 1080 },
-            { selector: ".light6", from: -1080, to: 1080 },
-            { selector: ".light7", from: -1080, to: 1080 },
-            { selector: ".light8", from: -1080, to: 1080 },
-            { selector: ".light11", from: -1080, to: 1080 },
-            { selector: ".light12", from: -1080, to: 1080 },
-            { selector: ".light13", from: -1080, to: 1080 },
-            { selector: ".light14", from: -1080, to: 1080 },
-            { selector: ".light15", from: -1080, to: 1080 },
-            { selector: ".light16", from: -1080, to: 1080 },
+            { selector: ".light4", duration: 14 },
+            { selector: ".light5", duration: 18 },
+            { selector: ".light6", duration: 12 },
+            { selector: ".light7", duration: 22 },
+            { selector: ".light8", duration: 16 },
+            { selector: ".light11", duration: 19 },
+            { selector: ".light12", duration: 15 },
+            { selector: ".light13", duration: 24 },
+            { selector: ".light14", duration: 17 },
+            { selector: ".light15", duration: 21 },
+            { selector: ".light16", duration: 13 },
         ];
 
         const lightsUp = [
-            { selector: ".light1", from: 1080, to: -1080 },
-            { selector: ".light2", from: 1080, to: -1080 },
-            { selector: ".light3", from: 1080, to: -1080 },
-            { selector: ".light9", from: 1080, to: -1080 },
-            { selector: ".light10", from: 1080, to: -1080 },
-            { selector: ".light17", from: 1080, to: -1080 },
+            { selector: ".light1", duration: 16 },
+            { selector: ".light2", duration: 20 },
+            { selector: ".light3", duration: 14 },
+            { selector: ".light9", duration: 18 },
+            { selector: ".light10", duration: 23 },
+            { selector: ".light17", duration: 15 },
         ];
 
         const container = containerRef.current;
         if (!container) return;
 
-        // Initialize animations
-        const allLights = [...lightsDown, ...lightsUp];
-        animationsRef.current = allLights.map((light) => {
-            const element = container.querySelector(light.selector) as SVGPathElement | null;
-            const duration = (Math.floor(Math.random() * 59) + 2) * 0.5 + 0.5;
-            return {
-                element,
-                from: light.from,
-                to: light.to,
-                duration: duration / speedMultiplier,
-            };
+        lightsDown.forEach((light, i) => {
+            const el = container.querySelector(light.selector) as SVGPathElement | null;
+            if (!el) return;
+            const dur = light.duration / speedMultiplier;
+            el.style.willChange = "transform";
+            el.style.animation = `privae-light-down ${dur}s linear ${-(i * 1.7)}s infinite`;
         });
 
-        // Animation state for each light
-        const animationState = animationsRef.current.map(() => ({
-            startTime: performance.now() - Math.random() * 5000, // Stagger start times
-            currentY: 0,
-        }));
-
-        let isVisible = false;
-
-        const animate = (time: number) => {
-            if (!isVisible) {
-                frameRef.current = requestAnimationFrame(animate);
-                return;
-            }
-
-            animationsRef.current.forEach((ref, index) => {
-                if (!ref.element) return;
-
-                const state = animationState[index];
-                const elapsed = (time - state.startTime) / 1000; // Convert to seconds
-                const progress = (elapsed % ref.duration) / ref.duration;
-                const currentY = ref.from + (ref.to - ref.from) * progress;
-
-                ref.element.style.transform = `translateY(${currentY}px)`;
-            });
-
-            frameRef.current = requestAnimationFrame(animate);
-        };
-
-        let observer: IntersectionObserver | null = null;
-        if (typeof window !== "undefined" && "IntersectionObserver" in window) {
-            observer = new IntersectionObserver(
-                ([entry]) => {
-                    isVisible = entry.isIntersecting;
-                },
-                { threshold: 0 }
-            );
-            observer.observe(container);
-        } else {
-            isVisible = true;
-        }
-
-        frameRef.current = requestAnimationFrame(animate);
-
-        return () => {
-            if (frameRef.current) {
-                cancelAnimationFrame(frameRef.current);
-            }
-            if (observer) {
-                observer.disconnect();
-            }
-        };
+        lightsUp.forEach((light, i) => {
+            const el = container.querySelector(light.selector) as SVGPathElement | null;
+            if (!el) return;
+            const dur = light.duration / speedMultiplier;
+            el.style.willChange = "transform";
+            el.style.animation = `privae-light-up ${dur}s linear ${-(i * 2.1)}s infinite`;
+        });
     }, [speedMultiplier]);
 
     return (

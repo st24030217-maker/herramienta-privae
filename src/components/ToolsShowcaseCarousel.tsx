@@ -3,7 +3,7 @@
 import React, { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowRight,
   Sparkles,
@@ -167,42 +167,42 @@ export function ToolsShowcaseCarousel() {
           <motion.div
             initial={{ opacity: 0.35, width: "12rem" }}
             animate={{ opacity: 1, width: "30rem" }}
-            transition={{ delay: 0.1, duration: 0.85, ease: "easeInOut" }}
+            transition={{ delay: 0.05, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
             style={{
               backgroundImage: `conic-gradient(var(--conic-position), var(--tw-gradient-stops))`,
             }}
-            className="absolute top-0 right-1/2 h-48 w-[30rem] bg-gradient-conic from-white/75 via-transparent to-transparent [--conic-position:from_70deg_at_center_top] [mask-image:radial-gradient(ellipse_at_top,black_20%,transparent_72%)]"
+            className="absolute top-0 right-1/2 h-48 w-[30rem] bg-gradient-conic from-white/75 via-transparent to-transparent [--conic-position:from_70deg_at_center_top] [mask-image:radial-gradient(ellipse_at_top,black_20%,transparent_72%)] will-change-transform"
           />
 
           <motion.div
             initial={{ opacity: 0.35, width: "12rem" }}
             animate={{ opacity: 1, width: "30rem" }}
-            transition={{ delay: 0.1, duration: 0.85, ease: "easeInOut" }}
+            transition={{ delay: 0.05, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
             style={{
               backgroundImage: `conic-gradient(var(--conic-position), var(--tw-gradient-stops))`,
             }}
-            className="absolute top-0 left-1/2 h-48 w-[30rem] bg-gradient-conic from-transparent via-transparent to-white/75 [--conic-position:from_290deg_at_center_top] [mask-image:radial-gradient(ellipse_at_top,black_20%,transparent_72%)]"
+            className="absolute top-0 left-1/2 h-48 w-[30rem] bg-gradient-conic from-transparent via-transparent to-white/75 [--conic-position:from_290deg_at_center_top] [mask-image:radial-gradient(ellipse_at_top,black_20%,transparent_72%)] will-change-transform"
           />
 
           <motion.div
             initial={{ width: "8rem", opacity: 0.25 }}
             animate={{ width: "22rem", opacity: 0.55 }}
-            transition={{ delay: 0.1, duration: 0.85, ease: "easeInOut" }}
+            transition={{ delay: 0.05, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
             className="absolute -top-6 z-20 h-28 w-80 rounded-full bg-white blur-3xl"
           />
 
           <motion.div
             initial={{ width: "12rem", opacity: 0.6 }}
             animate={{ width: "30rem", opacity: 1 }}
-            transition={{ delay: 0.1, duration: 0.85, ease: "easeInOut" }}
+            transition={{ delay: 0.05, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
             className="relative z-30 h-0.5 w-[30rem] max-w-[88vw] bg-white shadow-[0_0_25px_4px_rgba(255,255,255,0.95)]"
           />
         </div>
 
         <motion.div
-          initial={{ opacity: 0.4, y: 35 }}
+          initial={{ opacity: 0.4, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.15, duration: 0.75, ease: "easeOut" }}
+          transition={{ delay: 0.08, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           className="relative z-10 text-center max-w-4xl mx-auto px-2 space-y-3 mt-3"
         >
           <div className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 backdrop-blur-md px-4 py-1.5 text-xs font-mono font-bold text-white uppercase tracking-widest shadow-[0_0_20px_rgba(255,255,255,0.15)]">
@@ -215,13 +215,13 @@ export function ToolsShowcaseCarousel() {
           </h1>
 
           <p className="text-sm sm:text-base text-neutral-300 max-w-2xl mx-auto font-normal">
-            Gira el carrusel 3D o selecciona cualquiera de los 5 módulos oficiales de Privae Textil para preparar tus archivos a 300 DPI.
+            Gira el carrusel 3D con el cursor o selecciona cualquiera de los 5 módulos oficiales de Privae Textil para preparar tus archivos a 300 DPI.
           </p>
         </motion.div>
       </div>
 
-      {/* BARRA INTUITIVA DE ACCESO RÁPIDO A LOS MÓDULOS */}
-      <AnimatedContent distance={25} delay={0.08} trigger="mount">
+      {/* BARRA FLUIDA CON INDICADOR DESLIZANTE (SPRING LAYOUT ID) */}
+      <AnimatedContent distance={20} delay={0.04} trigger="mount">
         <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-2.5 max-w-5xl mx-auto px-2">
           {WORKSHOP_TOOLS.map((tool, idx) => {
             const Icon = tool.icon;
@@ -231,13 +231,20 @@ export function ToolsShowcaseCarousel() {
                 key={tool.id}
                 type="button"
                 onClick={() => handleSelectPill(idx)}
-                className={`group inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs sm:text-sm font-mono font-bold transition-all duration-200 backdrop-blur-md ${
+                className={`relative inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs sm:text-sm font-mono font-bold transition-colors duration-200 ${
                   isSelected
-                    ? "bg-white text-black shadow-[0_0_25px_rgba(255,255,255,0.45)] scale-105"
+                    ? "text-black"
                     : "bg-white/5 text-neutral-300 border border-white/15 hover:border-white/40 hover:bg-white/10 hover:text-white"
                 }`}
               >
-                <Icon className={`h-4 w-4 ${isSelected ? "text-black" : "text-white/80"}`} />
+                {isSelected && (
+                  <motion.span
+                    layoutId="activeToolPill"
+                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                    className="absolute inset-0 rounded-full bg-white shadow-[0_0_25px_rgba(255,255,255,0.45)] -z-10"
+                  />
+                )}
+                <Icon className={`h-4 w-4 transition-colors ${isSelected ? "text-black" : "text-white/80"}`} />
                 <span>{tool.shortName}</span>
               </button>
             );
@@ -245,14 +252,14 @@ export function ToolsShowcaseCarousel() {
         </div>
       </AnimatedContent>
 
-      {/* ESCENARIO 3D GIGANTE Y 100% TRANSPARENTE (SIN BORDES NI CAJAS) */}
-      <AnimatedContent distance={40} delay={0.14} trigger="mount">
+      {/* ESCENARIO 3D GIGANTE Y 100% TRANSPARENTE (60-120 FPS) */}
+      <AnimatedContent distance={28} delay={0.08} trigger="mount">
         <div className="relative w-full h-[460px] sm:h-[560px] lg:h-[600px] bg-transparent flex items-center justify-center select-none">
           <button
             type="button"
             onClick={() => carouselApiRef.current?.stepBy(-1)}
             aria-label="Servicio anterior"
-            className="absolute left-1 sm:left-4 z-20 flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full border border-white/25 bg-black/50 text-white backdrop-blur-md transition-all hover:scale-110 hover:border-white hover:bg-white hover:text-black active:scale-95 shadow-2xl"
+            className="absolute left-1 sm:left-4 z-20 flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full border border-white/25 bg-black/50 text-white backdrop-blur-md transition-transform duration-200 hover:scale-110 hover:border-white hover:bg-white hover:text-black active:scale-95 shadow-2xl"
           >
             <ChevronLeft className="h-6 w-6 sm:h-7 sm:w-7" />
           </button>
@@ -266,7 +273,8 @@ export function ToolsShowcaseCarousel() {
             aspectRatio={600 / 720}
             gap={22}
             tilt={preset === "orbit" ? -12 : -4}
-            speed={8}
+            speed={9.5}
+            momentum={0.82}
             autoplay="drift"
             pauseOnHover={true}
             draggable={true}
@@ -282,40 +290,51 @@ export function ToolsShowcaseCarousel() {
             type="button"
             onClick={() => carouselApiRef.current?.stepBy(1)}
             aria-label="Siguiente servicio"
-            className="absolute right-1 sm:right-4 z-20 flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full border border-white/25 bg-black/50 text-white backdrop-blur-md transition-all hover:scale-110 hover:border-white hover:bg-white hover:text-black active:scale-95 shadow-2xl"
+            className="absolute right-1 sm:right-4 z-20 flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full border border-white/25 bg-black/50 text-white backdrop-blur-md transition-transform duration-200 hover:scale-110 hover:border-white hover:bg-white hover:text-black active:scale-95 shadow-2xl"
           >
             <ChevronRight className="h-6 w-6 sm:h-7 sm:w-7" />
           </button>
         </div>
       </AnimatedContent>
 
-      {/* PANEL FLOTANTE DE ACCIÓN DIRECTA DEL MÓDULO SELECCIONADO */}
-      <AnimatedContent distance={30} delay={0.2} trigger="mount">
+      {/* PANEL FLOTANTE CON TRANSICIÓN SUAVE ENTRE MÓDULOS */}
+      <AnimatedContent distance={24} delay={0.12} trigger="mount">
         <div className="max-w-4xl mx-auto px-2">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-5 rounded-2xl border border-white/20 bg-black/55 backdrop-blur-xl px-6 py-5 shadow-[0_20px_60px_rgba(0,0,0,0.6)]">
-            <div className="space-y-1.5 text-center md:text-left flex-1">
-              <div className="flex flex-wrap items-center justify-center md:justify-start gap-2.5">
-                <span className={`font-mono text-xs font-bold border px-3 py-0.5 rounded-full ${currentTool.accent}`}>
-                  {currentTool.badge}
-                </span>
-                <span className="font-mono text-xs text-neutral-400">
-                  {currentTool.subtitle}
-                </span>
-              </div>
+          <div className="flex flex-col md:flex-row items-center justify-between gap-5 rounded-2xl border border-white/20 bg-black/60 backdrop-blur-xl px-6 py-5 shadow-[0_20px_60px_rgba(0,0,0,0.6)]">
+            <div className="flex-1 min-h-[104px] flex flex-col justify-center">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={currentTool.id}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.18, ease: "easeOut" }}
+                  className="space-y-1.5 text-center md:text-left"
+                >
+                  <div className="flex flex-wrap items-center justify-center md:justify-start gap-2.5">
+                    <span className={`font-mono text-xs font-bold border px-3 py-0.5 rounded-full ${currentTool.accent}`}>
+                      {currentTool.badge}
+                    </span>
+                    <span className="font-mono text-xs text-neutral-400">
+                      {currentTool.subtitle}
+                    </span>
+                  </div>
 
-              <h2 className="text-2xl sm:text-3xl font-black text-white tracking-wide">
-                {currentTool.title}
-              </h2>
+                  <h2 className="text-2xl sm:text-3xl font-black text-white tracking-wide">
+                    {currentTool.title}
+                  </h2>
 
-              <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed max-w-2xl">
-                {currentTool.desc}
-              </p>
+                  <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed max-w-2xl">
+                    {currentTool.desc}
+                  </p>
+                </motion.div>
+              </AnimatePresence>
             </div>
 
             <div className="flex flex-col items-center md:items-end gap-3 shrink-0 w-full md:w-auto">
               <Link
                 href={currentTool.href}
-                className="w-full md:w-auto inline-flex items-center justify-center gap-3 rounded-xl bg-white hover:bg-neutral-200 px-7 py-4 text-sm sm:text-base font-black text-black transition-all shadow-[0_0_30px_rgba(255,255,255,0.4)] hover:scale-[1.03] active:scale-95"
+                className="w-full md:w-auto inline-flex items-center justify-center gap-3 rounded-xl bg-white hover:bg-neutral-200 px-7 py-4 text-sm sm:text-base font-black text-black transition-all duration-200 shadow-[0_0_30px_rgba(255,255,255,0.4)] hover:scale-[1.03] active:scale-95"
               >
                 <span>{currentTool.action}</span>
                 <ArrowRight className="h-5 w-5" />

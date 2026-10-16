@@ -41,6 +41,28 @@ body {
   background-position: 0 0, 0 8px, 8px -8px, -8px 0px;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
+@keyframes privae-light-down {
+  0% {
+    transform: translate3d(0, -1080px, 0);
+  }
+  100% {
+    transform: translate3d(0, 1080px, 0);
+  }
+}
+
+@keyframes privae-light-up {
+  0% {
+    transform: translate3d(0, 1080px, 0);
+  }
+  100% {
+    transform: translate3d(0, -1080px, 0);
+  }
+}
+
 .custom-scrollbar::-webkit-scrollbar {
   width: 5px;
   height: 5px;
