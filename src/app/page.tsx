@@ -21,6 +21,7 @@ export default function HomePage() {
       spec: "PNG 300 DPI sin fondo",
       desc: "Elimina de forma automática el fondo de tu imagen y genera un archivo PNG con transparencia limpia listo para uso en DTF.",
       href: "/tools/remove-bg",
+      image: "/tools/dtf_remover_fondo_minimal_bn.png",
       icon: Scissors,
       action: "01 · Remover fondo",
     },
@@ -31,6 +32,7 @@ export default function HomePage() {
       spec: "Escala 2X/4X · 300 DPI",
       desc: "Incrementa la definición de imágenes con baja calidad para optimizar su nitidez en la impresión física a mínimo 300 DPI.",
       href: "/tools/enhance",
+      image: "/tools/dtf_mejorar_calidad_minimal_bn.png",
       icon: Sparkles,
       action: "02 · Mejorar calidad",
     },
@@ -41,6 +43,7 @@ export default function HomePage() {
       spec: "Gotero + Tolerancia",
       desc: "Selecciona un color específico con el gotero dentro de tu imagen y ajusta el nivel de tolerancia para eliminarlo con precisión.",
       href: "/tools/remove-color",
+      image: "/tools/dtf_eliminar_color_minimal_bn.png",
       icon: Pipette,
       action: "03 · Eliminar color",
     },
@@ -51,6 +54,7 @@ export default function HomePage() {
       spec: "Opacidad sólida DTF",
       desc: "Corrige bordes difusos y píxeles semitransparentes para evitar manchas blancas y defectos de adhesión de poliamida en DTF.",
       href: "/tools/clean-alpha",
+      image: "/tools/dtf_quitar_semitransparencias_minimal_bn.png",
       icon: Layers,
       action: "04 · Quitar semitransparencias",
     },
@@ -101,6 +105,15 @@ export default function HomePage() {
         <AnimatedContent distance={40} delay={0.15}>
           <GlareCard glareColor="white" className="p-6 lg:p-8">
             <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+              <div className="w-full lg:w-72 shrink-0 overflow-hidden rounded-xl border border-white/15 bg-black/40">
+                <img
+                  src="/tools/dtf_armador_archivos_minimal_bn.png"
+                  alt="05 Armador de Archivos DTF"
+                  className="w-full aspect-video object-cover"
+                  loading="lazy"
+                />
+              </div>
+
               <div className="flex-1">
                 <div className="flex items-center gap-2.5 mb-2">
                   <span className="font-mono text-xs text-white border border-white/20 px-2 py-0.5 rounded bg-white/5 font-semibold">
@@ -170,9 +183,18 @@ export default function HomePage() {
               >
                 <div className="flex flex-col h-full justify-between">
                   <div>
-                    <div className="flex items-center justify-between mb-3">
+                    <div className="mb-3.5 overflow-hidden rounded-lg border border-white/15 bg-black/40">
+                      <img
+                        src={tool.image}
+                        alt={tool.name}
+                        className="w-full aspect-video object-cover"
+                        loading="lazy"
+                      />
+                    </div>
+
+                    <div className="flex items-center justify-between mb-2.5">
                       <div className="flex items-center gap-2">
-                        <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-[#20232A] bg-[#0D0E11] text-white">
+                        <div className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#20232A] bg-[#0D0E11] text-white">
                           <Icon className="h-4 w-4 text-white" />
                         </div>
                         <span className="font-mono text-xs font-bold text-white bg-white/10 border border-white/20 px-2 py-0.5 rounded">
@@ -187,7 +209,7 @@ export default function HomePage() {
                     <h4 className="text-sm font-bold text-[#F3F4F6]">
                       {tool.name}
                     </h4>
-                    <p className="mt-2 text-xs text-[#8E95A5] leading-relaxed">
+                    <p className="mt-1.5 text-xs text-[#8E95A5] leading-relaxed">
                       {tool.desc}
                     </p>
                   </div>
@@ -225,6 +247,15 @@ export default function HomePage() {
 
           <GlareCard glareColor="white" className="p-6 lg:p-7">
             <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+              <div className="w-full lg:w-72 shrink-0 overflow-hidden rounded-xl border border-white/15 bg-black/40">
+                <img
+                  src="/tools/dtf_escaner_calidad_minimal_bn.png"
+                  alt="Escáner de Calidad DTF"
+                  className="w-full aspect-video object-cover"
+                  loading="lazy"
+                />
+              </div>
+
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-2">
                   <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-white/20 bg-white/5 text-white">

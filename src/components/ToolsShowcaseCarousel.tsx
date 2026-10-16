@@ -38,7 +38,7 @@ export interface WorkshopToolItem {
 export const WORKSHOP_TOOLS: WorkshopToolItem[] = [
   {
     id: "remove-bg",
-    src: "/tools/dtf_01_remover_fondo_minimalista.png",
+    src: "/tools/dtf_remover_fondo_minimal_bn.png",
     alt: "01 Remover Fondo",
     shortName: "01 · Remover Fondo",
     title: "01 · Remover Fondo (PNG 300 DPI)",
@@ -52,7 +52,7 @@ export const WORKSHOP_TOOLS: WorkshopToolItem[] = [
   },
   {
     id: "enhance",
-    src: "/tools/dtf_02_mejorar_calidad_minimalista.png",
+    src: "/tools/dtf_mejorar_calidad_minimal_bn.png",
     alt: "02 Mejorar Calidad / Resolución",
     shortName: "02 · Mejorar Calidad",
     title: "02 · Mejorar Calidad / Resolución",
@@ -66,7 +66,7 @@ export const WORKSHOP_TOOLS: WorkshopToolItem[] = [
   },
   {
     id: "remove-color",
-    src: "/tools/dtf_03_eliminar_color_minimalista.png",
+    src: "/tools/dtf_eliminar_color_minimal_bn.png",
     alt: "03 Eliminar un Color",
     shortName: "03 · Eliminar un Color",
     title: "03 · Eliminar un Color (Cuentagotas)",
@@ -80,7 +80,7 @@ export const WORKSHOP_TOOLS: WorkshopToolItem[] = [
   },
   {
     id: "clean-alpha",
-    src: "/tools/dtf_04_quitar_semitransparencias_minimalista.png",
+    src: "/tools/dtf_quitar_semitransparencias_minimal_bn.png",
     alt: "04 Quitar Semitransparencias",
     shortName: "04 · Quitar Semitransparencias",
     title: "04 · Quitar Semitransparencias (Hasta 58×200 cm)",
@@ -94,7 +94,7 @@ export const WORKSHOP_TOOLS: WorkshopToolItem[] = [
   },
   {
     id: "dtf-builder",
-    src: "/tools/dtf_05_armador_archivos_minimalista.png",
+    src: "/tools/dtf_armador_archivos_minimal_bn.png",
     alt: "05 Armador de Archivos DTF",
     shortName: "05 · Armador DTF",
     title: "05 · Armador de Archivos DTF (58×100 y 58×200 cm)",
@@ -108,7 +108,7 @@ export const WORKSHOP_TOOLS: WorkshopToolItem[] = [
   },
   {
     id: "scanner",
-    src: "/tools/dtf_06_escaner_calidad_minimalista.png",
+    src: "/tools/dtf_escaner_calidad_minimal_bn.png",
     alt: "Escáner de Calidad DTF",
     shortName: "06 · Escáner DTF",
     title: "06 · Escáner de Calidad DTF",
@@ -254,7 +254,7 @@ export function ToolsShowcaseCarousel() {
 
       {/* ESCENARIO 3D GIGANTE Y 100% TRANSPARENTE (60-120 FPS) */}
       <AnimatedContent distance={28} delay={0.08} trigger="mount">
-        <div className="relative w-full h-[500px] sm:h-[580px] lg:h-[620px] bg-transparent flex items-center justify-center select-none">
+        <div className="relative w-full h-[420px] sm:h-[500px] lg:h-[540px] bg-transparent flex items-center justify-center select-none">
           <button
             type="button"
             onClick={() => carouselApiRef.current?.stepBy(-1)}
@@ -269,9 +269,9 @@ export function ToolsShowcaseCarousel() {
             items={CAROUSEL_RING_ITEMS}
             preset={preset}
             intro="spin"
-            cardWidth={250}
-            aspectRatio={1600 / 2848}
-            gap={24}
+            cardWidth={340}
+            aspectRatio={2848 / 1600}
+            gap={26}
             tilt={preset === "orbit" ? -12 : -4}
             speed={9.5}
             momentum={0.82}
@@ -280,7 +280,7 @@ export function ToolsShowcaseCarousel() {
             draggable={true}
             depthFade={0.42}
             innerShade={0.45}
-            cornerRadius={22}
+            cornerRadius={20}
             onChange={(index: number) => setRawIndex(index)}
             onItemClick={handleCardClick}
             className="w-full h-full bg-transparent"
