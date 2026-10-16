@@ -6,7 +6,8 @@
   grid-auto-flow: row dense;
   width: 100%;
   color: var(--mb-ink);
-  font-feature-settings: 'tnum' 0;
+  font-family: 'Tanker', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+  letter-spacing: 0.03em;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -81,10 +82,11 @@
   text-decoration: none;
   isolation: isolate;
   outline: none;
-  transform: perspective(900px) translate3d(var(--mb-tx, 0px), var(--mb-ty, 0px), 0) rotateX(var(--mb-rx, 0deg))
-    rotateY(var(--mb-ry, 0deg)) scale(var(--mb-press, 1));
+  transform: none !important;
   user-select: none;
   -webkit-user-select: none;
+  font-family: 'Tanker', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+  letter-spacing: 0.03em;
 }
 
 .magic-bento__card[data-clickable] {

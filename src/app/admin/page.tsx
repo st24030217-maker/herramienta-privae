@@ -220,195 +220,200 @@ export default function AdminPage() {
             items={[
               {
                 id: "bento-users",
+                title: "Métricas de Usuarios",
                 colSpan: 2,
                 rowSpan: 1,
                 onClick: () => setActiveTab("users"),
                 content: (
-                  <div className="flex h-full flex-col justify-between select-none">
+                  <div className="flex h-full flex-col justify-between select-none font-tanker tracking-wide">
                     <div className="flex items-center justify-between text-xs">
-                      <div className="flex items-center gap-2 text-neutral-400 font-semibold tracking-wide uppercase text-[11px]">
+                      <div className="flex items-center gap-2 text-neutral-300 font-bold tracking-wider uppercase text-[11px]">
                         <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-sky-500/10 text-sky-400 border border-sky-500/20">
                           <Users className="h-3.5 w-3.5" />
                         </span>
                         <span>Control de Usuarios</span>
                       </div>
-                      <span className="rounded-full bg-neutral-900 border border-neutral-700/80 px-2 py-0.5 text-[10px] text-sky-300 font-mono">
+                      <span className="rounded-full bg-neutral-900 border border-neutral-700/80 px-2 py-0.5 text-[10px] uppercase font-bold tracking-wider text-sky-300">
                         {stats.trialUsers} en prueba 5D
                       </span>
                     </div>
 
                     <div className="my-auto py-2">
                       <div className="flex items-baseline gap-2">
-                        <span className="text-4xl font-black tracking-tight text-white">{stats.totalUsers}</span>
+                        <span className="text-4xl font-black tracking-tight text-white font-tanker">{stats.totalUsers}</span>
                         <span className="text-xs uppercase tracking-wider text-neutral-400 font-bold">Cuentas Registradas</span>
                       </div>
-                      <div className="mt-2.5 flex flex-wrap items-center gap-2 text-[11px] text-neutral-400">
-                        <span className="inline-flex items-center gap-1 rounded-md bg-emerald-500/10 px-2 py-0.5 text-emerald-400 font-medium border border-emerald-500/20">
+                      <div className="mt-2.5 flex flex-wrap items-center gap-2 text-[11px] uppercase tracking-wider font-bold text-neutral-400">
+                        <span className="inline-flex items-center gap-1 rounded-md bg-emerald-500/10 px-2 py-0.5 text-emerald-400 border border-emerald-500/20">
                           <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" /> {stats.activeSubscriptions} activos
                         </span>
-                        <span className="inline-flex items-center gap-1 rounded-md bg-sky-500/10 px-2 py-0.5 text-sky-400 font-medium border border-sky-500/20">
+                        <span className="inline-flex items-center gap-1 rounded-md bg-sky-500/10 px-2 py-0.5 text-sky-400 border border-sky-500/20">
                           <Clock className="h-3 w-3" /> {stats.trialUsers} prueba activa
                         </span>
                         {stats.suspendedUsers > 0 && (
-                          <span className="inline-flex items-center gap-1 rounded-md bg-rose-500/10 px-2 py-0.5 text-rose-400 font-medium border border-rose-500/20">
+                          <span className="inline-flex items-center gap-1 rounded-md bg-rose-500/10 px-2 py-0.5 text-rose-400 border border-rose-500/20">
                             <ShieldAlert className="h-3 w-3" /> {stats.suspendedUsers} suspendidos
                           </span>
                         )}
                       </div>
                     </div>
 
-                    <div className="flex items-center justify-between pt-2 border-t border-neutral-800/80 text-[11px] text-neutral-400 font-medium">
-                      <span>Ver directorio y accesos</span>
-                      <span className="text-sky-400 font-semibold">Gestionar →</span>
+                    <div className="flex items-center justify-between pt-2 border-t border-neutral-800/80 text-[11px] uppercase tracking-wider font-bold text-neutral-400">
+                      <span>Directorio y accesos</span>
+                      <span className="text-sky-400">Gestionar →</span>
                     </div>
                   </div>
                 ),
               },
               {
                 id: "bento-subs",
+                title: "Suscripciones Activas",
                 colSpan: 1,
                 rowSpan: 1,
                 onClick: () => setActiveTab("payments"),
                 content: (
-                  <div className="flex h-full flex-col justify-between select-none">
+                  <div className="flex h-full flex-col justify-between select-none font-tanker tracking-wide">
                     <div className="flex items-center justify-between text-xs">
-                      <div className="flex items-center gap-2 text-neutral-400 font-semibold tracking-wide uppercase text-[11px]">
+                      <div className="flex items-center gap-2 text-neutral-300 font-bold tracking-wider uppercase text-[11px]">
                         <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                           <CreditCard className="h-3.5 w-3.5" />
                         </span>
                         <span>Suscripciones</span>
                       </div>
-                      <span className="rounded-full bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 text-[10px] text-emerald-400 font-bold">
+                      <span className="rounded-full bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 text-[10px] uppercase font-bold tracking-wider text-emerald-400">
                         Stripe
                       </span>
                     </div>
 
                     <div className="my-auto py-2">
                       <div className="flex items-baseline gap-1.5">
-                        <span className="text-3xl sm:text-4xl font-black tracking-tight text-emerald-400">{stats.activeSubscriptions}</span>
+                        <span className="text-3xl sm:text-4xl font-black tracking-tight text-emerald-400 font-tanker">{stats.activeSubscriptions}</span>
                         <span className="text-xs uppercase tracking-wider text-neutral-400 font-bold">Activas</span>
                       </div>
-                      <div className="mt-1.5 text-xs text-neutral-400 font-medium">
-                        Cuota: <span className="font-semibold text-white">${planPriceUsd} USD</span> / mes
+                      <div className="mt-1.5 text-xs uppercase tracking-wider font-bold text-neutral-400">
+                        Cuota: <span className="text-white">${planPriceUsd} USD</span> / mes
                       </div>
                     </div>
 
-                    <div className="flex items-center justify-between pt-2 border-t border-neutral-800/80 text-[11px] text-neutral-400 font-medium">
+                    <div className="flex items-center justify-between pt-2 border-t border-neutral-800/80 text-[11px] uppercase tracking-wider font-bold text-neutral-400">
                       <span>Auditoría de cobros</span>
-                      <span className="text-emerald-400 font-semibold">Ver →</span>
+                      <span className="text-emerald-400">Ver →</span>
                     </div>
                   </div>
                 ),
               },
               {
                 id: "bento-security",
+                title: "Control de Accesos",
                 colSpan: 1,
                 rowSpan: 1,
                 onClick: () => setActiveTab("users"),
                 content: (
-                  <div className="flex h-full flex-col justify-between select-none">
+                  <div className="flex h-full flex-col justify-between select-none font-tanker tracking-wide">
                     <div className="flex items-center justify-between text-xs">
-                      <div className="flex items-center gap-2 text-neutral-400 font-semibold tracking-wide uppercase text-[11px]">
+                      <div className="flex items-center gap-2 text-neutral-300 font-bold tracking-wider uppercase text-[11px]">
                         <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-amber-500/10 text-amber-400 border border-amber-500/20">
                           <AlertTriangle className="h-3.5 w-3.5" />
                         </span>
                         <span>Accesos</span>
                       </div>
-                      <span className="rounded-full bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 text-[10px] text-amber-300 font-mono">
+                      <span className="rounded-full bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 text-[10px] uppercase font-bold tracking-wider text-amber-300">
                         Regla 3D
                       </span>
                     </div>
 
                     <div className="my-auto py-2">
                       <div className="flex items-baseline gap-1.5">
-                        <span className="text-3xl sm:text-4xl font-black tracking-tight text-amber-300">{stats.graceUsers}</span>
+                        <span className="text-3xl sm:text-4xl font-black tracking-tight text-amber-300 font-tanker">{stats.graceUsers}</span>
                         <span className="text-xs uppercase tracking-wider text-neutral-400 font-bold">En Gracia</span>
                       </div>
-                      <div className="mt-1.5 text-xs text-neutral-400 font-medium">
-                        {stats.suspendedUsers} cuentas suspendidas por pago
+                      <div className="mt-1.5 text-xs uppercase tracking-wider font-bold text-neutral-400">
+                        {stats.suspendedUsers} cuentas suspendidas
                       </div>
                     </div>
 
-                    <div className="flex items-center justify-between pt-2 border-t border-neutral-800/80 text-[11px] text-neutral-400 font-medium">
+                    <div className="flex items-center justify-between pt-2 border-t border-neutral-800/80 text-[11px] uppercase tracking-wider font-bold text-neutral-400">
                       <span>Corte automático</span>
-                      <span className="text-amber-400 font-semibold">Ver →</span>
+                      <span className="text-amber-400">Ver →</span>
                     </div>
                   </div>
                 ),
               },
               {
                 id: "bento-pipeline",
+                title: "Pipeline DTF Prepress",
                 colSpan: 2,
                 rowSpan: 1,
                 onClick: () => setActiveTab("support"),
                 content: (
-                  <div className="flex h-full flex-col justify-between select-none">
+                  <div className="flex h-full flex-col justify-between select-none font-tanker tracking-wide">
                     <div className="flex items-center justify-between text-xs">
-                      <div className="flex items-center gap-2 text-neutral-400 font-semibold tracking-wide uppercase text-[11px]">
+                      <div className="flex items-center gap-2 text-neutral-300 font-bold tracking-wider uppercase text-[11px]">
                         <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-purple-500/10 text-purple-400 border border-purple-500/20">
                           <Activity className="h-3.5 w-3.5" />
                         </span>
                         <span>Pipeline DTF Prepress</span>
                       </div>
-                      <span className="inline-flex items-center gap-1 rounded-full bg-neutral-900 border border-neutral-700/80 px-2 py-0.5 text-[10px] text-purple-300 font-mono">
+                      <span className="inline-flex items-center gap-1 rounded-full bg-neutral-900 border border-neutral-700/80 px-2 py-0.5 text-[10px] uppercase font-bold tracking-wider text-purple-300">
                         <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" /> Motor 300 DPI
                       </span>
                     </div>
 
                     <div className="my-auto py-1.5 space-y-2">
                       <div className="flex items-baseline gap-2">
-                        <span className="text-3xl font-black tracking-tight text-white">{stats.totalProcessings}</span>
+                        <span className="text-3xl font-black tracking-tight text-white font-tanker">{stats.totalProcessings}</span>
                         <span className="text-xs uppercase tracking-wider text-neutral-400 font-bold">Archivos Procesados</span>
                         {stats.errorProcessings > 0 ? (
-                          <span className="text-xs text-rose-400 font-semibold">({stats.errorProcessings} fallos)</span>
+                          <span className="text-xs text-rose-400 font-bold uppercase tracking-wider">({stats.errorProcessings} fallos)</span>
                         ) : (
-                          <span className="text-xs text-emerald-400 font-semibold">(0 errores)</span>
+                          <span className="text-xs text-emerald-400 font-bold uppercase tracking-wider">(0 errores)</span>
                         )}
                       </div>
 
                       {/* Steps del motor DTF reales */}
-                      <div className="grid grid-cols-4 gap-2 text-[10px] text-center font-medium">
+                      <div className="grid grid-cols-4 gap-2 text-[10px] text-center uppercase tracking-wider font-bold">
                         <div className="rounded-lg bg-neutral-900/90 border border-neutral-800 p-1.5">
-                          <div className="text-emerald-400 font-bold">✓ Subida</div>
+                          <div className="text-emerald-400">✓ Subida</div>
                           <div className="text-neutral-500 text-[9px]">PNG / PDF</div>
                         </div>
                         <div className="rounded-lg bg-neutral-900/90 border border-neutral-800 p-1.5">
-                          <div className="text-emerald-400 font-bold">✓ Alfa</div>
+                          <div className="text-emerald-400">✓ Alfa</div>
                           <div className="text-neutral-500 text-[9px]">Limpieza</div>
                         </div>
                         <div className="rounded-lg bg-neutral-900/90 border border-neutral-800 p-1.5">
-                          <div className="text-emerald-400 font-bold">✓ Semitono</div>
+                          <div className="text-emerald-400">✓ Semitono</div>
                           <div className="text-neutral-500 text-[9px]">Trama DTF</div>
                         </div>
                         <div className="rounded-lg bg-neutral-900/90 border border-neutral-800 p-1.5">
-                          <div className="text-purple-400 font-bold">✓ 300 DPI</div>
+                          <div className="text-purple-400">✓ 300 DPI</div>
                           <div className="text-neutral-500 text-[9px]">Exportación</div>
                         </div>
                       </div>
                     </div>
 
-                    <div className="flex items-center justify-between pt-2 border-t border-neutral-800/80 text-[11px] text-neutral-400 font-medium">
-                      <span>Bitácora técnica y diagnóstico</span>
-                      <span className="text-purple-400 font-semibold">Ver logs →</span>
+                    <div className="flex items-center justify-between pt-2 border-t border-neutral-800/80 text-[11px] uppercase tracking-wider font-bold text-neutral-400">
+                      <span>Bitácora técnica</span>
+                      <span className="text-purple-400">Ver logs →</span>
                     </div>
                   </div>
                 ),
               },
               {
                 id: "bento-settings",
+                title: "Pasarela y Parámetros",
                 colSpan: 2,
                 rowSpan: 1,
                 onClick: () => setActiveTab("settings"),
                 content: (
-                  <div className="flex h-full flex-col justify-between select-none">
+                  <div className="flex h-full flex-col justify-between select-none font-tanker tracking-wide">
                     <div className="flex items-center justify-between text-xs">
-                      <div className="flex items-center gap-2 text-neutral-400 font-semibold tracking-wide uppercase text-[11px]">
+                      <div className="flex items-center gap-2 text-neutral-300 font-bold tracking-wider uppercase text-[11px]">
                         <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
                           <Settings className="h-3.5 w-3.5" />
                         </span>
                         <span>Pasarela & Parámetros</span>
                       </div>
-                      <span className="rounded-full bg-cyan-500/10 border border-cyan-500/20 px-2 py-0.5 text-[10px] text-cyan-300 font-bold">
+                      <span className="rounded-full bg-cyan-500/10 border border-cyan-500/20 px-2 py-0.5 text-[10px] uppercase font-bold tracking-wider text-cyan-300">
                         Live Config
                       </span>
                     </div>
@@ -416,28 +421,28 @@ export default function AdminPage() {
                     <div className="my-auto py-1.5">
                       <div className="grid grid-cols-3 gap-2">
                         <div className="rounded-xl bg-neutral-900/90 border border-neutral-800 p-2 text-left">
-                          <div className="text-[10px] uppercase font-bold text-neutral-400">Precio Plan</div>
-                          <div className="text-sm sm:text-base font-black text-white mt-0.5">${planPriceUsd} USD</div>
-                          <div className="text-[9px] text-neutral-500">Recurrente</div>
+                          <div className="text-[10px] uppercase font-bold tracking-wider text-neutral-400">Precio Plan</div>
+                          <div className="text-sm sm:text-base font-black text-white mt-0.5 font-tanker">${planPriceUsd} USD</div>
+                          <div className="text-[9px] uppercase tracking-wider text-neutral-500 font-bold">Recurrente</div>
                         </div>
                         <div className="rounded-xl bg-neutral-900/90 border border-neutral-800 p-2 text-left">
-                          <div className="text-[10px] uppercase font-bold text-neutral-400">Retención</div>
-                          <div className="text-sm sm:text-base font-black text-white mt-0.5">{fileRetentionMinutes || 60} min</div>
-                          <div className="text-[9px] text-neutral-500">Auto-purga</div>
+                          <div className="text-[10px] uppercase font-bold tracking-wider text-neutral-400">Retención</div>
+                          <div className="text-sm sm:text-base font-black text-white mt-0.5 font-tanker">{fileRetentionMinutes || 60} min</div>
+                          <div className="text-[9px] uppercase tracking-wider text-neutral-500 font-bold">Auto-purga</div>
                         </div>
                         <div className="rounded-xl bg-neutral-900/90 border border-neutral-800 p-2 text-left">
-                          <div className="text-[10px] uppercase font-bold text-neutral-400">Stripe Price ID</div>
-                          <div className="text-xs sm:text-sm font-black text-white mt-0.5 truncate font-mono">
+                          <div className="text-[10px] uppercase font-bold tracking-wider text-neutral-400">Stripe Price ID</div>
+                          <div className="text-xs sm:text-sm font-black text-white mt-0.5 truncate font-tanker">
                             {stripePriceId ? stripePriceId.slice(0, 10) + "..." : "Enlazado"}
                           </div>
-                          <div className="text-[9px] text-neutral-500">Sincronizado</div>
+                          <div className="text-[9px] uppercase tracking-wider text-neutral-500 font-bold">Sincronizado</div>
                         </div>
                       </div>
                     </div>
 
-                    <div className="flex items-center justify-between pt-2 border-t border-neutral-800/80 text-[11px] text-neutral-400 font-medium">
-                      <span>Ajustar precio, retención y webhook</span>
-                      <span className="text-cyan-400 font-semibold">Configurar →</span>
+                    <div className="flex items-center justify-between pt-2 border-t border-neutral-800/80 text-[11px] uppercase tracking-wider font-bold text-neutral-400">
+                      <span>Ajustar precio y pasarela</span>
+                      <span className="text-cyan-400">Configurar →</span>
                     </div>
                   </div>
                 ),
@@ -452,10 +457,10 @@ export default function AdminPage() {
             enableBorderGlow={true}
             enableSpotlight={true}
             spotlightRadius={280}
-            enableTilt={true}
-            enableMagnetism={true}
+            enableTilt={false}
+            enableMagnetism={false}
             clickEffect={true}
-            intro={true}
+            intro={false}
           />
         </div>
       )}
