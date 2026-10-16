@@ -11,8 +11,8 @@ import {
 } from "lucide-react";
 import { CornerButton } from "@/components/ui/corner-button";
 import { GlareCard } from "@/components/ui/glare-card";
-
 import LampDemo from "@/components/lamp-demo";
+import { AnimatedContent } from "@/components/AnimatedContent";
 
 export default function HomePage() {
   const prepTools = [
@@ -62,143 +62,151 @@ export default function HomePage() {
       </section>
 
       {/* Ficha de Calibración Técnica de Taller */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-xs text-[#8E95A5] bg-[#16181D] border border-[#20232A] px-6 py-3.5 rounded-xl shadow-inner">
-        <div className="flex items-center gap-2">
-          <span className="inline-block h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          <span className="text-[#F3F4F6] font-bold">TALLER DTF LISTO:</span>
-          <span className="text-[#8E95A5]">Archivos listos para imprimir directo en tela</span>
+      <AnimatedContent distance={30} delay={0.1} trigger="mount">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-xs text-[#8E95A5] bg-[#16181D] border border-[#20232A] px-6 py-3.5 rounded-xl shadow-inner">
+          <div className="flex items-center gap-2">
+            <span className="inline-block h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span className="text-[#F3F4F6] font-bold">TALLER DTF LISTO:</span>
+            <span className="text-[#8E95A5]">Archivos listos para imprimir directo en tela</span>
+          </div>
+          <div className="flex items-center gap-6">
+            <div>
+              <span className="text-[#8E95A5]/60 block text-[10px]">ANCHO BOBINA</span>
+              <span className="text-[#F3F4F6] font-semibold">58.0 cm</span>
+            </div>
+            <div className="h-6 w-px bg-[#20232A]" />
+            <div>
+              <span className="text-[#8E95A5]/60 block text-[10px]">RESOLUCIÓN</span>
+              <span className="text-[#F3F4F6] font-semibold">300 DPI</span>
+            </div>
+            <div className="h-6 w-px bg-[#20232A]" />
+            <div>
+              <span className="text-[#8E95A5]/60 block text-[10px]">CALIFICACIÓN</span>
+              <span className="text-white font-semibold">Semáforo DTF</span>
+            </div>
+          </div>
         </div>
-        <div className="flex items-center gap-6">
-          <div>
-            <span className="text-[#8E95A5]/60 block text-[10px]">ANCHO BOBINA</span>
-            <span className="text-[#F3F4F6] font-semibold">58.0 cm</span>
-          </div>
-          <div className="h-6 w-px bg-[#20232A]" />
-          <div>
-            <span className="text-[#8E95A5]/60 block text-[10px]">RESOLUCIÓN</span>
-            <span className="text-[#F3F4F6] font-semibold">300 DPI</span>
-          </div>
-          <div className="h-6 w-px bg-[#20232A]" />
-          <div>
-            <span className="text-[#8E95A5]/60 block text-[10px]">CALIFICACIÓN</span>
-            <span className="text-white font-semibold">Semáforo DTF</span>
-          </div>
-        </div>
-      </div>
+      </AnimatedContent>
 
       {/* SECCIÓN 1: CHECADOR DE CALIDAD DTF */}
       <section>
-        <div className="mb-4 flex items-center justify-between border-b border-[#20232A] pb-2">
-          <h3 className="font-mono text-xs uppercase tracking-wider text-white font-semibold flex items-center gap-2">
-            <span>Checador de Calidad (Revisión antes de imprimir)</span>
-          </h3>
-          <span className="font-mono text-xs text-[#8E95A5]/60">
-            Evita echar a perder film o desperdiciar tinta
-          </span>
-        </div>
+        <AnimatedContent distance={35} delay={0.15}>
+          <div className="mb-4 flex items-center justify-between border-b border-[#20232A] pb-2">
+            <h3 className="font-mono text-xs uppercase tracking-wider text-white font-semibold flex items-center gap-2">
+              <span>Checador de Calidad (Revisión antes de imprimir)</span>
+            </h3>
+            <span className="font-mono text-xs text-[#8E95A5]/60">
+              Evita echar a perder film o desperdiciar tinta
+            </span>
+          </div>
 
-        {/* Tarjeta Escáner DTF con GlareCard */}
-        <GlareCard glareColor="white" className="p-6 lg:p-7">
-          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-            <div className="flex-1">
-              <div className="flex items-center gap-3 mb-2">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-white/20 bg-white/5 text-white">
-                  <ScanSearch className="h-5 w-5 text-white" />
-                </div>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <h3 className="text-xl font-bold text-white tracking-tight">
-                      Revisar si tu Diseño está Listo para DTF
-                    </h3>
-                    <span className="font-mono text-xs text-white border border-white/30 bg-white/10 px-2 py-0.5 rounded font-bold">
-                      CALIFICACIÓN 0-100%
+          {/* Tarjeta Escáner DTF con GlareCard */}
+          <GlareCard glareColor="white" className="p-6 lg:p-7">
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+              <div className="flex-1">
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-white/20 bg-white/5 text-white">
+                    <ScanSearch className="h-5 w-5 text-white" />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <h3 className="text-xl font-bold text-white tracking-tight">
+                        Revisar si tu Diseño está Listo para DTF
+                      </h3>
+                      <span className="font-mono text-xs text-white border border-white/30 bg-white/10 px-2 py-0.5 rounded font-bold">
+                        CALIFICACIÓN 0-100%
+                      </span>
+                    </div>
+                    <span className="font-mono text-xs text-[#8E95A5]">
+                      Checa si el fondo es transparente • Alerta de bordes blancos raros • Calcula medidas reales
                     </span>
                   </div>
-                  <span className="font-mono text-xs text-[#8E95A5]">
-                    Checa si el fondo es transparente • Alerta de bordes blancos raros • Calcula medidas reales
-                  </span>
                 </div>
+
+                <p className="mt-3 text-xs text-[#8E95A5] max-w-2xl leading-relaxed">
+                  Sube tu imagen y te decimos de volada si está lista: revisa si el fondo quedó 100% limpio, te avisa si hay manchas que harían salir tinta blanca de más, y te calcula el tamaño máximo en centímetros para que tu estampado se vea clarito y no pixeleado.
+                </p>
               </div>
 
-              <p className="mt-3 text-xs text-[#8E95A5] max-w-2xl leading-relaxed">
-                Sube tu imagen y te decimos de volada si está lista: revisa si el fondo quedó 100% limpio, te avisa si hay manchas que harían salir tinta blanca de más, y te calcula el tamaño máximo en centímetros para que tu estampado se vea clarito y no pixeleado.
-              </p>
+              <div className="flex flex-col sm:flex-row lg:flex-col gap-3 shrink-0 items-start">
+                <CornerButton
+                  href="/tools/scanner"
+                  variant="white"
+                  size="lg"
+                  icon={<ScanSearch className="h-4 w-4 text-[#0D0E11]" />}
+                >
+                  Revisar mi diseño ahora
+                </CornerButton>
+              </div>
             </div>
-
-            <div className="flex flex-col sm:flex-row lg:flex-col gap-3 shrink-0 items-start">
-              <CornerButton
-                href="/tools/scanner"
-                variant="white"
-                size="lg"
-                icon={<ScanSearch className="h-4 w-4 text-[#0D0E11]" />}
-              >
-                Revisar mi diseño ahora
-              </CornerButton>
-            </div>
-          </div>
-        </GlareCard>
+          </GlareCard>
+        </AnimatedContent>
       </section>
 
       {/* SECCIÓN 2: ARMADOR DE PLIEGOS */}
       <section>
-        <GlareCard glareColor="white" className="p-6 lg:p-8">
-          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-            <div className="flex-1">
-              <div className="flex items-center gap-2.5 mb-2">
-                <span className="font-mono text-xs text-white border border-white/20 px-2 py-0.5 rounded bg-white/5 font-semibold">
-                  MÓDULO PRINCIPAL
-                </span>
-                <span className="font-mono text-xs text-[#8E95A5]">
-                  Pliegos de 58 × 100 cm y 58 × 200 cm
-                </span>
+        <AnimatedContent distance={40} delay={0.2}>
+          <GlareCard glareColor="white" className="p-6 lg:p-8">
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+              <div className="flex-1">
+                <div className="flex items-center gap-2.5 mb-2">
+                  <span className="font-mono text-xs text-white border border-white/20 px-2 py-0.5 rounded bg-white/5 font-semibold">
+                    MÓDULO PRINCIPAL
+                  </span>
+                  <span className="font-mono text-xs text-[#8E95A5]">
+                    Pliegos de 58 × 100 cm y 58 × 200 cm
+                  </span>
+                </div>
+
+                <h2 className="text-xl sm:text-2xl font-bold text-[#F3F4F6] tracking-tight">
+                  Armar mi Metro DTF (Bobina de 58 cm)
+                </h2>
+                <p className="mt-2 text-sm text-[#8E95A5] max-w-2xl leading-relaxed">
+                  Acomoda varios diseños en un solo lienzo de 58 cm de ancho. Arrastra tus imágenes, duplica para llenar el metro con 1 clic, usa medidas estándar para ropa (pecho, espalda, gorras) y descarga tu archivo listo para mandar a la máquina.
+                </p>
+
+                <div className="mt-4 flex flex-wrap gap-2 text-xs font-mono text-[#8E95A5]">
+                  <span className="rounded bg-[#0D0E11] border border-[#20232A] px-2.5 py-1">
+                    Formatos: 1 metro (58×100 cm) y 2 metros (58×200 cm)
+                  </span>
+                  <span className="rounded bg-[#0D0E11] border border-[#20232A] px-2.5 py-1">
+                    Arrastra y acomoda libremente
+                  </span>
+                  <span className="rounded bg-[#0D0E11] border border-[#20232A] px-2.5 py-1">
+                    Medidas listas: Pecho, A4, A3, Espalda, Gorra
+                  </span>
+                </div>
               </div>
 
-              <h2 className="text-xl sm:text-2xl font-bold text-[#F3F4F6] tracking-tight">
-                Armar mi Metro DTF (Bobina de 58 cm)
-              </h2>
-              <p className="mt-2 text-sm text-[#8E95A5] max-w-2xl leading-relaxed">
-                Acomoda varios diseños en un solo lienzo de 58 cm de ancho. Arrastra tus imágenes, duplica para llenar el metro con 1 clic, usa medidas estándar para ropa (pecho, espalda, gorras) y descarga tu archivo listo para mandar a la máquina.
-              </p>
-
-              <div className="mt-4 flex flex-wrap gap-2 text-xs font-mono text-[#8E95A5]">
-                <span className="rounded bg-[#0D0E11] border border-[#20232A] px-2.5 py-1">
-                  Formatos: 1 metro (58×100 cm) y 2 metros (58×200 cm)
-                </span>
-                <span className="rounded bg-[#0D0E11] border border-[#20232A] px-2.5 py-1">
-                  Arrastra y acomoda libremente
-                </span>
-                <span className="rounded bg-[#0D0E11] border border-[#20232A] px-2.5 py-1">
-                  Medidas listas: Pecho, A4, A3, Espalda, Gorra
-                </span>
+              <div className="flex flex-col sm:flex-row lg:flex-col gap-3 shrink-0 items-start">
+                <CornerButton
+                  href="/tools/dtf-builder"
+                  variant="white"
+                  size="lg"
+                  icon={<LayoutGrid className="h-4 w-4 text-[#0D0E11]" />}
+                >
+                  Armar mi metro DTF
+                </CornerButton>
               </div>
             </div>
-
-            <div className="flex flex-col sm:flex-row lg:flex-col gap-3 shrink-0 items-start">
-              <CornerButton
-                href="/tools/dtf-builder"
-                variant="white"
-                size="lg"
-                icon={<LayoutGrid className="h-4 w-4 text-[#0D0E11]" />}
-              >
-                Armar mi metro DTF
-              </CornerButton>
-            </div>
-          </div>
-        </GlareCard>
+          </GlareCard>
+        </AnimatedContent>
       </section>
 
       {/* SECCIÓN 3: HERRAMIENTAS RÁPIDAS PARA TUS DISEÑOS */}
       <section>
-        <div className="mb-4 flex items-center justify-between border-b border-[#20232A] pb-2">
-          <h3 className="font-mono text-xs uppercase tracking-wider text-[#8E95A5]">
-            Herramientas Rápidas para tus Diseños
-          </h3>
-          <span className="font-mono text-xs text-[#8E95A5]/60">
-            4 opciones para dejar tus archivos al tiro
-          </span>
-        </div>
+        <AnimatedContent distance={30}>
+          <div className="mb-4 flex items-center justify-between border-b border-[#20232A] pb-2">
+            <h3 className="font-mono text-xs uppercase tracking-wider text-[#8E95A5]">
+              Herramientas Rápidas para tus Diseños
+            </h3>
+            <span className="font-mono text-xs text-[#8E95A5]/60">
+              4 opciones para dejar tus archivos al tiro
+            </span>
+          </div>
+        </AnimatedContent>
 
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <AnimatedContent distance={40} stagger={0.12} className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {prepTools.map((tool) => {
             const Icon = tool.icon;
             return (
@@ -242,7 +250,7 @@ export default function HomePage() {
               </GlareCard>
             );
           })}
-        </div>
+        </AnimatedContent>
       </section>
     </div>
   );

@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Lock, Mail, Loader2, AlertCircle } from "lucide-react";
+import { AnimatedContent } from "@/components/AnimatedContent";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -44,7 +45,8 @@ export default function LoginPage() {
 
   return (
     <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center px-4 py-12 bg-black">
-      <div className="w-full max-w-md rounded-2xl border border-neutral-800 bg-neutral-950 p-8 shadow-2xl">
+      <AnimatedContent distance={25} scale={0.96} duration={0.65} trigger="mount" className="w-full max-w-md">
+        <div className="w-full rounded-2xl border border-neutral-800 bg-neutral-950 p-8 shadow-2xl">
         <div className="mb-6 text-center">
           <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-white text-black font-black text-xl mb-3 shadow-glow-white">
             P
@@ -108,13 +110,14 @@ export default function LoginPage() {
           </button>
         </form>
 
-        <div className="mt-6 text-center text-xs text-neutral-400">
-          ¿No tienes una cuenta aún?{" "}
-          <Link href="/auth/register" className="font-bold text-white hover:underline">
-            Comienza tu prueba de 5 días gratis
-          </Link>
+          <div className="mt-6 text-center text-xs text-neutral-400">
+            ¿No tienes una cuenta aún?{" "}
+            <Link href="/auth/register" className="font-bold text-white hover:underline">
+              Comienza tu prueba de 5 días gratis
+            </Link>
+          </div>
         </div>
-      </div>
+      </AnimatedContent>
     </div>
   );
 }

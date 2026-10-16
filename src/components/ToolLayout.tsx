@@ -17,6 +17,7 @@ import {
   Maximize2,
   FolderOpen
 } from "lucide-react";
+import { AnimatedContent } from "@/components/AnimatedContent";
 
 interface ToolLayoutProps {
   title: string;
@@ -247,42 +248,46 @@ export function ToolLayout({
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-6">
       {/* Encabezado Técnico de Herramienta */}
-      <div className="rounded-2xl border border-[#20232A] bg-[#16181D]/90 p-6 sm:p-8 backdrop-blur-sm">
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <div className="space-y-2">
-            <div className="flex flex-wrap items-center gap-3">
-              <h1 className="text-2xl sm:text-3xl font-extrabold text-[#F3F4F6] tracking-tight">
-                {title}
-              </h1>
-              <span className="font-mono text-xs font-bold text-white border border-white/20 bg-white/10 px-3 py-1 rounded-full">
-                {badge}
-              </span>
+      <AnimatedContent distance={25} trigger="mount">
+        <div className="rounded-2xl border border-[#20232A] bg-[#16181D]/90 p-6 sm:p-8 backdrop-blur-sm">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div className="space-y-2">
+              <div className="flex flex-wrap items-center gap-3">
+                <h1 className="text-2xl sm:text-3xl font-extrabold text-[#F3F4F6] tracking-tight">
+                  {title}
+                </h1>
+                <span className="font-mono text-xs font-bold text-white border border-white/20 bg-white/10 px-3 py-1 rounded-full">
+                  {badge}
+                </span>
+              </div>
+              <p className="text-sm text-[#8E95A5] max-w-3xl leading-relaxed">
+                {description}
+              </p>
             </div>
-            <p className="text-sm text-[#8E95A5] max-w-3xl leading-relaxed">
-              {description}
-            </p>
-          </div>
 
-          {file && (
-            <button
-              onClick={handleReset}
-              className="flex items-center gap-2 rounded-xl border border-[#20232A] bg-[#0D0E11] px-4 py-2.5 text-xs font-semibold text-[#F3F4F6] hover:border-[#8E95A5]/60 hover:bg-[#1A1C23] transition-all shadow-sm"
-            >
-              <RefreshCw className="h-4 w-4 text-[#8E95A5]" />
-              <span>Cambiar imagen</span>
-            </button>
-          )}
+            {file && (
+              <button
+                onClick={handleReset}
+                className="flex items-center gap-2 rounded-xl border border-[#20232A] bg-[#0D0E11] px-4 py-2.5 text-xs font-semibold text-[#F3F4F6] hover:border-[#8E95A5]/60 hover:bg-[#1A1C23] transition-all shadow-sm"
+              >
+                <RefreshCw className="h-4 w-4 text-[#8E95A5]" />
+                <span>Cambiar imagen</span>
+              </button>
+            )}
+          </div>
         </div>
-      </div>
+      </AnimatedContent>
 
       {/* Controles de Parámetros Específicos */}
       {renderControls && (
-        <div className="rounded-2xl border border-[#20232A] bg-[#16181D] p-6 sm:p-7 shadow-sm">
-          <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-[#8E95A5] mb-4 flex items-center gap-2">
-            <span>Ajustes de Calibración</span>
-          </h3>
-          {renderControls(originalPreview, setCustomParam, customParams)}
-        </div>
+        <AnimatedContent distance={20} delay={0.08} trigger="mount">
+          <div className="rounded-2xl border border-[#20232A] bg-[#16181D] p-6 sm:p-7 shadow-sm">
+            <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-[#8E95A5] mb-4 flex items-center gap-2">
+              <span>Ajustes de Calibración</span>
+            </h3>
+            {renderControls(originalPreview, setCustomParam, customParams)}
+          </div>
+        </AnimatedContent>
       )}
 
       {/* Mensaje de Error con acción directa y botones grandes */}
@@ -321,8 +326,9 @@ export function ToolLayout({
       )}
 
       {/* Grid Técnico: ENTRADA Y RESULTADO */}
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        {/* ================= SECCIÓN 1: ENTRADA ================= */}
+      <AnimatedContent distance={30} delay={0.12} trigger="mount">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+          {/* ================= SECCIÓN 1: ENTRADA ================= */}
         <div className="flex flex-col justify-between rounded-2xl border border-[#20232A] bg-[#16181D] p-6 shadow-sm">
           <div>
             <div className="mb-4 flex items-center justify-between border-b border-[#20232A] pb-3">
@@ -581,6 +587,7 @@ export function ToolLayout({
           )}
         </div>
       </div>
+      </AnimatedContent>
     </div>
   );
 }

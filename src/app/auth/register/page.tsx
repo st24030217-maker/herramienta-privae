@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Lock, Mail, User, Loader2, AlertCircle, CheckCircle2 } from "lucide-react";
+import { AnimatedContent } from "@/components/AnimatedContent";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -45,7 +46,8 @@ export default function RegisterPage() {
 
   return (
     <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center px-4 py-12 bg-black">
-      <div className="w-full max-w-md rounded-2xl border border-neutral-800 bg-neutral-950 p-8 shadow-2xl">
+      <AnimatedContent distance={25} scale={0.96} duration={0.65} trigger="mount" className="w-full max-w-md">
+        <div className="w-full rounded-2xl border border-neutral-800 bg-neutral-950 p-8 shadow-2xl">
         <div className="mb-6 text-center">
           <div className="mx-auto inline-flex items-center gap-1.5 rounded-full border border-neutral-700 bg-neutral-900 px-3 py-1 text-xs font-bold text-white mb-3">
             <CheckCircle2 className="h-3.5 w-3.5" /> 5 Días de Prueba Gratis
@@ -125,13 +127,14 @@ export default function RegisterPage() {
           </button>
         </form>
 
-        <div className="mt-6 text-center text-xs text-neutral-400">
-          ¿Ya tienes una cuenta?{" "}
-          <Link href="/auth/login" className="font-bold text-white hover:underline">
-            Inicia sesión aquí
-          </Link>
+          <div className="mt-6 text-center text-xs text-neutral-400">
+            ¿Ya tienes una cuenta?{" "}
+            <Link href="/auth/login" className="font-bold text-white hover:underline">
+              Inicia sesión aquí
+            </Link>
+          </div>
         </div>
-      </div>
+      </AnimatedContent>
     </div>
   );
 }

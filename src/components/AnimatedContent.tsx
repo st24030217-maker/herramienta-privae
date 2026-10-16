@@ -1,26 +1,60 @@
 'use client';
 
-import { useEffect, useLayoutEffect, useRef } from 'react';
+import React, { useEffect, useLayoutEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-gsap.registerPlugin(ScrollTrigger);
+if (typeof window !== 'undefined') {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
 
-const WIPES = {
-  up: 'linear-gradient(to top, #000 calc(var(--ac-wipe) * 140% - 40%), transparent 140%))',
-  down: 'linear-gradient(to bottom, #000 calc(var(--ac-wipe) * 140% - 40%), transparent 140%))',
-  left: 'linear-gradient(to left, #000 calc(var(--ac-wipe) * 140% - 40%), transparent 140%))',
-  right: 'linear-gradient(to right, #000 calc(var(--ac-wipe) * 140% - 40%), transparent 140%))',
+const WIPES: Record<string, string> = {
+  up: 'linear-gradient(to top, #000 calc(var(--ac-wipe) * 140% - 40%), transparent 140%)',
+  down: 'linear-gradient(to bottom, #000 calc(var(--ac-wipe) * 140% - 40%), transparent 140%)',
+  left: 'linear-gradient(to left, #000 calc(var(--ac-wipe) * 140% - 40%), transparent 140%)',
+  right: 'linear-gradient(to right, #000 calc(var(--ac-wipe) * 140% - 40%), transparent 140%)',
   center:
-    'radial-gradient(farthest-corner at 50% 50%, #000 calc(var(--ac-wipe) * 140% - 40%), transparent 140%))'
+    'radial-gradient(farthest-corner at 50% 50%, #000 calc(var(--ac-wipe) * 140% - 40%), transparent 140%)'
 };
 
-const AnimatedContent = ({
+export interface AnimatedContentProps extends React.HTMLAttributes<HTMLDivElement> {
+  children: React.ReactNode;
+  container?: HTMLElement | string | null;
+  distance?: number;
+  direction?: 'vertical' | 'horizontal';
+  reverse?: boolean;
+  duration?: number;
+  ease?: string;
+  initialOpacity?: number;
+  animateOpacity?: boolean;
+  scale?: number;
+  blur?: number;
+  rotate?: number;
+  tilt?: number;
+  wipe?: 'none' | 'up' | 'down' | 'left' | 'right' | 'center';
+  threshold?: number;
+  delay?: number;
+  stagger?: number;
+  staggerFrom?: 'start' | 'center' | 'end' | 'edges' | 'random' | number;
+  trigger?: 'scroll' | 'mount';
+  once?: boolean;
+  scrub?: boolean | number;
+  disappearAfter?: number;
+  disappearDuration?: number;
+  disappearEase?: string;
+  onStart?: () => void;
+  onComplete?: () => void;
+  onDisappearanceComplete?: () => void;
+  className?: string;
+  style?: React.CSSProperties;
+}
+
+export const AnimatedContent: React.FC<AnimatedContentProps> = ({
   children,
   container,
-  distance = 100,
+  distance = 60,
   direction = 'vertical',
   reverse = false,
   duration = 0.8,
@@ -49,7 +83,7 @@ const AnimatedContent = ({
   style,
   ...props
 }) => {
-  const ref = useRef(null);
+  const ref = useRef<HTMLDivElement>(null);
   const callbacksRef = useRef({ onStart, onComplete, onDisappearanceComplete });
   callbacksRef.current = { onStart, onComplete, onDisappearanceComplete };
 
@@ -57,8 +91,14 @@ const AnimatedContent = ({
     const el = ref.current;
     if (!el) return undefined;
 
-    let scroller = container || document.getElementById('snap-main-container') || null;
-    if (typeof scroller === 'string') scroller = document.querySelector(scroller);
+    let scroller: Element | null = null;
+    if (typeof container === 'string') {
+      scroller = document.querySelector(container);
+    } else if (container instanceof HTMLElement) {
+      scroller = container;
+    } else {
+      scroller = document.getElementById('snap-main-container');
+    }
 
     const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
 
@@ -67,7 +107,7 @@ const AnimatedContent = ({
       const horizontal = direction === 'horizontal';
       const axis = horizontal ? 'x' : 'y';
       const sign = reverse ? -1 : 1;
-      const mask = WIPES[wipe];
+      const mask = wipe !== 'none' ? WIPES[wipe] : undefined;
 
       gsap.set(el, { visibility: 'visible' });
 
@@ -76,12 +116,12 @@ const AnimatedContent = ({
         return;
       }
 
-      const from = {
+      const from: Record<string, any> = {
         [axis]: distance * sign,
         scale,
         opacity: animateOpacity ? initialOpacity : 1
       };
-      const to = {
+      const to: Record<string, any> = {
         [axis]: 0,
         scale: 1,
         opacity: 1,
@@ -118,7 +158,7 @@ const AnimatedContent = ({
 
       const disappear = () => {
         if (disappearAfter <= 0) return;
-        const out = {
+        const out: Record<string, any> = {
           [axis]: -distance * sign,
           scale: 0.8,
           opacity: animateOpacity ? initialOpacity : 0,
@@ -148,24 +188,10 @@ const AnimatedContent = ({
         return;
       }
 
-      const start = `top ${(1 - threshold) * 100}%`;
-
-      if (scrub) {
-        ScrollTrigger.create({
-          trigger: el,
-          scroller,
-          start,
-          end: `top ${Math.max((1 - threshold) * 100 - 45, 5)}%`,
-          scrub: scrub === true ? true : Math.max(Number(scrub) || 0, 0.01),
-          animation: tl
-        });
-        return;
-      }
-
       ScrollTrigger.create({
         trigger: el,
-        scroller,
-        start,
+        scroller: scroller || undefined,
+        start: `top ${(1 - threshold) * 100}%`,
         once,
         onEnter: () => tl.play(),
         onLeaveBack: once

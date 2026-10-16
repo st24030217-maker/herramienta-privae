@@ -9,6 +9,7 @@ import {
   RefreshCw,
   Sparkles
 } from "lucide-react";
+import { AnimatedContent } from "@/components/AnimatedContent";
 
 interface UserAccountData {
   id: string;
@@ -123,14 +124,16 @@ export default function AccountPage() {
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-10 sm:px-6 lg:px-8">
-      <div className="mb-8 border-b border-neutral-800 pb-5">
-        <h1 className="text-2xl sm:text-3xl font-black text-white uppercase tracking-tight">
-          Mi Cuenta & Membresía
-        </h1>
-        <p className="mt-1 text-xs sm:text-sm text-neutral-400">
-          Gestiona el estado de tu prueba, suscripción recurrente y métodos de pago de Privae Textil.
-        </p>
-      </div>
+      <AnimatedContent distance={20} trigger="mount">
+        <div className="mb-8 border-b border-neutral-800 pb-5">
+          <h1 className="text-2xl sm:text-3xl font-black text-white uppercase tracking-tight">
+            Mi Cuenta & Membresía
+          </h1>
+          <p className="mt-1 text-xs sm:text-sm text-neutral-400">
+            Gestiona el estado de tu prueba, suscripción recurrente y métodos de pago de Privae Textil.
+          </p>
+        </div>
+      </AnimatedContent>
 
       {feedback && (
         <div
@@ -157,8 +160,9 @@ export default function AccountPage() {
         </div>
       )}
 
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-        {/* Tarjeta de Información de Usuario */}
+      <AnimatedContent distance={25} delay={0.1} trigger="mount">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+          {/* Tarjeta de Información de Usuario */}
         <div className="rounded-2xl border border-neutral-800 bg-neutral-950 p-6 md:col-span-1">
           <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white text-black font-black text-lg mb-4">
             {user.name ? user.name.charAt(0).toUpperCase() : "U"}
@@ -256,6 +260,7 @@ export default function AccountPage() {
           </div>
         </div>
       </div>
+      </AnimatedContent>
     </div>
   );
 }

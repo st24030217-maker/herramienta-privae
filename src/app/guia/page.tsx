@@ -26,6 +26,7 @@ import {
   Download,
   Keyboard
 } from "lucide-react";
+import { AnimatedContent } from "@/components/AnimatedContent";
 
 interface StepGuide {
   id: string;
@@ -211,34 +212,36 @@ export default function GuiaPage() {
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-12">
       {/* HEADER HERO DEL MANUAL */}
-      <div className="rounded-3xl border border-[#20232A] bg-gradient-to-b from-[#16181D] to-[#0D0E11] p-8 sm:p-12 text-center relative overflow-hidden shadow-2xl">
-        <div className="mx-auto max-w-3xl space-y-4 relative z-10">
-          <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-mono font-bold text-white tracking-wider uppercase">
-            <BookOpen className="h-4 w-4 text-white" />
-            <span>Manual Oficial del Taller • Guía de Primera Vez</span>
-          </div>
+      <AnimatedContent distance={30} trigger="mount">
+        <div className="rounded-3xl border border-[#20232A] bg-gradient-to-b from-[#16181D] to-[#0D0E11] p-8 sm:p-12 text-center relative overflow-hidden shadow-2xl">
+          <div className="mx-auto max-w-3xl space-y-4 relative z-10">
+            <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-mono font-bold text-white tracking-wider uppercase">
+              <BookOpen className="h-4 w-4 text-white" />
+              <span>Manual Oficial del Taller • Guía de Primera Vez</span>
+            </div>
 
-          <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-[#F3F4F6]">
-            Cómo Preparar tus Diseños DTF como un Profesional
-          </h1>
+            <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-[#F3F4F6]">
+              Cómo Preparar tus Diseños DTF como un Profesional
+            </h1>
 
-          <p className="text-sm sm:text-base text-[#8E95A5] leading-relaxed">
-            Sin rollos técnicos ni rodeos: aprende el camino exacto para pasar de una imagen cualquiera a un metro de 58 cm listo para imprimir a 300 DPI, con base blanca calibrada y sin sorpresas en la tela.
-          </p>
+            <p className="text-sm sm:text-base text-[#8E95A5] leading-relaxed">
+              Sin rollos técnicos ni rodeos: aprende el camino exacto para pasar de una imagen cualquiera a un metro de 58 cm listo para imprimir a 300 DPI, con base blanca calibrada y sin sorpresas en la tela.
+            </p>
 
-          <div className="pt-2 flex flex-wrap items-center justify-center gap-4 text-xs font-mono text-neutral-400">
-            <span className="flex items-center gap-1.5">
-              <CheckCircle2 className="h-4 w-4 text-white" /> Sin orillas lechosas
-            </span>
-            <span className="flex items-center gap-1.5">
-              <CheckCircle2 className="h-4 w-4 text-white" /> 300 DPI certificados
-            </span>
-            <span className="flex items-center gap-1.5">
-              <CheckCircle2 className="h-4 w-4 text-white" /> Aprovecha todo el metro
-            </span>
+            <div className="pt-2 flex flex-wrap items-center justify-center gap-4 text-xs font-mono text-neutral-400">
+              <span className="flex items-center gap-1.5">
+                <CheckCircle2 className="h-4 w-4 text-white" /> Sin orillas lechosas
+              </span>
+              <span className="flex items-center gap-1.5">
+                <CheckCircle2 className="h-4 w-4 text-white" /> 300 DPI certificados
+              </span>
+              <span className="flex items-center gap-1.5">
+                <CheckCircle2 className="h-4 w-4 text-white" /> Aprovecha todo el metro
+              </span>
+            </div>
           </div>
         </div>
-      </div>
+      </AnimatedContent>
 
       {/* RUTA DE 6 PASOS DEL TALLER (SELECTOR INTERACTIVO) */}
       <section className="space-y-6">
