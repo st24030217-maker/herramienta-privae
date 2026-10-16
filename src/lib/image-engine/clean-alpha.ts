@@ -27,7 +27,7 @@ export async function cleanAlphaChannel(
     removeSpeckles = true
   } = options;
 
-  const image = sharp(imageBuffer).ensureAlpha();
+  const image = sharp(imageBuffer, { limitInputPixels: false }).ensureAlpha();
   const { data, info } = await image.raw().toBuffer({ resolveWithObject: true });
   const { width, height, channels } = info;
   const totalPixels = width * height;
@@ -144,6 +144,7 @@ export async function cleanAlphaChannel(
   }
 
   return await sharp(outputData, {
+    limitInputPixels: false,
     raw: {
       width,
       height,

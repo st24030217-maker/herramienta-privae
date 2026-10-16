@@ -124,13 +124,19 @@ export function Navbar() {
 
   const allNavItems = [...leftNavItems, ...rightNavItems];
 
-  // Contenido para el ala izquierda (Left Wing)
+  // Contenido para el ala izquierda (Left Wing) — Incluye navegación clara de regreso a la tienda oficial Privae Textil (Sección 06)
+  const storeUrl = process.env.NEXT_PUBLIC_STORE_URL || "https://privaetextil.com";
   const leftWingContent = (
     <div className="flex items-center gap-2 font-mono text-[11px] text-neutral-400 shrink-0 select-none">
-      <span className="h-1.5 w-1.5 rounded-full bg-white shrink-0"></span>
-      <span className="text-neutral-300 font-medium hidden md:inline shrink-0">TALLER DTF</span>
-      <span className="text-neutral-600 hidden lg:inline shrink-0">·</span>
-      <span className="hidden xl:inline shrink-0">300 DPI</span>
+      <a
+        href={storeUrl}
+        className="inline-flex items-center gap-1.5 rounded-lg border border-neutral-800 bg-[#16181D] px-2.5 py-1 text-[11px] font-mono font-bold text-neutral-200 hover:border-white/50 hover:text-white transition-all"
+        title="Regresar a la Tienda Oficial de Privae Textil"
+      >
+        <span>← Tienda Privae</span>
+      </a>
+      <span className="text-neutral-600 hidden xl:inline shrink-0">·</span>
+      <span className="hidden xl:inline shrink-0 text-neutral-300 font-semibold">300 DPI</span>
       <span className="text-neutral-600 hidden 2xl:inline shrink-0">·</span>
       <span className="text-neutral-400 hidden 2xl:inline shrink-0">58 CM</span>
     </div>

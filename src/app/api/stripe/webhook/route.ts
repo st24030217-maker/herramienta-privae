@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { stripe } from "@/lib/stripe";
 import { prisma } from "@/lib/prisma";
+import { sendTransactionalEventEmail } from "@/lib/email";
 import Stripe from "stripe";
 
 export async function POST(req: NextRequest) {
@@ -32,17 +33,29 @@ export async function POST(req: NextRequest) {
         const session = event.data.object as any;
         const userId = session.metadata?.userId;
         const customerId = session.customer as string;
-        const subscriptionId = (typeof session.subscription === "string" ? session.subscription : session.subscription?.id) as string;
+        const subscriptionId = (typeof session.subscription === "string"
+          ? session.subscription
+          : session.subscription?.id) as string;
 
         if (userId) {
           let currentPeriodEnd = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+          let paymentMethodBrand: string | null = null;
+          let paymentMethodLast4: string | null = null;
 
           if (subscriptionId) {
-            const stripeSub = (await stripe.subscriptions.retrieve(subscriptionId)) as any;
+            const stripeSub = (await stripe.subscriptions.retrieve(subscriptionId, {
+              expand: ["default_payment_method"],
+            })) as any;
             if (stripeSub?.current_period_end) {
               currentPeriodEnd = new Date(stripeSub.current_period_end * 1000);
             }
+            if (stripeSub?.default_payment_method?.card) {
+              paymentMethodBrand = stripeSub.default_payment_method.card.brand || "Tarjeta";
+              paymentMethodLast4 = stripeSub.default_payment_method.card.last4 || null;
+            }
           }
+
+          const amountPaid = (session.amount_total || 1999) / 100;
 
           await prisma.subscription.upsert({
             where: { userId },
@@ -52,6 +65,10 @@ export async function POST(req: NextRequest) {
               stripeSubscriptionId: subscriptionId,
               currentPeriodEnd,
               gracePeriodEndsAt: null,
+              cancelAtPeriodEnd: false,
+              paymentMethodBrand,
+              paymentMethodLast4,
+              planPrice: amountPaid,
             },
             create: {
               userId,
@@ -60,20 +77,36 @@ export async function POST(req: NextRequest) {
               stripeCustomerId: customerId,
               stripeSubscriptionId: subscriptionId,
               currentPeriodEnd,
-              planPrice: (session.amount_total || 1999) / 100,
+              paymentMethodBrand,
+              paymentMethodLast4,
+              planPrice: amountPaid,
             },
           });
 
-          // Registrar pago en historial
           await prisma.payment.create({
             data: {
               userId,
-              amount: (session.amount_total || 1999) / 100,
+              amount: amountPaid,
               currency: (session.currency || "usd").toUpperCase(),
               status: "PAID",
               gatewayReference: (session.payment_intent as string) || session.id,
             },
           });
+
+          const user = await prisma.user.findUnique({ where: { id: userId } });
+          if (user?.email) {
+            await sendTransactionalEventEmail({
+              userId: user.id,
+              recipient: user.email,
+              userName: user.name,
+              eventType: "PAGO_APROBADO",
+              extraData: {
+                amount: amountPaid,
+                currency: (session.currency || "usd").toUpperCase(),
+                currentPeriodEnd,
+              },
+            }).catch(() => {});
+          }
         }
         break;
       }
@@ -81,10 +114,13 @@ export async function POST(req: NextRequest) {
       case "invoice.payment_succeeded": {
         const invoice = event.data.object as any;
         const customerId = invoice.customer as string;
-        const subscriptionId = (typeof invoice.subscription === "string" ? invoice.subscription : invoice.subscription?.id) as string;
+        const subscriptionId = (typeof invoice.subscription === "string"
+          ? invoice.subscription
+          : invoice.subscription?.id) as string;
 
         const sub = await prisma.subscription.findFirst({
           where: { stripeCustomerId: customerId },
+          include: { user: true },
         });
 
         if (sub) {
@@ -96,25 +132,42 @@ export async function POST(req: NextRequest) {
             }
           }
 
+          const amountPaid = (invoice.amount_paid || 1999) / 100;
+
           await prisma.subscription.update({
             where: { id: sub.id },
             data: {
               status: "ACTIVE",
               currentPeriodEnd,
               gracePeriodEndsAt: null,
+              graceExpiredNoticeSent: false,
             },
           });
 
           await prisma.payment.create({
             data: {
               userId: sub.userId,
-              amount: (invoice.amount_paid || 1999) / 100,
+              amount: amountPaid,
               currency: (invoice.currency || "usd").toUpperCase(),
               status: "PAID",
               gatewayReference: (invoice.payment_intent as string) || invoice.id,
               invoiceUrl: invoice.hosted_invoice_url || null,
             },
           });
+
+          if (sub.user?.email) {
+            await sendTransactionalEventEmail({
+              userId: sub.userId,
+              recipient: sub.user.email,
+              userName: sub.user.name,
+              eventType: "PAGO_APROBADO",
+              extraData: {
+                amount: amountPaid,
+                currency: (invoice.currency || "usd").toUpperCase(),
+                currentPeriodEnd,
+              },
+            }).catch(() => {});
+          }
         }
         break;
       }
@@ -125,10 +178,11 @@ export async function POST(req: NextRequest) {
 
         const sub = await prisma.subscription.findFirst({
           where: { stripeCustomerId: customerId },
+          include: { user: true },
         });
 
         if (sub) {
-          // Activar 3 días naturales de período de gracia con aviso en plataforma
+          // Otorgar 3 días naturales de gracia (Sección 02 y 08 del PDF)
           const graceEndsAt = new Date();
           graceEndsAt.setDate(graceEndsAt.getDate() + 3);
 
@@ -137,6 +191,7 @@ export async function POST(req: NextRequest) {
             data: {
               status: "GRACE_PERIOD",
               gracePeriodEndsAt: graceEndsAt,
+              graceExpiredNoticeSent: false,
             },
           });
 
@@ -148,8 +203,21 @@ export async function POST(req: NextRequest) {
               status: "FAILED",
               gatewayReference: invoice.id,
               invoiceUrl: invoice.hosted_invoice_url || null,
+              failureReason:
+                invoice.last_finalization_error?.message ||
+                "Fallo en el cobro de renovación reportado por Stripe",
             },
           });
+
+          if (sub.user?.email) {
+            await sendTransactionalEventEmail({
+              userId: sub.userId,
+              recipient: sub.user.email,
+              userName: sub.user.name,
+              eventType: "PAGO_FALLIDO_GRACIA",
+              extraData: { gracePeriodEndsAt: graceEndsAt },
+            }).catch(() => {});
+          }
         }
         break;
       }

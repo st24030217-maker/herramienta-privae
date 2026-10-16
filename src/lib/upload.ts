@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-export const MAX_UPLOAD_BYTES = 25 * 1024 * 1024; // 25 MB
+export const MAX_UPLOAD_BYTES = 80 * 1024 * 1024; // 80 MB para soportar archivos grandes de hasta 58 × 200 cm a 300 DPI
 
 const ALLOWED_MIME_TYPES = new Set([
   "image/png",

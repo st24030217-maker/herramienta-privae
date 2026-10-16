@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { hashPassword, createSessionToken } from "@/lib/auth";
 import { rateLimit } from "@/lib/rate-limit";
+import { getPlatformConfig } from "@/lib/settings";
+import { sendTransactionalEventEmail } from "@/lib/email";
 
 export async function POST(req: NextRequest) {
   try {
@@ -65,12 +67,12 @@ export async function POST(req: NextRequest) {
     }
 
     const passwordHash = await hashPassword(password);
+    const config = await getPlatformConfig();
 
     // Calcular 5 días de prueba gratis exactamente
     const trialEndsAt = new Date();
     trialEndsAt.setDate(trialEndsAt.getDate() + 5);
 
-    // Rol ADMIN solo si coincide con ADMIN_EMAIL y supera la clave de registro si está definida
     const adminEmails = (process.env.ADMIN_EMAIL || "")
       .split(",")
       .map((e) => e.trim().toLowerCase())
@@ -94,7 +96,7 @@ export async function POST(req: NextRequest) {
           create: {
             status: "TRIAL",
             trialEndsAt,
-            planPrice: 19.99,
+            planPrice: config.planPriceUsd,
           },
         },
       },
@@ -102,6 +104,15 @@ export async function POST(req: NextRequest) {
         subscription: true,
       },
     });
+
+    // Evento automático Sección 08: Alta / Inicio de prueba (5 días)
+    await sendTransactionalEventEmail({
+      userId: user.id,
+      recipient: user.email,
+      userName: user.name,
+      eventType: "ALTA_INICIO_PRUEBA",
+      extraData: { trialEndsAt },
+    }).catch(() => {});
 
     const token = await createSessionToken(user.id, user.role);
 
@@ -120,7 +131,7 @@ export async function POST(req: NextRequest) {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
-      maxAge: 60 * 60 * 24 * 30, // 30 días
+      maxAge: 60 * 60 * 24 * 30,
       path: "/",
     });
 

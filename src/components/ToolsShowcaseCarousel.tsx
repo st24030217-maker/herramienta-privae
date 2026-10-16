@@ -34,94 +34,94 @@ export interface WorkshopToolItem {
   icon: React.ComponentType<{ className?: string }>;
 }
 
+// Las 5 Herramientas Oficiales requeridas en Propuesta_Herramienta_Privae.pdf + Escáner de Diagnóstico
 export const WORKSHOP_TOOLS: WorkshopToolItem[] = [
-  {
-    id: "dtf-builder",
-    src: "/tools/dtf-builder.svg",
-    alt: "Armar Metro DTF",
-    shortName: "Armar Metro DTF",
-    title: "Armar Metro DTF (Bobina 58 cm)",
-    subtitle: "Pliegos de 1 metro y 2 metros • 300 DPI",
-    desc: "Acomoda varios diseños en tu lienzo de 58 cm de ancho, duplica logos con 1 clic y descarga tu archivo listo para imprimir.",
-    href: "/tools/dtf-builder",
-    badge: "SERVICIO #1 • MÓDULO PRINCIPAL",
-    action: "Abrir Armador de Metros DTF",
-    accent: "border-emerald-400/50 text-emerald-300 bg-emerald-500/10",
-    icon: LayoutGrid,
-  },
-  {
-    id: "scanner",
-    src: "/tools/scanner.svg",
-    alt: "Checar Calidad DTF",
-    shortName: "Checar Calidad",
-    title: "Checador & Escáner de Calidad DTF",
-    subtitle: "Semáforo Preventivo 0 a 100%",
-    desc: "Revisa en segundos si tu imagen tiene fondo 100% transparente, si tiene buena resolución (300 DPI) y qué medida máxima aguanta sin pixelarse.",
-    href: "/tools/scanner",
-    badge: "SERVICIO #2 • DIAGNÓSTICO",
-    action: "Escanear mi Diseño Ahora",
-    accent: "border-blue-400/50 text-blue-300 bg-blue-500/10",
-    icon: ScanSearch,
-  },
   {
     id: "remove-bg",
     src: "/tools/remove-bg.svg",
-    alt: "Quitar Fondo",
-    shortName: "Quitar Fondo",
-    title: "Quitar Fondo Inteligente",
-    subtitle: "Transparencia Pura RGBA",
-    desc: "Borra el fondo de cualquier foto o logotipo cuidando las letras blancas y los detalles internos para que quede listo para DTF.",
+    alt: "01 Remover Fondo",
+    shortName: "01 · Remover Fondo",
+    title: "01 · Remover Fondo (PNG 300 DPI)",
+    subtitle: "Bordes limpios en cabello y formas irregulares • Transparencia Real",
+    desc: "Sube tu imagen y el sistema detecta el sujeto u objeto principal, elimina el fondo con bordes limpios y conserva transparencia real en PNG a mínimo 300 DPI.",
     href: "/tools/remove-bg",
-    badge: "SERVICIO #3 • TRANSPARENCIA",
-    action: "Quitar Fondo a mi Imagen",
+    badge: "MÓDULO 01 • REMOVER FONDO",
+    action: "Abrir 01 · Remover Fondo",
     accent: "border-purple-400/50 text-purple-300 bg-purple-500/10",
     icon: Scissors,
   },
   {
     id: "enhance",
     src: "/tools/enhance.svg",
-    alt: "Subir Calidad 4X",
-    shortName: "Subir Calidad 4X",
-    title: "Mejorar Calidad y Nitidez (4X)",
-    subtitle: "Superresolución a 300 DPI",
-    desc: "Convierte imágenes borrosas o bajadas de WhatsApp en archivos ultra nítidos a 300 DPI para que tu estampado salga perfecto.",
+    alt: "02 Mejorar Calidad / Resolución",
+    shortName: "02 · Mejorar Calidad",
+    title: "02 · Mejorar Calidad / Resolución",
+    subtitle: "Superresolución sin deformar • Salida PNG 300 DPI",
+    desc: "Sube una imagen de baja o media resolución y mejora su nitidez, tamaño y definición sin deformar el diseño, conservando la transparencia en PNG a mínimo 300 DPI.",
     href: "/tools/enhance",
-    badge: "SERVICIO #4 • SUPERRESOLUCIÓN",
-    action: "Subir Calidad 4X Ahora",
+    badge: "MÓDULO 02 • MEJORAR RESOLUCIÓN",
+    action: "Abrir 02 · Mejorar Calidad",
     accent: "border-amber-400/50 text-amber-300 bg-amber-500/10",
     icon: Sparkles,
   },
   {
     id: "remove-color",
     src: "/tools/remove-color.svg",
-    alt: "Borrar un Color",
-    shortName: "Borrar un Color",
-    title: "Borrar un Color Específico (Gotero)",
-    subtitle: "Extracción Directa con 1 Clic",
-    desc: "Toca con el gotero cualquier color que te estorbe (fondos negros, blancos o manchas) para volverlo 100% transparente al instante.",
+    alt: "03 Eliminar un Color",
+    shortName: "03 · Eliminar un Color",
+    title: "03 · Eliminar un Color (Cuentagotas)",
+    subtitle: "Selector visual con rango de tolerancia ajustable • PNG 300 DPI",
+    desc: "Selecciona visualmente sobre la imagen el color que deseas retirar con el cuentagotas y conviértelo en transparencia con tolerancia regulable sin dañar otros colores.",
     href: "/tools/remove-color",
-    badge: "SERVICIO #5 • GOTERO DIRECTO",
-    action: "Usar Gotero Quita-Color",
+    badge: "MÓDULO 03 • ELIMINAR COLOR",
+    action: "Abrir 03 · Eliminar un Color",
     accent: "border-pink-400/50 text-pink-300 bg-pink-500/10",
     icon: Pipette,
   },
   {
     id: "clean-alpha",
     src: "/tools/clean-alpha.svg",
-    alt: "Limpiar Bordes",
-    shortName: "Limpiar Bordes",
-    title: "Limpiar Bordes y Halos Blancos",
-    subtitle: "Cero Filtración de Base Blanca",
-    desc: "Elimina las orillas blancas y manchas fantasma alrededor de tu recorte para que la tinta blanca de la máquina no se asome.",
+    alt: "04 Quitar Semitransparencias",
+    shortName: "04 · Quitar Semitransparencias",
+    title: "04 · Quitar Semitransparencias (Hasta 58×200 cm)",
+    subtitle: "Purificación de canal alfa apta para DTF • Soporta pliegos grandes",
+    desc: "Detecta píxeles semitransparentes y corrige el canal alfa en imágenes individuales o archivos grandes de hasta 58 × 200 cm para eliminar residuos y halos no deseados a 300 DPI.",
     href: "/tools/clean-alpha",
-    badge: "SERVICIO #6 • ANTI-HALO",
-    action: "Limpiar Bordes de mi Diseño",
+    badge: "MÓDULO 04 • SEMITRANSPARENCIAS",
+    action: "Abrir 04 · Quitar Semitransparencias",
     accent: "border-cyan-400/50 text-cyan-300 bg-cyan-500/10",
     icon: Layers,
   },
+  {
+    id: "dtf-builder",
+    src: "/tools/dtf-builder.svg",
+    alt: "05 Armador de Archivos DTF",
+    shortName: "05 · Armador DTF",
+    title: "05 · Armador de Archivos DTF (58×100 y 58×200 cm)",
+    subtitle: "Lienzo a escala con medidas en cm, acomodo automático y salida 300 DPI",
+    desc: "Lienzo de trabajo con formatos exactos de 58 × 100 cm y 58 × 200 cm. Sube múltiples diseños, muévelos, escálalos proporcionalmente, duplícalos y exporta el pliego completo en PNG transparente a 300 DPI.",
+    href: "/tools/dtf-builder",
+    badge: "MÓDULO 05 • ARMADOR DTF",
+    action: "Abrir 05 · Armador de Archivos DTF",
+    accent: "border-emerald-400/50 text-emerald-300 bg-emerald-500/10",
+    icon: LayoutGrid,
+  },
+  {
+    id: "scanner",
+    src: "/tools/scanner.svg",
+    alt: "Escáner de Calidad DTF",
+    shortName: "Checar Calidad DTF",
+    title: "Diagnóstico & Escáner Preventivo DTF",
+    subtitle: "Revisión de Transparencia, Halos y Resolución 300 DPI",
+    desc: "Verifica antes de imprimir si tu archivo cumple con transparencia real, ausencia de semitransparencias y resolución efectiva en centímetros.",
+    href: "/tools/scanner",
+    badge: "CONTROL DE CALIDAD",
+    action: "Abrir Escáner de Calidad",
+    accent: "border-blue-400/50 text-blue-300 bg-blue-500/10",
+    icon: ScanSearch,
+  },
 ];
 
-// Duplicamos los 6 servicios (12 tarjetas en el anillo 360°) para que el cilindro 3D tenga gran diámetro y amplitud visual
 const CAROUSEL_RING_ITEMS = [...WORKSHOP_TOOLS, ...WORKSHOP_TOOLS];
 
 export function ToolsShowcaseCarousel() {
@@ -130,7 +130,9 @@ export function ToolsShowcaseCarousel() {
   const [rawIndex, setRawIndex] = useState(0);
   const [preset, setPreset] = useState<"cylinder" | "orbit" | "wheel" | "panorama">("cylinder");
 
-  const activeToolIndex = ((rawIndex % WORKSHOP_TOOLS.length) + WORKSHOP_TOOLS.length) % WORKSHOP_TOOLS.length;
+  const activeToolIndex =
+    ((rawIndex % WORKSHOP_TOOLS.length) + WORKSHOP_TOOLS.length) %
+    WORKSHOP_TOOLS.length;
   const currentTool = WORKSHOP_TOOLS[activeToolIndex] || WORKSHOP_TOOLS[0];
 
   const handleSelectPill = (toolIdx: number) => {
@@ -147,7 +149,11 @@ export function ToolsShowcaseCarousel() {
     setRawIndex(targetRingIndex);
   };
 
-  const handleCardClick = (item: WorkshopToolItem, _index: number, wasActive?: boolean) => {
+  const handleCardClick = (
+    item: WorkshopToolItem,
+    _index: number,
+    wasActive?: boolean
+  ) => {
     if (wasActive && item?.href) {
       router.push(item.href);
     }
@@ -157,9 +163,7 @@ export function ToolsShowcaseCarousel() {
     <div className="relative w-full bg-transparent pt-6 pb-2 space-y-6">
       {/* LÁMPARA DE LUZ SUPERIOR + TÍTULO HERO TRANSPARENTE (SIN RECUADROS) */}
       <div className="relative flex flex-col items-center justify-center pt-10 sm:pt-14 pb-2 overflow-visible">
-        {/* Efecto Aceternity Lamp Transparente arriba del título */}
         <div className="pointer-events-none relative flex w-full max-w-4xl items-center justify-center isolate z-0 mb-4">
-          {/* Cono de luz izquierdo */}
           <motion.div
             initial={{ opacity: 0.35, width: "12rem" }}
             animate={{ opacity: 1, width: "30rem" }}
@@ -170,7 +174,6 @@ export function ToolsShowcaseCarousel() {
             className="absolute top-0 right-1/2 h-48 w-[30rem] bg-gradient-conic from-white/75 via-transparent to-transparent [--conic-position:from_70deg_at_center_top] [mask-image:radial-gradient(ellipse_at_top,black_20%,transparent_72%)]"
           />
 
-          {/* Cono de luz derecho */}
           <motion.div
             initial={{ opacity: 0.35, width: "12rem" }}
             animate={{ opacity: 1, width: "30rem" }}
@@ -181,7 +184,6 @@ export function ToolsShowcaseCarousel() {
             className="absolute top-0 left-1/2 h-48 w-[30rem] bg-gradient-conic from-transparent via-transparent to-white/75 [--conic-position:from_290deg_at_center_top] [mask-image:radial-gradient(ellipse_at_top,black_20%,transparent_72%)]"
           />
 
-          {/* Resplandor difuso central bajo la lámpara */}
           <motion.div
             initial={{ width: "8rem", opacity: 0.25 }}
             animate={{ width: "22rem", opacity: 0.55 }}
@@ -189,7 +191,6 @@ export function ToolsShowcaseCarousel() {
             className="absolute -top-6 z-20 h-28 w-80 rounded-full bg-white blur-3xl"
           />
 
-          {/* Tubo luminoso horizontal de la lámpara */}
           <motion.div
             initial={{ width: "12rem", opacity: 0.6 }}
             animate={{ width: "30rem", opacity: 1 }}
@@ -198,7 +199,6 @@ export function ToolsShowcaseCarousel() {
           />
         </div>
 
-        {/* Contenido Hero iluminado por la lámpara */}
         <motion.div
           initial={{ opacity: 0.4, y: 35 }}
           animate={{ opacity: 1, y: 0 }}
@@ -207,20 +207,20 @@ export function ToolsShowcaseCarousel() {
         >
           <div className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 backdrop-blur-md px-4 py-1.5 text-xs font-mono font-bold text-white uppercase tracking-widest shadow-[0_0_20px_rgba(255,255,255,0.15)]">
             <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span>TALLER DTF PRIVAE • BOBINA 58 CM • 300 DPI</span>
+            <span>05 HERRAMIENTAS • 5 DÍAS PRUEBA GRATIS • 300 DPI • 58 CM DTF</span>
           </div>
 
           <h1 className="bg-gradient-to-b from-white via-white to-neutral-400 bg-clip-text text-transparent text-4xl sm:text-6xl lg:text-7xl font-black tracking-wide leading-none drop-shadow-[0_6px_30px_rgba(0,0,0,0.85)]">
-            ELIGE EL SERVICIO PARA TU DISEÑO
+            PREPARACIÓN DE IMÁGENES Y DTF
           </h1>
 
           <p className="text-sm sm:text-base text-neutral-300 max-w-2xl mx-auto font-normal">
-            Gira el carrusel 3D, usa las flechas o toca cualquier servicio para preparar e imprimir tus archivos al instante.
+            Gira el carrusel 3D o selecciona cualquiera de los 5 módulos oficiales de Privae Textil para preparar tus archivos a 300 DPI.
           </p>
         </motion.div>
       </div>
 
-      {/* BARRA INTUITIVA DE ACCESO RÁPIDO A LOS 6 SERVICIOS */}
+      {/* BARRA INTUITIVA DE ACCESO RÁPIDO A LOS MÓDULOS */}
       <AnimatedContent distance={25} delay={0.08} trigger="mount">
         <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-2.5 max-w-5xl mx-auto px-2">
           {WORKSHOP_TOOLS.map((tool, idx) => {
@@ -248,7 +248,6 @@ export function ToolsShowcaseCarousel() {
       {/* ESCENARIO 3D GIGANTE Y 100% TRANSPARENTE (SIN BORDES NI CAJAS) */}
       <AnimatedContent distance={40} delay={0.14} trigger="mount">
         <div className="relative w-full h-[460px] sm:h-[560px] lg:h-[600px] bg-transparent flex items-center justify-center select-none">
-          {/* Botón Flotante Izquierdo */}
           <button
             type="button"
             onClick={() => carouselApiRef.current?.stepBy(-1)}
@@ -258,7 +257,6 @@ export function ToolsShowcaseCarousel() {
             <ChevronLeft className="h-6 w-6 sm:h-7 sm:w-7" />
           </button>
 
-          {/* Carrusel Circular 3D Transparente */}
           <CircularCarousel
             apiRef={carouselApiRef}
             items={CAROUSEL_RING_ITEMS}
@@ -280,7 +278,6 @@ export function ToolsShowcaseCarousel() {
             className="w-full h-full bg-transparent"
           />
 
-          {/* Botón Flotante Derecho */}
           <button
             type="button"
             onClick={() => carouselApiRef.current?.stepBy(1)}
@@ -292,7 +289,7 @@ export function ToolsShowcaseCarousel() {
         </div>
       </AnimatedContent>
 
-      {/* PANEL FLOTANTE DE ACCIÓN DIRECTA DEL SERVICIO SELECCIONADO */}
+      {/* PANEL FLOTANTE DE ACCIÓN DIRECTA DEL MÓDULO SELECCIONADO */}
       <AnimatedContent distance={30} delay={0.2} trigger="mount">
         <div className="max-w-4xl mx-auto px-2">
           <div className="flex flex-col md:flex-row items-center justify-between gap-5 rounded-2xl border border-white/20 bg-black/55 backdrop-blur-xl px-6 py-5 shadow-[0_20px_60px_rgba(0,0,0,0.6)]">
@@ -324,7 +321,6 @@ export function ToolsShowcaseCarousel() {
                 <ArrowRight className="h-5 w-5" />
               </Link>
 
-              {/* Selector compacto de vista 3D */}
               <div className="flex items-center gap-1.5 text-[11px] font-mono text-neutral-400">
                 <Rotate3d className="h-3.5 w-3.5 text-white/70 mr-1" />
                 <span>Vista 3D:</span>

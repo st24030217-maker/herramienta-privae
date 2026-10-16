@@ -1,6 +1,8 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/auth";
+import { getPlatformConfig } from "@/lib/settings";
+import { runSubscriptionLifecycleChecks } from "@/lib/lifecycle";
 
 export async function GET() {
   try {
@@ -9,37 +11,72 @@ export async function GET() {
       return NextResponse.json({ error: "Acceso no autorizado" }, { status: 403 });
     }
 
-    const totalUsers = await prisma.user.count();
-    const activeSubscriptions = await prisma.subscription.count({
-      where: { status: "ACTIVE" },
-    });
-    const trialUsers = await prisma.subscription.count({
-      where: { status: "TRIAL" },
-    });
-    const suspendedUsers = await prisma.subscription.count({
-      where: { status: "SUSPENDED" },
-    });
-    const totalProcessings = await prisma.toolUsage.count();
+    // Ejecutar revisión automática de ciclo de vida al cargar el panel
+    await runSubscriptionLifecycleChecks().catch(() => {});
 
-    const recentUsages = await prisma.toolUsage.findMany({
-      take: 10,
-      orderBy: { createdAt: "desc" },
-      include: {
-        user: {
-          select: { email: true, name: true },
+    const [
+      totalUsers,
+      activeSubscriptions,
+      trialUsers,
+      graceUsers,
+      suspendedUsers,
+      totalProcessings,
+      errorProcessings,
+      recentUsages,
+      recentPayments,
+      recentEmails,
+      auditLogs,
+      config,
+    ] = await Promise.all([
+      prisma.user.count(),
+      prisma.subscription.count({ where: { status: "ACTIVE" } }),
+      prisma.subscription.count({ where: { status: "TRIAL" } }),
+      prisma.subscription.count({ where: { status: "GRACE_PERIOD" } }),
+      prisma.subscription.count({
+        where: { status: { in: ["SUSPENDED", "CANCELED", "PAST_DUE"] } },
+      }),
+      prisma.toolUsage.count(),
+      prisma.toolUsage.count({ where: { status: "ERROR" } }),
+      prisma.toolUsage.findMany({
+        take: 30,
+        orderBy: { createdAt: "desc" },
+        include: {
+          user: { select: { email: true, name: true } },
         },
-      },
-    });
+      }),
+      prisma.payment.findMany({
+        take: 30,
+        orderBy: { createdAt: "desc" },
+        include: {
+          user: { select: { email: true, name: true } },
+        },
+      }),
+      prisma.emailLog.findMany({
+        take: 30,
+        orderBy: { createdAt: "desc" },
+      }),
+      prisma.auditLog.findMany({
+        take: 30,
+        orderBy: { createdAt: "desc" },
+      }),
+      getPlatformConfig(),
+    ]);
 
     return NextResponse.json({
       stats: {
         totalUsers,
         activeSubscriptions,
         trialUsers,
+        graceUsers,
         suspendedUsers,
         totalProcessings,
+        errorProcessings,
       },
       recentUsages,
+      recentPayments,
+      recentEmails,
+      auditLogs,
+      config,
     });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });

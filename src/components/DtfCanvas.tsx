@@ -25,6 +25,7 @@ import {
   Scissors,
   RotateCcw
 } from "lucide-react";
+import { inject300DpiIntoPngBlob } from "@/lib/png-dpi";
 
 export interface CanvasDesign {
   id: string;
@@ -53,6 +54,7 @@ export function DtfCanvas() {
   const [designs, setDesigns] = useState<CanvasDesign[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [mirrorAll, setMirrorAll] = useState<boolean>(false);
+  const [marginCm, setMarginCm] = useState<number>(0.8);
   const [zoom, setZoom] = useState<number>(1);
   const [exporting, setExporting] = useState<boolean>(false);
   const [exportError, setExportError] = useState<string | null>(null);
@@ -775,13 +777,51 @@ export function DtfCanvas() {
     );
   };
 
+  // Acomodo automático de todos los diseños en el lienzo respetando el margen configurable (Sección 05 del PDF)
+  const handleAutoArrange = () => {
+    if (designs.length === 0) return;
+    const gap = Math.max(0.2, Math.min(5, marginCm || 0.8));
+    const sorted = [...designs].sort((a, b) => b.heightCm - a.heightCm);
+
+    let cursorX = gap;
+    let cursorY = gap;
+    let rowMaxH = 0;
+
+    const arranged = sorted.map((d) => {
+      const w = Math.min(canvasWidthCm - gap * 2, d.widthCm);
+      const h = parseFloat((w / d.aspectRatio).toFixed(2));
+
+      if (cursorX + w + gap > canvasWidthCm && cursorX > gap) {
+        cursorX = gap;
+        cursorY = parseFloat((cursorY + rowMaxH + gap).toFixed(2));
+        rowMaxH = 0;
+      }
+
+      const xCm = parseFloat(Math.min(canvasWidthCm - w, cursorX).toFixed(2));
+      const yCm = parseFloat(Math.min(canvasHeightCm - h, cursorY).toFixed(2));
+
+      cursorX = parseFloat((cursorX + w + gap).toFixed(2));
+      if (h > rowMaxH) rowMaxH = h;
+
+      return {
+        ...d,
+        xCm,
+        yCm,
+        widthCm: w,
+        heightCm: h,
+      };
+    });
+
+    setDesigns(arranged);
+  };
+
   const handleGridFill = () => {
     if (!selectedDesign) return;
-    const spacingCm = 0.8;
+    const spacingCm = Math.max(0.2, Math.min(5, marginCm || 0.8));
     const colWidth = selectedDesign.widthCm + spacingCm;
     const rowHeight = selectedDesign.heightCm + spacingCm;
-    const cols = Math.max(1, Math.floor((canvasWidthCm - 1) / colWidth));
-    const rows = Math.max(1, Math.floor((canvasHeightCm - 1) / rowHeight));
+    const cols = Math.max(1, Math.floor((canvasWidthCm - spacingCm) / colWidth));
+    const rows = Math.max(1, Math.floor((canvasHeightCm - spacingCm) / rowHeight));
 
     const newDesigns: CanvasDesign[] = [];
     for (let r = 0; r < rows; r++) {
@@ -789,13 +829,83 @@ export function DtfCanvas() {
         newDesigns.push({
           ...selectedDesign,
           id: "design_" + Math.random().toString(36).substring(2, 9),
-          xCm: parseFloat((1 + c * colWidth).toFixed(2)),
-          yCm: parseFloat((1 + r * rowHeight).toFixed(2)),
+          xCm: parseFloat((spacingCm + c * colWidth).toFixed(2)),
+          yCm: parseFloat((spacingCm + r * rowHeight).toFixed(2)),
         });
       }
     }
     setDesigns(newDesigns);
     setSelectedId(newDesigns[0]?.id || null);
+  };
+
+  // Respaldo de alta capacidad a 300 DPI reales (6850×11811 px o 6850×23622 px) cuando el lote supera el límite HTTP de Vercel
+  const composeHighCapDtfAt300Dpi = async (): Promise<Blob> => {
+    const authRes = await fetch("/api/process/log-usage", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        toolName: "DTF_BUILDER",
+        inputName: `pliego_${format}_${designs.length}_artes.png`,
+        canvasSize: `${format}cm`,
+        status: "SUCCESS",
+      }),
+    });
+
+    if (!authRes.ok) {
+      setExportErrorStatus(authRes.status);
+      const errData = await authRes.json().catch(() => ({}));
+      throw new Error(
+        errData.error ||
+          "Debes tener una prueba activa o suscripción Premium para exportar el metro DTF."
+      );
+    }
+
+    const pxPerCm300 = 300 / 2.54; // 118.110236 px/cm
+    const targetW = Math.round(canvasWidthCm * pxPerCm300); // 6850 px
+    const targetH = Math.round(canvasHeightCm * pxPerCm300); // 11811 px o 23622 px
+
+    const canvas = document.createElement("canvas");
+    canvas.width = targetW;
+    canvas.height = targetH;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) throw new Error("No se pudo inicializar el lienzo de exportación a 300 DPI.");
+
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = "high";
+
+    for (const d of designs) {
+      const bitmap = await createImageBitmap(d.file);
+      const crop = d.crop || { top: 0, right: 0, bottom: 0, left: 0 };
+      const sx = Math.round(crop.left * bitmap.width);
+      const sy = Math.round(crop.top * bitmap.height);
+      const sw = Math.max(1, Math.round((1 - crop.left - crop.right) * bitmap.width));
+      const sh = Math.max(1, Math.round((1 - crop.top - crop.bottom) * bitmap.height));
+
+      const dw = d.widthCm * pxPerCm300;
+      const dh = d.heightCm * pxPerCm300;
+      const dx = d.xCm * pxPerCm300;
+      const dy = d.yCm * pxPerCm300;
+
+      ctx.save();
+      ctx.translate(dx + dw / 2, dy + dh / 2);
+      if (d.rotation) {
+        ctx.rotate((d.rotation * Math.PI) / 180);
+      }
+      const flipX = Boolean(d.flipH) !== Boolean(mirrorAll) ? -1 : 1;
+      const flipY = d.flipV ? -1 : 1;
+      ctx.scale(flipX, flipY);
+      ctx.drawImage(bitmap, sx, sy, sw, sh, -dw / 2, -dh / 2, dw, dh);
+      ctx.restore();
+    }
+
+    const rawBlob: Blob = await new Promise((resolve, reject) => {
+      canvas.toBlob(
+        (b) => (b ? resolve(b) : reject(new Error("Error al codificar el pliego PNG"))),
+        "image/png"
+      );
+    });
+
+    return await inject300DpiIntoPngBlob(rawBlob, 300);
   };
 
   const handleExport = async () => {
@@ -806,39 +916,49 @@ export function DtfCanvas() {
     setExportSuccess(false);
 
     try {
-      const formData = new FormData();
-      formData.append("format", format);
-      formData.append("mirrorAll", String(mirrorAll));
-
-      const layoutData = designs.map((d, index) => {
-        const fileKey = `file_${index}`;
-        formData.append(fileKey, d.file);
-        return {
-          fileKey,
-          xCm: d.xCm,
-          yCm: d.yCm,
-          widthCm: d.widthCm,
-          heightCm: d.heightCm,
-          rotation: d.rotation,
-          flipH: Boolean(d.flipH),
-          flipV: Boolean(d.flipV),
-          crop: d.crop,
-        };
+      const uniqueFiles = new Set(designs.map((d) => d.file));
+      let totalBytes = 0;
+      uniqueFiles.forEach((f) => {
+        totalBytes += f.size;
       });
 
-      formData.append("layout", JSON.stringify(layoutData));
+      let blob: Blob;
 
-      const res = await fetch("/api/process/compose-dtf", {
-        method: "POST",
-        body: formData,
-      });
+      if (totalBytes > 4.0 * 1024 * 1024) {
+        blob = await composeHighCapDtfAt300Dpi();
+      } else {
+        const formData = new FormData();
+        formData.append("format", format);
+        formData.append("mirrorAll", String(mirrorAll));
 
-      if (!res.ok) {
-        setExportErrorStatus(res.status);
-        let errorMsg = "Error al componer el archivo DTF.";
+        const layoutData = designs.map((d, index) => {
+          const fileKey = `file_${index}`;
+          formData.append(fileKey, d.file);
+          return {
+            fileKey,
+            xCm: d.xCm,
+            yCm: d.yCm,
+            widthCm: d.widthCm,
+            heightCm: d.heightCm,
+            rotation: d.rotation,
+            flipH: Boolean(d.flipH),
+            flipV: Boolean(d.flipV),
+            crop: d.crop,
+          };
+        });
+
+        formData.append("layout", JSON.stringify(layoutData));
+
+        const res = await fetch("/api/process/compose-dtf", {
+          method: "POST",
+          body: formData,
+        });
+
         if (res.status === 413) {
-          errorMsg = "El conjunto de imágenes supera el límite de 4.5 MB del servidor de Vercel. Reduce o comprime alguna de las imágenes antes de exportar.";
-        } else {
+          blob = await composeHighCapDtfAt300Dpi();
+        } else if (!res.ok) {
+          setExportErrorStatus(res.status);
+          let errorMsg = "Error al componer el archivo DTF.";
           try {
             const err = await res.json();
             if (err?.error) errorMsg = err.error;
@@ -846,11 +966,12 @@ export function DtfCanvas() {
             const text = await res.text().catch(() => "");
             if (text && text.length < 150) errorMsg = text;
           }
+          throw new Error(errorMsg);
+        } else {
+          blob = await res.blob();
         }
-        throw new Error(errorMsg);
       }
 
-      const blob = await res.blob();
       const downloadUrl = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = downloadUrl;
@@ -874,14 +995,14 @@ export function DtfCanvas() {
         <div>
           <div className="flex items-center gap-3">
             <h1 className="text-2xl sm:text-3xl font-bold text-[#F3F4F6] tracking-tight">
-              Armador de Metros DTF
+              05 · Armador de Archivos DTF
             </h1>
             <span className="font-mono text-xs text-white border border-white/20 bg-white/10 px-2.5 py-0.5 rounded">
-              METRO DE 58 CM — 300 DPI
+              58 × 100 CM Y 58 × 200 CM — 300 DPI
             </span>
           </div>
           <p className="mt-1.5 text-xs sm:text-sm text-[#8E95A5]">
-            Acomoda tus diseños en centímetros reales para aprovechar todo el metro y descargarlo listo para imprimir.
+            Acomoda múltiples diseños en centímetros reales dentro del área imprimible de 58 cm y exporta tu lienzo completo en PNG transparente a 300 DPI.
           </p>
         </div>
 
@@ -950,7 +1071,7 @@ export function DtfCanvas() {
             ) : (
               <>
                 <Download className="h-5 w-5" />
-                <span>Descargar Metro DTF</span>
+                <span>Descargar PNG ({format} cm · 300 DPI)</span>
               </>
             )}
           </button>
@@ -1013,10 +1134,10 @@ export function DtfCanvas() {
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
         {/* SIDEBAR DE CONTROL (4 Columnas) */}
         <div className="space-y-5 lg:col-span-4">
-          <div className="rounded-2xl border border-[#20232A] bg-[#16181D] p-5 shadow-sm">
-            <div className="flex items-center justify-between mb-4">
+          <div className="rounded-2xl border border-[#20232A] bg-[#16181D] p-5 shadow-sm space-y-4">
+            <div className="flex items-center justify-between">
               <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#8E95A5]">
-                Tus Diseños en el Metro ({designs.length})
+                Tus Diseños en el Lienzo ({designs.length})
               </span>
               <div className="flex items-center gap-2">
                 {designs.length > 0 && (
@@ -1053,6 +1174,37 @@ export function DtfCanvas() {
               />
             </div>
 
+            {/* Separación Configurable y Acomodo Automático (Sección 05 del PDF) */}
+            {designs.length > 0 && (
+              <div className="rounded-xl border border-[#20232A] bg-[#0D0E11] p-3.5 space-y-2.5">
+                <div className="flex items-center justify-between gap-2">
+                  <label className="text-[11px] font-mono text-[#8E95A5]">
+                    Separación / Margen entre diseños (cm):
+                  </label>
+                  <input
+                    type="number"
+                    step="0.1"
+                    min="0.2"
+                    max="5"
+                    value={marginCm}
+                    onChange={(e) =>
+                      setMarginCm(Math.max(0.2, parseFloat(e.target.value) || 0.8))
+                    }
+                    className="w-20 rounded-lg border border-[#20232A] bg-[#16181D] px-2.5 py-1 text-xs font-mono text-white text-right focus:border-white focus:outline-none"
+                  />
+                </div>
+                <button
+                  type="button"
+                  onClick={handleAutoArrange}
+                  className="w-full flex items-center justify-center gap-2 rounded-xl bg-white text-black hover:bg-neutral-200 px-3.5 py-2 text-xs font-black transition-all active:scale-95"
+                  title="Acomoda automáticamente todos los diseños cargados aprovechando el espacio del lienzo"
+                >
+                  <Sparkles className="h-3.5 w-3.5" />
+                  <span>Acomodo Automático (Aprovechar Espacio)</span>
+                </button>
+              </div>
+            )}
+
             {designs.length === 0 ? (
               <div
                 onClick={() => fileInputRef.current?.click()}
@@ -1062,63 +1214,78 @@ export function DtfCanvas() {
                   <Plus className="h-6 w-6" />
                 </div>
                 <span className="text-sm font-bold text-[#F3F4F6]">
-                  Haz clic para subir imágenes
+                  Haz clic para seleccionar varios PNG
                 </span>
                 <span className="font-mono text-xs text-[#8E95A5] mt-1">
-                  O arrástralas directo al metro de 58 cm
+                  O arrástralos y suéltalos directo al lienzo de 58 cm
                 </span>
               </div>
             ) : (
               <div className="space-y-2 max-h-52 overflow-y-auto custom-scrollbar pr-1">
-                {designs.map((d) => (
-                  <div
-                    key={d.id}
-                    onClick={() => setSelectedId(d.id)}
-                    className={`flex items-center justify-between gap-2 p-2 rounded cursor-pointer border text-xs transition-colors ${
-                      selectedId === d.id
-                        ? "bg-[#20232A] border-white/40 text-[#F3F4F6] font-semibold"
-                        : "bg-[#0D0E11] border-[#20232A] text-[#8E95A5] hover:text-[#F3F4F6] hover:bg-[#12141A]"
-                    }`}
-                  >
-                    <div className="flex items-center gap-2 truncate">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={d.previewUrl}
-                        alt="preview"
-                        className="h-8 w-8 object-contain rounded bg-[#16181D] border border-[#20232A] p-0.5"
-                      />
-                      <div className="truncate font-mono">
-                        <p className="truncate text-xs text-[#F3F4F6]">{d.file.name}</p>
-                        <p className="text-[10px] text-[#8E95A5]">
-                          {d.widthCm} × {d.heightCm} cm • {calculateEffectiveDpi(d)} DPI
-                        </p>
+                {designs.map((d) => {
+                  const effDpi = calculateEffectiveDpi(d);
+                  const isLowDpi = effDpi < 200;
+                  return (
+                    <div
+                      key={d.id}
+                      onClick={() => setSelectedId(d.id)}
+                      className={`flex items-center justify-between gap-2 p-2 rounded cursor-pointer border text-xs transition-colors ${
+                        selectedId === d.id
+                          ? "bg-[#20232A] border-white/40 text-[#F3F4F6] font-semibold"
+                          : "bg-[#0D0E11] border-[#20232A] text-[#8E95A5] hover:text-[#F3F4F6] hover:bg-[#12141A]"
+                      }`}
+                    >
+                      <div className="flex items-center gap-2 truncate">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={d.previewUrl}
+                          alt="preview"
+                          className="h-8 w-8 object-contain rounded bg-[#16181D] border border-[#20232A] p-0.5"
+                        />
+                        <div className="truncate font-mono">
+                          <p className="truncate text-xs text-[#F3F4F6]">{d.file.name}</p>
+                          <p className="text-[10px] text-[#8E95A5] flex items-center gap-1.5">
+                            <span>
+                              {d.widthCm} × {d.heightCm} cm
+                            </span>
+                            <span
+                              className={
+                                isLowDpi
+                                  ? "text-amber-400 font-bold"
+                                  : "text-emerald-400"
+                              }
+                            >
+                              • {effDpi} DPI {isLowDpi ? "⚠️ Baja res." : "✓"}
+                            </span>
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-1 text-[#8E95A5]">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDuplicate(d.id);
+                          }}
+                          title="Duplicar"
+                          className="p-1 hover:text-[#F3F4F6]"
+                        >
+                          <Copy className="h-3.5 w-3.5" />
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDelete(d.id);
+                          }}
+                          title="Eliminar (Supr)"
+                          className="p-1 hover:text-red-400"
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </button>
                       </div>
                     </div>
-
-                    <div className="flex items-center gap-1 text-[#8E95A5]">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleDuplicate(d.id);
-                        }}
-                        title="Duplicar"
-                        className="p-1 hover:text-[#F3F4F6]"
-                      >
-                        <Copy className="h-3.5 w-3.5" />
-                      </button>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleDelete(d.id);
-                        }}
-                        title="Eliminar (Supr)"
-                        className="p-1 hover:text-red-400"
-                      >
-                        <Trash2 className="h-3.5 w-3.5" />
-                      </button>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>

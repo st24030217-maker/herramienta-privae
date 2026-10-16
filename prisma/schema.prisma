@@ -8,33 +8,41 @@ datasource db {
 }
 
 model User {
-  id            String         @id @default(uuid())
-  email         String         @unique
-  name          String?
-  passwordHash  String
-  role          String         @default("USER") // USER | ADMIN
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
+  id               String         @id @default(uuid())
+  email            String         @unique
+  name             String?
+  passwordHash     String
+  role             String         @default("USER") // USER | ADMIN
+  resetToken       String?
+  resetTokenExpiry DateTime?
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
 
-  subscription  Subscription?
-  payments      Payment[]
-  toolUsages    ToolUsage[]
+  subscription     Subscription?
+  payments         Payment[]
+  toolUsages       ToolUsage[]
+  emailLogs        EmailLog[]
 }
 
 model Subscription {
-  id                   String    @id @default(uuid())
-  userId               String    @unique
-  user                 User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  status               String    @default("TRIAL") // TRIAL | ACTIVE | PAST_DUE | GRACE_PERIOD | SUSPENDED | CANCELED
-  trialEndsAt          DateTime
-  gracePeriodEndsAt    DateTime?
-  currentPeriodEnd     DateTime?
-  stripeCustomerId     String?
-  stripeSubscriptionId String?
-  cancelAtPeriodEnd    Boolean   @default(false)
-  planPrice            Float     @default(19.99)
-  createdAt            DateTime  @default(now())
-  updatedAt            DateTime  @updatedAt
+  id                      String    @id @default(uuid())
+  userId                  String    @unique
+  user                    User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  status                  String    @default("TRIAL") // TRIAL | ACTIVE | PAST_DUE | GRACE_PERIOD | SUSPENDED | CANCELED
+  trialEndsAt             DateTime
+  gracePeriodEndsAt       DateTime?
+  currentPeriodEnd        DateTime?
+  stripeCustomerId        String?
+  stripeSubscriptionId    String?
+  paymentMethodBrand      String?
+  paymentMethodLast4      String?
+  cancelAtPeriodEnd       Boolean   @default(false)
+  planPrice               Float     @default(19.99)
+  lastReminderSentAt      DateTime?
+  trialExpiredNoticeSent  Boolean   @default(false)
+  graceExpiredNoticeSent  Boolean   @default(false)
+  createdAt               DateTime  @default(now())
+  updatedAt               DateTime  @updatedAt
 }
 
 model Payment {
@@ -46,19 +54,41 @@ model Payment {
   status           String   // PAID | FAILED | REFUNDED
   gatewayReference String?
   invoiceUrl       String?
+  failureReason    String?
   createdAt        DateTime @default(now())
 }
 
 model ToolUsage {
-  id          String   @id @default(uuid())
-  userId      String
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  toolName    String   // REMOVE_BG | ENHANCE | REMOVE_COLOR | CLEAN_ALPHA | DTF_BUILDER
-  inputName   String?
-  outputDpi   Int      @default(300)
-  canvasSize  String?  // e.g. "58x100cm", "58x200cm"
-  status      String   @default("SUCCESS")
-  createdAt   DateTime @default(now())
+  id           String   @id @default(uuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  toolName     String   // REMOVE_BG | ENHANCE | REMOVE_COLOR | CLEAN_ALPHA | DTF_BUILDER
+  inputName    String?
+  outputDpi    Int      @default(300)
+  canvasSize   String?  // e.g. "58x100cm", "58x200cm"
+  status       String   @default("SUCCESS") // SUCCESS | ERROR
+  errorMessage String?
+  createdAt    DateTime @default(now())
+}
+
+model EmailLog {
+  id        String   @id @default(uuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  recipient String
+  eventType String   // ALTA_INICIO_PRUEBA | FIN_DE_PRUEBA | RECORDATORIO_3_DIAS | PAGO_APROBADO | PAGO_FALLIDO_GRACIA | FIN_PERIODO_GRACIA | RECUPERAR_CONTRASENA
+  subject   String
+  status    String   @default("SENT")
+  createdAt DateTime @default(now())
+}
+
+model AuditLog {
+  id              String   @id @default(uuid())
+  adminEmail      String
+  targetUserEmail String?
+  action          String
+  details         String?
+  createdAt       DateTime @default(now())
 }
 
 model Setting {
