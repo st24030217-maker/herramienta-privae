@@ -18,6 +18,7 @@ import {
   ExternalLink,
   Save,
 } from "lucide-react";
+import MagicBento from "@/components/MagicBento";
 
 interface AdminStats {
   totalUsers: number;
@@ -203,67 +204,90 @@ export default function AdminPage() {
         </div>
       )}
 
-      {/* Tarjetas de Métricas */}
+      {/* Tarjetas de Métricas con MagicBento */}
       {stats && (
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
-          <div className="rounded-xl border border-neutral-800 bg-neutral-950 p-4">
-            <div className="flex items-center justify-between text-neutral-400 mb-1">
-              <span className="text-[11px] font-bold uppercase">Usuarios</span>
-              <Users className="h-4 w-4 text-white" />
-            </div>
-            <div className="text-2xl font-black text-white">{stats.totalUsers}</div>
+        <div className="space-y-4">
+          <div className="flex items-center justify-between border-b border-neutral-800/60 pb-2">
+            <span className="text-[11px] font-black uppercase tracking-widest text-neutral-400">
+              Métricas Operativas · MagicBento Interactivo
+            </span>
+            <span className="text-[10px] text-neutral-500 hidden sm:inline">
+              Haz clic en cualquier tarjeta para navegar a su panel correspondiente
+            </span>
           </div>
 
-          <div className="rounded-xl border border-neutral-800 bg-neutral-950 p-4">
-            <div className="flex items-center justify-between text-neutral-400 mb-1">
-              <span className="text-[11px] font-bold uppercase">Premium Activos</span>
-              <CreditCard className="h-4 w-4 text-emerald-400" />
-            </div>
-            <div className="text-2xl font-black text-white">
-              {stats.activeSubscriptions}
-            </div>
-          </div>
-
-          <div className="rounded-xl border border-neutral-800 bg-neutral-950 p-4">
-            <div className="flex items-center justify-between text-neutral-400 mb-1">
-              <span className="text-[11px] font-bold uppercase">En Prueba 5D</span>
-              <Clock className="h-4 w-4 text-white" />
-            </div>
-            <div className="text-2xl font-black text-white">{stats.trialUsers}</div>
-          </div>
-
-          <div className="rounded-xl border border-neutral-800 bg-neutral-950 p-4">
-            <div className="flex items-center justify-between text-neutral-400 mb-1">
-              <span className="text-[11px] font-bold uppercase">En Gracia 3D</span>
-              <AlertTriangle className="h-4 w-4 text-amber-400" />
-            </div>
-            <div className="text-2xl font-black text-amber-300">
-              {stats.graceUsers}
-            </div>
-          </div>
-
-          <div className="rounded-xl border border-neutral-800 bg-neutral-950 p-4">
-            <div className="flex items-center justify-between text-neutral-400 mb-1">
-              <span className="text-[11px] font-bold uppercase">Suspendidos</span>
-              <ShieldAlert className="h-4 w-4 text-neutral-500" />
-            </div>
-            <div className="text-2xl font-black text-neutral-400">
-              {stats.suspendedUsers}
-            </div>
-          </div>
-
-          <div className="rounded-xl border border-neutral-800 bg-neutral-950 p-4">
-            <div className="flex items-center justify-between text-neutral-400 mb-1">
-              <span className="text-[11px] font-bold uppercase">Archivos / Errores</span>
-              <Activity className="h-4 w-4 text-white" />
-            </div>
-            <div className="text-2xl font-black text-white">
-              {stats.totalProcessings}{" "}
-              <span className="text-xs font-mono text-neutral-400">
-                ({stats.errorProcessings} err)
-              </span>
-            </div>
-          </div>
+          <MagicBento
+            items={[
+              {
+                id: "bento-users",
+                title: `${stats.totalUsers} Usuarios · ${stats.trialUsers} en Prueba 5D`,
+                description: `${stats.suspendedUsers} cuentas suspendidas. Haz clic para gestionar accesos.`,
+                label: "MÉTRICAS DE USUARIOS",
+                icon: <Users className="h-4 w-4 text-sky-400" />,
+                visual: "analytics",
+                colSpan: 2,
+                rowSpan: 1,
+                onClick: () => setActiveTab("users"),
+              },
+              {
+                id: "bento-subs",
+                title: `${stats.activeSubscriptions} Suscriptores Activos`,
+                description: `Cuota mensual $${planPriceUsd} USD administrada por pasarela Stripe.`,
+                label: "INGRESOS & COBROS",
+                icon: <CreditCard className="h-4 w-4 text-emerald-400" />,
+                visual: "dashboard",
+                colSpan: 1,
+                rowSpan: 1,
+                onClick: () => setActiveTab("payments"),
+              },
+              {
+                id: "bento-security",
+                title: `${stats.graceUsers} en Gracia (3 Días)`,
+                description: "Corte automático de servicio tras 72 hrs de cobro no resuelto.",
+                label: "CONTROL DE ACCESOS",
+                icon: <ShieldAlert className="h-4 w-4 text-amber-400" />,
+                visual: "security",
+                colSpan: 1,
+                rowSpan: 1,
+                onClick: () => setActiveTab("users"),
+              },
+              {
+                id: "bento-pipeline",
+                title: `${stats.totalProcessings} Archivos DTF Procesados`,
+                description: `${stats.errorProcessings} errores en bitácora · Automatización de semitonos y limpieza.`,
+                label: "PIPELINE DTF PREPRESS",
+                icon: <Activity className="h-4 w-4 text-purple-400" />,
+                visual: "automation",
+                colSpan: 2,
+                rowSpan: 1,
+                onClick: () => setActiveTab("support"),
+              },
+              {
+                id: "bento-settings",
+                title: "Pasarela & Configuración",
+                description: "Stripe Price ID, retención de archivos y webhook sin tocar código.",
+                label: "INTEGRACIONES & API",
+                icon: <Settings className="h-4 w-4 text-cyan-400" />,
+                visual: "integration",
+                colSpan: 2,
+                rowSpan: 1,
+                onClick: () => setActiveTab("settings"),
+              },
+            ]}
+            columns={4}
+            rowHeight={210}
+            gap={14}
+            radius={18}
+            theme="dark"
+            glowColor="#ffffff"
+            enableBorderGlow={true}
+            enableSpotlight={true}
+            spotlightRadius={280}
+            enableTilt={true}
+            enableMagnetism={true}
+            clickEffect={true}
+            intro={true}
+          />
         </div>
       )}
 
