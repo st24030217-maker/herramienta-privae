@@ -3,11 +3,12 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "prisma db push && next build",
+    "dev": "node prisma/sync-provider.mjs && next dev",
+    "build": "node prisma/sync-provider.mjs && prisma generate && prisma db push --accept-data-loss && next build",
     "start": "next start",
     "lint": "next lint",
-    "postinstall": "prisma generate",
+    "postinstall": "node prisma/sync-provider.mjs && prisma generate",
+    "db:push": "node prisma/sync-provider.mjs && prisma db push",
     "db:seed": "node prisma/seed.mjs"
   },
   "prisma": {
