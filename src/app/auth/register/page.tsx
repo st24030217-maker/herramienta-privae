@@ -125,6 +125,18 @@ export default function RegisterPage() {
           >
             {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Iniciar mis 5 Días Gratis"}
           </button>
+
+          <p className="text-[11px] text-center text-neutral-400 leading-relaxed pt-1">
+            Al crear tu cuenta aceptas nuestros{" "}
+            <Link href="/terminos" className="text-white underline hover:text-neutral-300">
+              Términos y Condiciones
+            </Link>{" "}
+            y la{" "}
+            <Link href="/privacidad" className="text-white underline hover:text-neutral-300">
+              Política de Privacidad y Eliminación de Archivos
+            </Link>
+            .
+          </p>
         </form>
 
           <div className="mt-6 text-center text-xs text-neutral-400">

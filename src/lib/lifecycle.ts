@@ -1,17 +1,21 @@
 import { prisma } from "./prisma";
 import { sendTransactionalEventEmail } from "./email";
+import { getPlatformConfig } from "./settings";
 
 /**
- * Evalúa y ejecuta las reglas automáticas del ciclo de vida de suscripción (Sección 02 y 08 del PDF):
+ * Evalúa y ejecuta las reglas automáticas del ciclo de vida de suscripción y retención (Secciones 02, 07 y 08 del PDF):
  * 1. Fin de prueba gratuita (5 días): bloquea acceso y envía aviso FIN_DE_PRUEBA.
  * 2. Recordatorio 3 días antes de la fecha de renovación/vencimiento (RECORDATORIO_3_DIAS).
  * 3. Fin de los 3 días naturales de gracia: suspende suscripción sin borrar cuenta y envía FIN_PERIODO_GRACIA.
+ * 4. Política de eliminación automática de originales/temporales y tokens vencidos según FILE_RETENTION_MINUTES.
  */
 export async function runSubscriptionLifecycleChecks() {
   const now = new Date();
   let trialsExpired = 0;
   let remindersSent = 0;
   let gracePeriodsExpired = 0;
+  let expiredTokensPurged = 0;
+  let anonymizedFileLogs = 0;
 
   try {
     // 1. Verificar pruebas de 5 días vencidas
@@ -112,6 +116,30 @@ export async function runSubscriptionLifecycleChecks() {
       }
       gracePeriodsExpired++;
     }
+
+    // 4. Purga automática conforme a FILE_RETENTION_MINUTES (Sección 07 punto 5)
+    const config = await getPlatformConfig();
+    const retentionCutoff = new Date(
+      now.getTime() - config.fileRetentionMinutes * 60 * 1000
+    );
+
+    const purgedTokens = await prisma.passwordResetToken.deleteMany({
+      where: {
+        OR: [{ expiresAt: { lt: now } }, { usedAt: { not: null } }],
+      },
+    });
+    expiredTokensPurged = purgedTokens.count;
+
+    const purgedFileRefs = await prisma.toolUsage.updateMany({
+      where: {
+        createdAt: { lt: retentionCutoff },
+        NOT: { inputName: "[PURGADO AUTOMÁTICAMENTE]" },
+      },
+      data: {
+        inputName: "[PURGADO AUTOMÁTICAMENTE]",
+      },
+    });
+    anonymizedFileLogs = purgedFileRefs.count;
   } catch (err) {
     console.error("Error ejecutando ciclo de vida de suscripciones:", err);
   }
@@ -121,5 +149,7 @@ export async function runSubscriptionLifecycleChecks() {
     trialsExpired,
     remindersSent,
     gracePeriodsExpired,
+    expiredTokensPurged,
+    anonymizedFileLogs,
   };
 }

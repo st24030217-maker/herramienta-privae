@@ -69,9 +69,15 @@ export default function RootLayout({
               <span className="text-neutral-600">|</span>
               <span className="font-medium text-neutral-300">Consola de Preparación y Salida DTF</span>
             </div>
-            <div className="flex items-center gap-4 font-mono text-[11px] text-[#8E95A5]">
+            <div className="flex flex-wrap items-center justify-center gap-4 font-mono text-[11px] text-[#8E95A5]">
               <Link href="/guia" className="hover:text-white transition-colors underline">
                 MANUAL DEL TALLER
+              </Link>
+              <Link href="/terminos" className="hover:text-white transition-colors underline">
+                TÉRMINOS
+              </Link>
+              <Link href="/privacidad" className="hover:text-white transition-colors underline">
+                PRIVACIDAD
               </Link>
               <span>300 DPI CERTIFICADO</span>
               <span>ANCHO 580 MM</span>
