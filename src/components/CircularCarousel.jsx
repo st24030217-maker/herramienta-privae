@@ -268,14 +268,15 @@ const CircularCarousel = ({
   const [ready, setReady] = useState(true);
   const [dragging, setDragging] = useState(false);
   const readyRef = useRef(true);
-  readyRef.current = ready;
+  const dragSign = layout.inward ? -1 : 1;
+  const directionSign = (direction === 'right' ? 1 : -1) * dragSign;
 
   const stateRef = useRef({
     angle: 0,
     dragGoal: 0,
     velocity: 0,
     target: null,
-    dir: 0,
+    dir: directionSign,
     press: null,
     drag: false,
     hover: false,
@@ -323,9 +324,6 @@ const CircularCarousel = ({
 
   const onChangeRef = useRef(onChange);
   onChangeRef.current = onChange;
-
-  const dragSign = layout.inward ? -1 : 1;
-  const directionSign = (direction === 'right' ? 1 : -1) * dragSign;
 
   useEffect(() => {
     stateRef.current.dir = directionSign;
@@ -654,8 +652,22 @@ const CircularCarousel = ({
     render(settingsRef.current, performance.now());
     wake();
 
+    // Re-medición garantizada tras el renderizado del DOM de Next.js
+    const timer1 = setTimeout(() => {
+      measure();
+      render(settingsRef.current, performance.now());
+      wake();
+    }, 50);
+    const timer2 = setTimeout(() => {
+      measure();
+      render(settingsRef.current, performance.now());
+      wake();
+    }, 250);
+
     return () => {
       cancelAnimationFrame(raf);
+      clearTimeout(timer1);
+      clearTimeout(timer2);
       resize.disconnect();
       io.disconnect();
       clearTimeout(state.wheelTimer);
