@@ -3,6 +3,7 @@
 import React, { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import {
   ArrowRight,
   Sparkles,
@@ -14,7 +15,6 @@ import {
   Rotate3d,
   ChevronLeft,
   ChevronRight,
-  MousePointerClick,
 } from "lucide-react";
 import CircularCarousel, { CircularCarouselApi } from "@/components/CircularCarousel";
 import { AnimatedContent } from "@/components/AnimatedContent";
@@ -138,7 +138,6 @@ export function ToolsShowcaseCarousel() {
       router.push(WORKSHOP_TOOLS[toolIdx].href);
       return;
     }
-    // Buscamos la copia más cercana en el anillo de 12 elementos para un giro corto y fluido
     const candidateA = toolIdx;
     const candidateB = toolIdx + WORKSHOP_TOOLS.length;
     const distA = Math.abs(rawIndex - candidateA);
@@ -149,29 +148,77 @@ export function ToolsShowcaseCarousel() {
   };
 
   const handleCardClick = (item: WorkshopToolItem, _index: number, wasActive?: boolean) => {
-    // Si la tarjeta ya estaba al frente o el usuario hace clic directo sobre la tarjeta frontal, abre la herramienta
     if (wasActive && item?.href) {
       router.push(item.href);
     }
   };
 
   return (
-    <div className="relative w-full bg-transparent py-2 space-y-6">
-      {/* PRESENTACIÓN HERO ABIERTA Y TRANSPARENTE (SIN RECUADROS) */}
-      <AnimatedContent distance={35} trigger="mount" className="text-center max-w-4xl mx-auto px-2 space-y-3">
-        <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 backdrop-blur-md px-4 py-1.5 text-xs font-mono font-bold text-white uppercase tracking-widest">
-          <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-          <span>TALLER DTF PRIVAE • BOBINA 58 CM • 300 DPI</span>
+    <div className="relative w-full bg-transparent pt-6 pb-2 space-y-6">
+      {/* LÁMPARA DE LUZ SUPERIOR + TÍTULO HERO TRANSPARENTE (SIN RECUADROS) */}
+      <div className="relative flex flex-col items-center justify-center pt-10 sm:pt-14 pb-2 overflow-visible">
+        {/* Efecto Aceternity Lamp Transparente arriba del título */}
+        <div className="pointer-events-none relative flex w-full max-w-4xl items-center justify-center isolate z-0 mb-4">
+          {/* Cono de luz izquierdo */}
+          <motion.div
+            initial={{ opacity: 0.35, width: "12rem" }}
+            animate={{ opacity: 1, width: "30rem" }}
+            transition={{ delay: 0.1, duration: 0.85, ease: "easeInOut" }}
+            style={{
+              backgroundImage: `conic-gradient(var(--conic-position), var(--tw-gradient-stops))`,
+            }}
+            className="absolute top-0 right-1/2 h-48 w-[30rem] bg-gradient-conic from-white/75 via-transparent to-transparent [--conic-position:from_70deg_at_center_top] [mask-image:radial-gradient(ellipse_at_top,black_20%,transparent_72%)]"
+          />
+
+          {/* Cono de luz derecho */}
+          <motion.div
+            initial={{ opacity: 0.35, width: "12rem" }}
+            animate={{ opacity: 1, width: "30rem" }}
+            transition={{ delay: 0.1, duration: 0.85, ease: "easeInOut" }}
+            style={{
+              backgroundImage: `conic-gradient(var(--conic-position), var(--tw-gradient-stops))`,
+            }}
+            className="absolute top-0 left-1/2 h-48 w-[30rem] bg-gradient-conic from-transparent via-transparent to-white/75 [--conic-position:from_290deg_at_center_top] [mask-image:radial-gradient(ellipse_at_top,black_20%,transparent_72%)]"
+          />
+
+          {/* Resplandor difuso central bajo la lámpara */}
+          <motion.div
+            initial={{ width: "8rem", opacity: 0.25 }}
+            animate={{ width: "22rem", opacity: 0.55 }}
+            transition={{ delay: 0.1, duration: 0.85, ease: "easeInOut" }}
+            className="absolute -top-6 z-20 h-28 w-80 rounded-full bg-white blur-3xl"
+          />
+
+          {/* Tubo luminoso horizontal de la lámpara */}
+          <motion.div
+            initial={{ width: "12rem", opacity: 0.6 }}
+            animate={{ width: "30rem", opacity: 1 }}
+            transition={{ delay: 0.1, duration: 0.85, ease: "easeInOut" }}
+            className="relative z-30 h-0.5 w-[30rem] max-w-[88vw] bg-white shadow-[0_0_25px_4px_rgba(255,255,255,0.95)]"
+          />
         </div>
 
-        <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black text-white tracking-wide leading-none drop-shadow-[0_6px_30px_rgba(0,0,0,0.8)]">
-          ELIGE EL SERVICIO PARA TU DISEÑO
-        </h1>
+        {/* Contenido Hero iluminado por la lámpara */}
+        <motion.div
+          initial={{ opacity: 0.4, y: 35 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.15, duration: 0.75, ease: "easeOut" }}
+          className="relative z-10 text-center max-w-4xl mx-auto px-2 space-y-3 mt-3"
+        >
+          <div className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 backdrop-blur-md px-4 py-1.5 text-xs font-mono font-bold text-white uppercase tracking-widest shadow-[0_0_20px_rgba(255,255,255,0.15)]">
+            <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span>TALLER DTF PRIVAE • BOBINA 58 CM • 300 DPI</span>
+          </div>
 
-        <p className="text-sm sm:text-base text-neutral-300 max-w-2xl mx-auto font-normal">
-          Gira el carrusel 3D, usa las flechas o toca cualquier servicio para preparar e imprimir tus archivos al instante.
-        </p>
-      </AnimatedContent>
+          <h1 className="bg-gradient-to-b from-white via-white to-neutral-400 bg-clip-text text-transparent text-4xl sm:text-6xl lg:text-7xl font-black tracking-wide leading-none drop-shadow-[0_6px_30px_rgba(0,0,0,0.85)]">
+            ELIGE EL SERVICIO PARA TU DISEÑO
+          </h1>
+
+          <p className="text-sm sm:text-base text-neutral-300 max-w-2xl mx-auto font-normal">
+            Gira el carrusel 3D, usa las flechas o toca cualquier servicio para preparar e imprimir tus archivos al instante.
+          </p>
+        </motion.div>
+      </div>
 
       {/* BARRA INTUITIVA DE ACCESO RÁPIDO A LOS 6 SERVICIOS */}
       <AnimatedContent distance={25} delay={0.08} trigger="mount">
