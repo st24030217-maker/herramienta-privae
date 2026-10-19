@@ -202,7 +202,7 @@ export default function AccountPage() {
               Área de Usuario · Mi Cuenta
             </h1>
             <span className="inline-flex items-center gap-1.5 rounded-full border border-neutral-700 bg-neutral-900 px-3 py-1 text-xs font-mono font-bold text-neutral-200">
-              {user.role === "ADMIN" ? "👑 Administrador" : "✦ Cliente DTF"}: {user.name || user.email}
+              {user.role === "ADMIN" ? "Administrador" : "Cliente DTF"}: {user.name || user.email}
             </span>
           </div>
           <p className="mt-1 text-xs sm:text-sm text-neutral-400">

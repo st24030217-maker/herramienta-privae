@@ -662,7 +662,7 @@ export default function AdminPage() {
             </h1>
             {adminInfo && (
               <span className="hidden sm:inline-flex items-center gap-1.5 rounded-full border border-neutral-700 bg-neutral-900 px-3 py-0.5 text-xs font-mono font-bold text-neutral-300">
-                👑 Admin: {adminInfo.name || adminInfo.email}
+                Admin: {adminInfo.name || adminInfo.email}
               </span>
             )}
           </div>

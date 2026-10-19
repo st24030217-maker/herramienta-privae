@@ -121,7 +121,7 @@ export default function RemoveColorPage() {
           {/* ACCESOS DIRECTOS DE TALLER: NEGRO, ROJO Y BLANCO */}
           <div>
             <span className="text-xs font-mono font-bold text-[#F3F4F6] uppercase tracking-wider block mb-3">
-              ⚡ Borrar Colores Comunes (1 Clic):
+              Borrar Colores Comunes (1 Clic):
             </span>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               {/* Botón Quitar Negro */}

@@ -16,6 +16,7 @@ import {
   Crown,
   Maximize2,
   FolderOpen,
+  Grid,
 } from "lucide-react";
 import { AnimatedContent } from "@/components/AnimatedContent";
 import { inject300DpiIntoPngBlob } from "@/lib/png-dpi";
@@ -612,7 +613,7 @@ export function ToolLayout({
                         }`}
                         title="Fondo Cuadrícula Transparente"
                       >
-                        🏁
+                        <Grid className="h-3.5 w-3.5 text-neutral-300" />
                       </button>
                       <button
                         type="button"
