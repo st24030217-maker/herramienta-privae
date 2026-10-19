@@ -17,6 +17,10 @@ import {
   AlertTriangle,
   ExternalLink,
   Save,
+  FileSpreadsheet,
+  FileText,
+  Printer,
+  Download,
 } from "lucide-react";
 import MagicBento from "@/components/MagicBento";
 
@@ -160,6 +164,427 @@ export default function AdminPage() {
     }
   };
 
+  const exportToExcel = (type: "users" | "payments" | "usage" | "all" = "all") => {
+    let csvContent = "\uFEFF"; // BOM UTF-8 para compatibilidad nativa con Microsoft Excel
+    const today = new Date().toISOString().split("T")[0];
+    const target = type === "all" ? activeTab : type;
+
+    if (target === "users") {
+      const headers = [
+        "ID Usuario",
+        "Nombre",
+        "Correo",
+        "Rol",
+        "Estado Suscripcion",
+        "Fin de Prueba (5D)",
+        "Fin de Gracia (3D)",
+        "Fin Periodo Actual",
+        "Archivos DTF Procesados",
+        "Fecha de Registro",
+      ];
+      const rows = users.map((u) => [
+        `"${u.id}"`,
+        `"${(u.name || "Sin nombre").replace(/"/g, '""')}"`,
+        `"${u.email}"`,
+        `"${u.role}"`,
+        `"${u.subscription?.status || "SIN_SUSCRIPCION"}"`,
+        `"${u.subscription?.trialEndsAt ? new Date(u.subscription.trialEndsAt).toLocaleDateString("es-MX") : "N/A"}"`,
+        `"${u.subscription?.gracePeriodEndsAt ? new Date(u.subscription.gracePeriodEndsAt).toLocaleDateString("es-MX") : "N/A"}"`,
+        `"${u.subscription?.currentPeriodEnd ? new Date(u.subscription.currentPeriodEnd).toLocaleDateString("es-MX") : "N/A"}"`,
+        `"${u._count?.toolUsages ?? 0}"`,
+        `"${new Date(u.createdAt).toLocaleDateString("es-MX")}"`,
+      ]);
+
+      csvContent += headers.join(",") + "\n";
+      rows.forEach((r) => {
+        csvContent += r.join(",") + "\n";
+      });
+
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.setAttribute("href", url);
+      link.setAttribute("download", `privae_reporte_usuarios_${today}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      setFeedback("Reporte de Usuarios exportado exitosamente en formato Excel (CSV).");
+    } else if (target === "payments") {
+      const headers = [
+        "ID Pago",
+        "Usuario / Correo",
+        "Monto",
+        "Moneda",
+        "Estado",
+        "Referencia Pasarela",
+        "Fallo / Motivo",
+        "Fecha de Pago",
+      ];
+      const rows = recentPayments.map((p) => [
+        `"${p.id}"`,
+        `"${p.user?.email || "N/A"}"`,
+        `"${p.amount}"`,
+        `"${p.currency}"`,
+        `"${p.status}"`,
+        `"${p.gatewayReference || "N/A"}"`,
+        `"${(p.failureReason || "Ninguno").replace(/"/g, '""')}"`,
+        `"${new Date(p.createdAt).toLocaleDateString("es-MX")}"`,
+      ]);
+
+      csvContent += headers.join(",") + "\n";
+      rows.forEach((r) => {
+        csvContent += r.join(",") + "\n";
+      });
+
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.setAttribute("href", url);
+      link.setAttribute("download", `privae_reporte_pagos_${today}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      setFeedback("Reporte Financiero de Pagos exportado exitosamente en formato Excel (CSV).");
+    } else {
+      const headers = [
+        "ID Registro",
+        "Usuario / Correo",
+        "Herramienta DTF",
+        "Archivo Entrada",
+        "Pliego / Canvas",
+        "DPI Salida",
+        "Estado",
+        "Error",
+        "Fecha",
+      ];
+      const rows = recentUsages.map((u) => [
+        `"${u.id}"`,
+        `"${u.user?.email || "Anonimo"}"`,
+        `"${u.toolName}"`,
+        `"${(u.inputName || "N/A").replace(/"/g, '""')}"`,
+        `"${u.canvasSize || "N/A"}"`,
+        `"${u.outputDpi || 300}"`,
+        `"${u.status}"`,
+        `"${(u.errorMessage || "").replace(/"/g, '""')}"`,
+        `"${new Date(u.createdAt).toLocaleDateString("es-MX")}"`,
+      ]);
+
+      csvContent += headers.join(",") + "\n";
+      rows.forEach((r) => {
+        csvContent += r.join(",") + "\n";
+      });
+
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.setAttribute("href", url);
+      link.setAttribute("download", `privae_reporte_bitacora_dtf_${today}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      setFeedback("Bitácora de producción DTF exportada exitosamente en formato Excel (CSV).");
+    }
+  };
+
+  const exportToPdf = () => {
+    const today = new Date().toLocaleDateString("es-MX", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+
+    let tableHtml = "";
+    let reportTitle = "";
+
+    if (activeTab === "users") {
+      reportTitle = "Reporte Oficial de Usuarios, Pruebas y Suscripciones";
+      tableHtml = `
+        <thead>
+          <tr>
+            <th>Usuario / Correo</th>
+            <th>Rol</th>
+            <th>Estado</th>
+            <th>Fin Prueba / Cobro</th>
+            <th>Archivos DTF</th>
+            <th>Fecha de Alta</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${users
+            .map(
+              (u) => `
+            <tr>
+              <td><strong>${u.name || "Sin nombre"}</strong><br/><small style="color:#666;">${u.email}</small></td>
+              <td>${u.role}</td>
+              <td><span class="badge ${
+                u.subscription?.status === "ACTIVE"
+                  ? "badge-success"
+                  : u.subscription?.status === "GRACE_PERIOD"
+                  ? "badge-warning"
+                  : "badge-neutral"
+              }">${u.subscription?.status || "SIN SUSCRIPCIÓN"}</span></td>
+              <td>${
+                u.subscription?.trialEndsAt
+                  ? new Date(u.subscription.trialEndsAt).toLocaleDateString("es-MX")
+                  : "N/A"
+              }</td>
+              <td style="text-align:center;">${u._count?.toolUsages ?? 0}</td>
+              <td>${new Date(u.createdAt).toLocaleDateString("es-MX")}</td>
+            </tr>
+          `
+            )
+            .join("")}
+        </tbody>
+      `;
+    } else if (activeTab === "payments") {
+      reportTitle = "Reporte Financiero de Pagos y Facturación Stripe";
+      tableHtml = `
+        <thead>
+          <tr>
+            <th>ID Transacción</th>
+            <th>Cliente</th>
+            <th>Monto</th>
+            <th>Moneda</th>
+            <th>Estado</th>
+            <th>Referencia</th>
+            <th>Fecha</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${
+            recentPayments.length === 0
+              ? `<tr><td colspan="7" style="text-align:center;color:#888;">No hay pagos registrados aún</td></tr>`
+              : recentPayments
+                  .map(
+                    (p) => `
+              <tr>
+                <td><small style="font-family:monospace;">${p.id.slice(0, 13)}...</small></td>
+                <td>${p.user?.email || "N/A"}</td>
+                <td><strong>$${p.amount.toFixed(2)}</strong></td>
+                <td>${p.currency.toUpperCase()}</td>
+                <td><span class="badge ${p.status === "PAID" ? "badge-success" : "badge-danger"}">${p.status}</span></td>
+                <td>${p.gatewayReference || "N/A"}</td>
+                <td>${new Date(p.createdAt).toLocaleDateString("es-MX")}</td>
+              </tr>
+            `
+                  )
+                  .join("")
+          }
+        </tbody>
+      `;
+    } else {
+      reportTitle = "Reporte Técnico de Producción DTF Prepress a 300 DPI";
+      tableHtml = `
+        <thead>
+          <tr>
+            <th>Herramienta DTF</th>
+            <th>Usuario</th>
+            <th>Archivo / Pliego</th>
+            <th>Resolución</th>
+            <th>Estado</th>
+            <th>Fecha</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${
+            recentUsages.length === 0
+              ? `<tr><td colspan="6" style="text-align:center;color:#888;">No hay registros de uso en bitácora</td></tr>`
+              : recentUsages
+                  .map(
+                    (u) => `
+              <tr>
+                <td><strong>${u.toolName}</strong></td>
+                <td>${u.user?.email || "Anónimo"}</td>
+                <td>${u.inputName || "N/A"} ${u.canvasSize ? `(${u.canvasSize})` : ""}</td>
+                <td>${u.outputDpi || 300} DPI</td>
+                <td><span class="badge ${u.status === "SUCCESS" ? "badge-success" : "badge-danger"}">${u.status}</span></td>
+                <td>${new Date(u.createdAt).toLocaleDateString("es-MX")}</td>
+              </tr>
+            `
+                  )
+                  .join("")
+          }
+        </tbody>
+      `;
+    }
+
+    const printWindow = window.open("", "_blank");
+    if (!printWindow) {
+      alert("Por favor permite las ventanas emergentes en tu navegador para ver y descargar el reporte PDF.");
+      return;
+    }
+
+    printWindow.document.write(`
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>Privae Textil - ${reportTitle}</title>
+          <style>
+            body {
+              font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+              color: #111;
+              margin: 0;
+              padding: 30px;
+              background: #fff;
+            }
+            .header {
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              border-bottom: 2px solid #111;
+              padding-bottom: 16px;
+              margin-bottom: 24px;
+            }
+            .logo-title {
+              font-size: 22px;
+              font-weight: 900;
+              letter-spacing: -0.5px;
+              text-transform: uppercase;
+            }
+            .subtitle {
+              font-size: 13px;
+              color: #555;
+              margin-top: 4px;
+              font-weight: 600;
+            }
+            .meta {
+              text-align: right;
+              font-size: 11px;
+              color: #666;
+            }
+            .kpis {
+              display: grid;
+              grid-template-columns: repeat(4, 1fr);
+              gap: 12px;
+              margin-bottom: 24px;
+            }
+            .kpi-box {
+              border: 1px solid #ddd;
+              border-radius: 8px;
+              padding: 12px;
+              background: #fafafa;
+            }
+            .kpi-label {
+              font-size: 10px;
+              text-transform: uppercase;
+              color: #777;
+              font-weight: bold;
+              letter-spacing: 0.5px;
+            }
+            .kpi-value {
+              font-size: 22px;
+              font-weight: 900;
+              color: #111;
+              margin-top: 4px;
+            }
+            table {
+              width: 100%;
+              border-collapse: collapse;
+              font-size: 12px;
+              margin-bottom: 24px;
+            }
+            th, td {
+              padding: 10px 12px;
+              text-align: left;
+              border-bottom: 1px solid #eee;
+            }
+            th {
+              background: #f4f4f5;
+              text-transform: uppercase;
+              font-size: 10px;
+              font-weight: bold;
+              color: #444;
+              border-bottom: 2px solid #ccc;
+              letter-spacing: 0.5px;
+            }
+            tr:nth-child(even) td {
+              background: #fafafa;
+            }
+            .badge {
+              display: inline-block;
+              padding: 3px 8px;
+              border-radius: 4px;
+              font-size: 9px;
+              font-weight: bold;
+              text-transform: uppercase;
+            }
+            .badge-success { background: #dcfce7; color: #166534; }
+            .badge-warning { background: #fef3c7; color: #92400e; }
+            .badge-danger { background: #fee2e2; color: #991b1b; }
+            .badge-neutral { background: #f3f4f6; color: #374151; }
+            .footer {
+              border-top: 1px solid #ddd;
+              padding-top: 12px;
+              display: flex;
+              justify-content: space-between;
+              font-size: 10px;
+              color: #888;
+            }
+            @media print {
+              body { padding: 0; }
+              @page { margin: 1.5cm; }
+            }
+          </style>
+        </head>
+        <body>
+          <div class="header">
+            <div>
+              <div class="logo-title">PRIVAE TEXTIL · AUDITORÍA DE ADMINISTRACIÓN</div>
+              <div class="subtitle">${reportTitle}</div>
+            </div>
+            <div class="meta">
+              <div>Fecha de Emisión: <strong>${today}</strong></div>
+              <div>Taller Certificado DTF Prepress 300 DPI</div>
+            </div>
+          </div>
+
+          ${
+            stats
+              ? `
+            <div class="kpis">
+              <div class="kpi-box">
+                <div class="kpi-label">Usuarios Totales</div>
+                <div class="kpi-value">${stats.totalUsers}</div>
+              </div>
+              <div class="kpi-box">
+                <div class="kpi-label">Suscriptores Activos</div>
+                <div class="kpi-value">${stats.activeSubscriptions}</div>
+              </div>
+              <div class="kpi-box">
+                <div class="kpi-label">En Prueba (5 Días)</div>
+                <div class="kpi-value">${stats.trialUsers}</div>
+              </div>
+              <div class="kpi-box">
+                <div class="kpi-label">Archivos Procesados</div>
+                <div class="kpi-value">${stats.totalProcessings}</div>
+              </div>
+            </div>
+          `
+              : ""
+          }
+
+          <table>
+            ${tableHtml}
+          </table>
+
+          <div class="footer">
+            <div>Documento Oficial Generado por el Panel de Administración Privae Textil</div>
+            <div>Base de Datos Neon PostgreSQL · Certificación DTF Prepress 300 DPI</div>
+          </div>
+
+          <script>
+            window.onload = function() {
+              window.print();
+            };
+          </script>
+        </body>
+      </html>
+    `);
+    printWindow.document.close();
+  };
+
   if (loading) {
     return (
       <div className="flex min-h-[50vh] items-center justify-center">
@@ -184,12 +609,32 @@ export default function AdminPage() {
           </p>
         </div>
 
-        <button
-          onClick={loadData}
-          className="flex items-center gap-1.5 rounded-xl border border-neutral-800 bg-neutral-900 px-4 py-2 text-xs font-bold text-white hover:bg-neutral-800 transition-colors"
-        >
-          <RefreshCw className="h-3.5 w-3.5" /> Actualizar Panel
-        </button>
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            onClick={() => exportToExcel("all")}
+            className="flex items-center gap-1.5 rounded-xl border border-neutral-700 bg-neutral-900 px-3.5 py-2 text-xs font-bold text-white hover:bg-neutral-800 transition-colors shadow-sm"
+            title="Exportar datos a formato Excel (.CSV)"
+          >
+            <FileSpreadsheet className="h-3.5 w-3.5 text-emerald-400" />
+            <span>Exportar Excel</span>
+          </button>
+
+          <button
+            onClick={exportToPdf}
+            className="flex items-center gap-1.5 rounded-xl border border-neutral-700 bg-neutral-900 px-3.5 py-2 text-xs font-bold text-white hover:bg-neutral-800 transition-colors shadow-sm"
+            title="Generar o Imprimir Reporte Oficial en PDF"
+          >
+            <FileText className="h-3.5 w-3.5 text-sky-400" />
+            <span>Reporte PDF</span>
+          </button>
+
+          <button
+            onClick={loadData}
+            className="flex items-center gap-1.5 rounded-xl border border-neutral-800 bg-neutral-900 px-4 py-2 text-xs font-bold text-white hover:bg-neutral-800 transition-colors"
+          >
+            <RefreshCw className="h-3.5 w-3.5" /> Actualizar Panel
+          </button>
+        </div>
       </div>
 
       {feedback && (
@@ -515,15 +960,25 @@ export default function AdminPage() {
             <h2 className="text-xs font-black uppercase tracking-widest text-neutral-300">
               Ver y Buscar Usuarios · Control de Pruebas (5 Días) y Suscripciones
             </h2>
-            <div className="relative w-full max-w-xs">
-              <Search className="absolute left-3 top-2.5 h-4 w-4 text-neutral-500" />
-              <input
-                type="text"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="Buscar por correo o nombre..."
-                className="w-full rounded-lg border border-neutral-800 bg-black py-2 pl-9 pr-3 text-xs text-white focus:border-white focus:outline-none"
-              />
+            <div className="flex items-center gap-2">
+              <div className="relative w-full max-w-xs">
+                <Search className="absolute left-3 top-2.5 h-4 w-4 text-neutral-500" />
+                <input
+                  type="text"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder="Buscar por correo o nombre..."
+                  className="w-full rounded-lg border border-neutral-800 bg-black py-2 pl-9 pr-3 text-xs text-white focus:border-white focus:outline-none"
+                />
+              </div>
+              <button
+                onClick={() => exportToExcel("users")}
+                className="flex items-center gap-1.5 rounded-lg border border-neutral-800 bg-neutral-900 px-3 py-2 text-xs font-bold text-neutral-300 hover:text-white hover:border-neutral-700 transition-colors shadow-sm"
+                title="Exportar lista de usuarios a Excel"
+              >
+                <FileSpreadsheet className="h-3.5 w-3.5 text-emerald-400" />
+                <span className="hidden sm:inline">Excel</span>
+              </button>
             </div>
           </div>
 
@@ -643,9 +1098,19 @@ export default function AdminPage() {
       {/* PESTAÑA 2: PAGOS, RENOVACIONES Y FALLOS DE PASARELA */}
       {activeTab === "payments" && (
         <div className="rounded-2xl border border-neutral-800 bg-neutral-950 p-6 space-y-4">
-          <h2 className="text-xs font-black uppercase tracking-widest text-neutral-300">
-            Pagos, Renovaciones Mensuales y Fallos Reportados por la Pasarela (Stripe)
-          </h2>
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <h2 className="text-xs font-black uppercase tracking-widest text-neutral-300">
+              Pagos, Renovaciones Mensuales y Fallos Reportados por la Pasarela (Stripe)
+            </h2>
+            <button
+              onClick={() => exportToExcel("payments")}
+              className="flex items-center gap-1.5 rounded-lg border border-neutral-800 bg-neutral-900 px-3 py-1.5 text-xs font-bold text-neutral-300 hover:text-white hover:border-neutral-700 transition-colors shadow-sm"
+              title="Exportar reporte de pagos a Excel"
+            >
+              <FileSpreadsheet className="h-3.5 w-3.5 text-emerald-400" />
+              <span>Exportar Pagos Excel</span>
+            </button>
+          </div>
 
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs text-neutral-300">
@@ -808,10 +1273,20 @@ export default function AdminPage() {
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
           {/* Uso Básico y Errores de Procesamiento */}
           <div className="rounded-2xl border border-neutral-800 bg-neutral-950 p-6 space-y-4">
-            <h3 className="text-xs font-black uppercase tracking-wider text-white flex items-center gap-2">
-              <Activity className="h-4 w-4" />
-              <span>Uso de las 5 Herramientas y Errores de Procesamiento</span>
-            </h3>
+            <div className="flex items-center justify-between">
+              <h3 className="text-xs font-black uppercase tracking-wider text-white flex items-center gap-2">
+                <Activity className="h-4 w-4" />
+                <span>Uso de las 5 Herramientas y Errores de Procesamiento</span>
+              </h3>
+              <button
+                onClick={() => exportToExcel("usage")}
+                className="flex items-center gap-1.5 rounded-lg border border-neutral-800 bg-neutral-900 px-2.5 py-1 text-xs font-bold text-neutral-300 hover:text-white hover:border-neutral-700 transition-colors shadow-sm"
+                title="Exportar bitácora DTF a Excel"
+              >
+                <FileSpreadsheet className="h-3 w-3 text-emerald-400" />
+                <span className="hidden sm:inline">Excel</span>
+              </button>
+            </div>
             <div className="space-y-2 max-h-80 overflow-y-auto pr-1">
               {recentUsages.length === 0 ? (
                 <p className="text-xs text-neutral-500">Sin operaciones registradas.</p>
