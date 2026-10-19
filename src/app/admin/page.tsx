@@ -39,6 +39,11 @@ interface AdminUserItem {
   email: string;
   name: string | null;
   role: string;
+  isActive?: boolean;
+  lastLoginAt?: string | null;
+  lastLoginIp?: string | null;
+  failedAttempts?: number;
+  lockedUntil?: string | null;
   createdAt: string;
   subscription: {
     status: string;
@@ -164,6 +169,52 @@ export default function AdminPage() {
       loadData();
     } catch (err: any) {
       setFeedback(err.message || "Error al actualizar contraseña.");
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const handleToggleActive = async (userId: string, userEmail: string, currentActive: boolean) => {
+    const nextState = !currentActive;
+    const confirmMsg = nextState
+      ? `¿Deseas reactivar la cuenta de ${userEmail}?`
+      : `¿Deseas suspender y desactivar la cuenta de ${userEmail}? Sus sesiones activas se revocarán de inmediato.`;
+    if (!confirm(confirmMsg)) return;
+
+    setActionLoading(true);
+    setFeedback(null);
+    try {
+      const res = await fetch("/api/admin/users", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId, toggleActive: nextState }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || "No se pudo actualizar el estado de la cuenta.");
+      setFeedback(data.message || "Cuenta actualizada exitosamente.");
+      loadData();
+    } catch (err: any) {
+      setFeedback(err.message || "Error al actualizar cuenta.");
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const handleUnlockAccount = async (userId: string, userEmail: string) => {
+    setActionLoading(true);
+    setFeedback(null);
+    try {
+      const res = await fetch("/api/admin/users", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId, unlockAccount: true }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || "No se pudo desbloquear la cuenta.");
+      setFeedback(data.message || `Cuenta de ${userEmail} desbloqueada exitosamente.`);
+      loadData();
+    } catch (err: any) {
+      setFeedback(err.message || "Error al desbloquear.");
     } finally {
       setActionLoading(false);
     }
@@ -1051,8 +1102,9 @@ export default function AdminPage() {
               <thead className="border-b border-neutral-800 bg-black text-[11px] uppercase tracking-wider text-neutral-400">
                 <tr>
                   <th className="py-3 px-3">Usuario</th>
-                  <th className="py-3 px-3">Fecha de Alta</th>
-                  <th className="py-3 px-3">Estado</th>
+                  <th className="py-3 px-3">Alta / Acceso</th>
+                  <th className="py-3 px-3">Cuenta</th>
+                  <th className="py-3 px-3">Suscripción</th>
                   <th className="py-3 px-3">Fin Prueba / Cobro</th>
                   <th className="py-3 px-3">Uso DTF</th>
                   <th className="py-3 px-3 text-right">Acciones de Acceso</th>
@@ -1061,13 +1113,15 @@ export default function AdminPage() {
               <tbody className="divide-y divide-neutral-900">
                 {users.length === 0 ? (
                   <tr>
-                    <td colSpan={6} className="py-6 text-center text-neutral-500">
+                    <td colSpan={7} className="py-6 text-center text-neutral-500">
                       No se encontraron usuarios.
                     </td>
                   </tr>
                 ) : (
                   users.map((u) => {
                     const status = u.subscription?.status || "TRIAL";
+                    const isLocked = u.lockedUntil && new Date(u.lockedUntil) > new Date();
+                    const isActive = u.isActive !== false;
                     return (
                       <tr key={u.id} className="hover:bg-neutral-900/50">
                         <td className="py-3 px-3">
@@ -1078,8 +1132,30 @@ export default function AdminPage() {
                             {u.email}
                           </div>
                         </td>
-                        <td className="py-3 px-3 text-neutral-400 font-mono text-[11px]">
-                          {new Date(u.createdAt).toLocaleDateString("es-MX")}
+                        <td className="py-3 px-3 font-mono text-[11px]">
+                          <div className="text-neutral-300">
+                            Alta: {new Date(u.createdAt).toLocaleDateString("es-MX")}
+                          </div>
+                          <div className="text-neutral-500 text-[10px]">
+                            {u.lastLoginAt
+                              ? `Último: ${new Date(u.lastLoginAt).toLocaleDateString("es-MX")}`
+                              : "Sin accesos"}
+                          </div>
+                        </td>
+                        <td className="py-3 px-3">
+                          {isLocked ? (
+                            <span className="inline-flex rounded-full px-2 py-0.5 text-[10px] font-bold border border-white bg-black text-white">
+                              Bloqueado
+                            </span>
+                          ) : !isActive ? (
+                            <span className="inline-flex rounded-full px-2 py-0.5 text-[10px] font-bold border border-neutral-700 bg-neutral-950 text-neutral-500">
+                              Inactivo
+                            </span>
+                          ) : (
+                            <span className="inline-flex rounded-full px-2 py-0.5 text-[10px] font-bold border border-neutral-800 bg-neutral-900 text-neutral-300">
+                              Activo
+                            </span>
+                          )}
                         </td>
                         <td className="py-3 px-3">
                           <span
@@ -1116,6 +1192,28 @@ export default function AdminPage() {
                           {u._count.toolUsages} archivos
                         </td>
                         <td className="py-3 px-3 text-right space-x-1.5 whitespace-nowrap">
+                          {isLocked && (
+                            <button
+                              onClick={() => handleUnlockAccount(u.id, u.email)}
+                              disabled={actionLoading}
+                              className="rounded bg-white text-black px-2 py-1 text-[10px] font-bold hover:bg-neutral-200 transition-colors"
+                              title="Desbloquear intentos fallidos"
+                            >
+                              Desbloquear
+                            </button>
+                          )}
+                          <button
+                            onClick={() => handleToggleActive(u.id, u.email, isActive)}
+                            disabled={actionLoading}
+                            className={`rounded px-2 py-1 text-[10px] font-bold border transition-colors ${
+                              isActive
+                                ? "bg-neutral-950 border-neutral-800 text-neutral-400 hover:text-white hover:bg-neutral-900"
+                                : "bg-white text-black border-white hover:bg-neutral-200"
+                            }`}
+                            title={isActive ? "Desactivar cuenta y revocar sesiones" : "Reactivar cuenta"}
+                          >
+                            {isActive ? "Desactivar" : "Reactivar"}
+                          </button>
                           <button
                             onClick={() => handleUpdateStatus(u.id, "ACTIVE")}
                             disabled={actionLoading}

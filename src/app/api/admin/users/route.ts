@@ -7,7 +7,10 @@ export async function GET(req: NextRequest) {
   try {
     const user = await getCurrentUser();
     if (!user || user.role !== "ADMIN") {
-      return NextResponse.json({ error: "Acceso no autorizado: Se requiere rol de Administrador" }, { status: 403 });
+      return NextResponse.json(
+        { error: "Acceso no autorizado: Se requiere rol de Administrador" },
+        { status: 403 }
+      );
     }
 
     const { searchParams } = new URL(req.url);
@@ -27,6 +30,11 @@ export async function GET(req: NextRequest) {
         email: true,
         name: true,
         role: true,
+        isActive: true,
+        lastLoginAt: true,
+        lastLoginIp: true,
+        failedAttempts: true,
+        lockedUntil: true,
         createdAt: true,
         subscription: true,
         _count: {
@@ -46,10 +54,20 @@ export async function PATCH(req: NextRequest) {
   try {
     const adminUser = await getCurrentUser();
     if (!adminUser || adminUser.role !== "ADMIN") {
-      return NextResponse.json({ error: "Acceso no autorizado: Se requiere rol de Administrador" }, { status: 403 });
+      return NextResponse.json(
+        { error: "Acceso no autorizado: Se requiere rol de Administrador" },
+        { status: 403 }
+      );
     }
 
-    const { userId, newStatus, addDays, newPassword } = await req.json();
+    const {
+      userId,
+      newStatus,
+      addDays,
+      newPassword,
+      toggleActive,
+      unlockAccount,
+    } = await req.json();
 
     if (!userId) {
       return NextResponse.json(
@@ -63,6 +81,60 @@ export async function PATCH(req: NextRequest) {
       return NextResponse.json({ error: "Usuario no encontrado" }, { status: 404 });
     }
 
+    // Desbloqueo manual de cuenta bloqueada por intentos fallidos
+    if (unlockAccount) {
+      await prisma.user.update({
+        where: { id: userId },
+        data: {
+          failedAttempts: 0,
+          lockedUntil: null,
+        },
+      });
+
+      await prisma.auditLog.create({
+        data: {
+          adminEmail: adminUser.email,
+          targetUserEmail: targetUser.email,
+          action: "UNLOCK_ACCOUNT",
+          details: `Cuenta desbloqueada manualmente por el administrador ${adminUser.email}`,
+        },
+      });
+
+      return NextResponse.json({
+        success: true,
+        message: `Cuenta de ${targetUser.email} desbloqueada exitosamente.`,
+      });
+    }
+
+    // Activar o desactivar cuenta de usuario (baneo o suspensión total)
+    if (typeof toggleActive === "boolean") {
+      await prisma.user.update({
+        where: { id: userId },
+        data: {
+          isActive: toggleActive,
+          tokenVersion: { increment: 1 }, // Revoca de inmediato todas las sesiones activas
+        },
+      });
+
+      await prisma.auditLog.create({
+        data: {
+          adminEmail: adminUser.email,
+          targetUserEmail: targetUser.email,
+          action: toggleActive ? "ACTIVATE_USER" : "DEACTIVATE_USER",
+          details: toggleActive
+            ? `Cuenta activada por el administrador ${adminUser.email}`
+            : `Cuenta desactivada y sesiones revocadas por el administrador ${adminUser.email}`,
+        },
+      });
+
+      return NextResponse.json({
+        success: true,
+        message: `Estado de la cuenta de ${targetUser.email} actualizado a ${
+          toggleActive ? "Activo" : "Desactivado"
+        }.`,
+      });
+    }
+
     // Restablecimiento de contraseña solicitado por el Administrador
     if (newPassword) {
       if (typeof newPassword !== "string" || newPassword.length < 6) {
@@ -74,7 +146,12 @@ export async function PATCH(req: NextRequest) {
       const passwordHash = await hashPassword(newPassword);
       await prisma.user.update({
         where: { id: userId },
-        data: { passwordHash },
+        data: {
+          passwordHash,
+          tokenVersion: { increment: 1 }, // Invalida sesiones previas tras cambio de contraseña
+          failedAttempts: 0,
+          lockedUntil: null,
+        },
       });
       await prisma.auditLog.create({
         data: {
@@ -88,7 +165,7 @@ export async function PATCH(req: NextRequest) {
       if (!newStatus) {
         return NextResponse.json({
           success: true,
-          message: `Contraseña de ${targetUser.email} actualizada con éxito.`,
+          message: `Contraseña de ${targetUser.email} actualizada con éxito y sesiones previas revocadas.`,
         });
       }
     }
@@ -146,7 +223,7 @@ export async function PATCH(req: NextRequest) {
       },
     });
 
-    // Registrar cambio en AuditLog (Sección 09 del PDF: "con registro básico de cambios")
+    // Registrar cambio en AuditLog
     await prisma.auditLog.create({
       data: {
         adminEmail: adminUser.email,

@@ -92,6 +92,11 @@ export async function POST(req: NextRequest) {
         name: name || null,
         passwordHash,
         role,
+        isActive: true,
+        lastLoginAt: new Date(),
+        lastLoginIp: clientIp,
+        failedAttempts: 0,
+        tokenVersion: 1,
         subscription: {
           create: {
             status: "TRIAL",
@@ -105,6 +110,15 @@ export async function POST(req: NextRequest) {
       },
     });
 
+    await prisma.auditLog.create({
+      data: {
+        adminEmail: "system",
+        targetUserEmail: user.email,
+        action: "REGISTER_SUCCESS",
+        details: `Registro de nueva cuenta desde IP ${clientIp}. Periodo de prueba de 5 dias iniciado.`,
+      },
+    }).catch(() => {});
+
     // Evento automático Sección 08: Alta / Inicio de prueba (5 días)
     await sendTransactionalEventEmail({
       userId: user.id,
@@ -114,7 +128,7 @@ export async function POST(req: NextRequest) {
       extraData: { trialEndsAt },
     }).catch(() => {});
 
-    const token = await createSessionToken(user.id, user.role);
+    const token = await createSessionToken(user.id, user.role, user.tokenVersion || 1);
 
     const response = NextResponse.json({
       success: true,

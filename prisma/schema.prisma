@@ -13,6 +13,12 @@ model User {
   name             String?
   passwordHash     String
   role             String         @default("USER") // USER | ADMIN
+  isActive         Boolean        @default(true)
+  lastLoginAt      DateTime?
+  lastLoginIp      String?
+  failedAttempts   Int            @default(0)
+  lockedUntil      DateTime?
+  tokenVersion     Int            @default(1)
   resetToken       String?
   resetTokenExpiry DateTime?
   createdAt        DateTime       @default(now())

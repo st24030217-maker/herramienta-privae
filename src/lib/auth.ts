@@ -17,6 +17,9 @@ export interface UserSession {
   email: string;
   name: string | null;
   role: string;
+  isActive: boolean;
+  lastLoginAt: string | null;
+  lastLoginIp: string | null;
   createdAt: string;
   subscription: {
     status: string;
@@ -49,6 +52,12 @@ export interface UserSession {
   }>;
 }
 
+export interface SessionPayload {
+  userId: string;
+  role: string;
+  tokenVersion: number;
+}
+
 export async function hashPassword(password: string): Promise<string> {
   return await bcrypt.hash(password, 10);
 }
@@ -57,18 +66,28 @@ export async function verifyPassword(password: string, hash: string): Promise<bo
   return await bcrypt.compare(password, hash);
 }
 
-export async function createSessionToken(userId: string, role: string = "USER"): Promise<string> {
-  return await new SignJWT({ sub: userId, role })
+export async function createSessionToken(
+  userId: string,
+  role: string = "USER",
+  tokenVersion: number = 1
+): Promise<string> {
+  return await new SignJWT({ sub: userId, role, v: tokenVersion })
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
     .setExpirationTime("30d")
     .sign(getJwtSecret());
 }
 
-export async function verifySessionToken(token: string): Promise<string | null> {
+export async function verifySessionToken(token: string): Promise<SessionPayload | null> {
   try {
     const verified = await jwtVerify(token, getJwtSecret());
-    return (verified.payload.sub as string) || null;
+    const sub = verified.payload.sub as string;
+    if (!sub) return null;
+    return {
+      userId: sub,
+      role: (verified.payload.role as string) || "USER",
+      tokenVersion: typeof verified.payload.v === "number" ? verified.payload.v : 1,
+    };
   } catch {
     return null;
   }
@@ -81,11 +100,11 @@ export async function getCurrentUser(): Promise<UserSession | null> {
 
     if (!token) return null;
 
-    const userId = await verifySessionToken(token);
-    if (!userId) return null;
+    const session = await verifySessionToken(token);
+    if (!session) return null;
 
     const user = await prisma.user.findUnique({
-      where: { id: userId },
+      where: { id: session.userId },
       include: {
         subscription: true,
         payments: {
@@ -100,6 +119,10 @@ export async function getCurrentUser(): Promise<UserSession | null> {
     });
 
     if (!user) return null;
+
+    // Validación de seguridad: cuenta desactivada o sesión revocada
+    if (user.isActive === false) return null;
+    if (user.tokenVersion !== session.tokenVersion) return null;
 
     const config = await getPlatformConfig();
     let subscription = user.subscription;
@@ -223,6 +246,9 @@ export async function getCurrentUser(): Promise<UserSession | null> {
       email: user.email,
       name: user.name,
       role: user.role,
+      isActive: user.isActive,
+      lastLoginAt: user.lastLoginAt ? user.lastLoginAt.toISOString() : null,
+      lastLoginIp: user.lastLoginIp || null,
       createdAt: user.createdAt.toISOString(),
       subscription: {
         status: subscription.status,
