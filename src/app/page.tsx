@@ -7,6 +7,7 @@ import {
   ScanSearch,
   ArrowRight,
 } from "lucide-react";
+import Image from "next/image";
 import { CornerButton } from "@/components/ui/corner-button";
 import { GlareCard } from "@/components/ui/glare-card";
 import { AnimatedContent } from "@/components/AnimatedContent";
@@ -106,11 +107,14 @@ export default function HomePage() {
           <GlareCard glareColor="white" className="p-6 lg:p-8">
             <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
               <div className="w-full lg:w-72 shrink-0 overflow-hidden rounded-xl border border-white/15 bg-black/40">
-                <img
+                <Image
                   src="/tools/dtf_armador_archivos_minimal_bn.png"
                   alt="05 Armador de Archivos DTF"
+                  width={640}
+                  height={360}
                   className="w-full aspect-video object-cover"
-                  loading="lazy"
+                  sizes="(max-width: 1024px) 100vw, 288px"
+                  priority={false}
                 />
               </div>
 
@@ -184,11 +188,14 @@ export default function HomePage() {
                 <div className="flex flex-col h-full justify-between">
                   <div>
                     <div className="mb-3.5 overflow-hidden rounded-lg border border-white/15 bg-black/40">
-                      <img
+                      <Image
                         src={tool.image}
                         alt={tool.name}
+                        width={640}
+                        height={360}
                         className="w-full aspect-video object-cover"
-                        loading="lazy"
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                        priority={false}
                       />
                     </div>
 
@@ -248,11 +255,14 @@ export default function HomePage() {
           <GlareCard glareColor="white" className="p-6 lg:p-7">
             <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
               <div className="w-full lg:w-72 shrink-0 overflow-hidden rounded-xl border border-white/15 bg-black/40">
-                <img
+                <Image
                   src="/tools/dtf_escaner_calidad_minimal_bn.png"
                   alt="Escáner de Calidad DTF"
+                  width={640}
+                  height={360}
                   className="w-full aspect-video object-cover"
-                  loading="lazy"
+                  sizes="(max-width: 1024px) 100vw, 288px"
+                  priority={false}
                 />
               </div>
 

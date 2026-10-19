@@ -6,7 +6,13 @@ import { sendTransactionalEventEmail } from "./email";
 import { getPlatformConfig } from "./settings";
 
 function getJwtSecret(): Uint8Array {
-  const secret = process.env.JWT_SECRET || "privae_master_jwt_secret_key_dtf_prepress_2026_prod_fallback_auth";
+  const secret = process.env.JWT_SECRET;
+  if (!secret) {
+    if (process.env.NODE_ENV === "production") {
+      throw new Error("FATAL_SECURITY_ERROR: La variable de entorno JWT_SECRET no está configurada en producción.");
+    }
+    return new TextEncoder().encode("dev_insecure_jwt_secret_only_for_local_development_300dpi");
+  }
   return new TextEncoder().encode(secret);
 }
 

@@ -8,9 +8,35 @@ import TargetCursor from "@/components/TargetCursor";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Privae Textil - Herramientas Profesionales de Preparación de Imágenes y DTF",
+  title: "Privae Textil — Herramientas Profesionales de Preparación de Imágenes y DTF a 300 DPI",
   description:
-    "Plataforma web de procesamiento de imágenes y armado de archivos DTF a 300 DPI con transparencia real.",
+    "Plataforma web oficial para preparar, optimizar y armar pliegos textiles DTF de 58 cm con fondo transparente certificado a 300 DPI reales.",
+  metadataBase: new URL("https://herramienta-privae.vercel.app"),
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: "Privae Textil — Plataforma de Preparación DTF a 300 DPI",
+    description: "5 herramientas en línea para remover fondos, escalar resolución y armar pliegos de 58 cm para producción textil.",
+    url: "https://herramienta-privae.vercel.app",
+    siteName: "Privae Textil",
+    images: [
+      {
+        url: "/logo.png",
+        width: 800,
+        height: 400,
+        alt: "Privae Textil",
+      },
+    ],
+    locale: "es_MX",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Privae Textil — Plataforma DTF a 300 DPI",
+    description: "Preparación y armado de archivos DTF profesionales a 300 DPI reales.",
+    images: ["/logo.png"],
+  },
 };
 
 export default function RootLayout({
@@ -39,7 +65,7 @@ export default function RootLayout({
           targetSelector='.cursor-target, a, button, [role="button"]'
           spinDuration={2.2}
           hoverDuration={0.18}
-          hideDefaultCursor={true}
+          hideDefaultCursor={false}
           parallaxOn={true}
         />
         <div className="fixed inset-0 -z-10 pointer-events-none overflow-hidden">

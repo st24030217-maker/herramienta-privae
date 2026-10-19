@@ -4,21 +4,34 @@ import { hashPassword } from "@/lib/auth";
 
 export async function GET(req: NextRequest) {
   try {
+    const adminCount = await prisma.user.count({ where: { role: "ADMIN" } });
+    if (adminCount > 0) {
+      return NextResponse.json(
+        { error: "Operación no permitida: El administrador ya se encuentra inicializado en el sistema." },
+        { status: 403 }
+      );
+    }
+
+    const setupKey = req.nextUrl.searchParams.get("key");
+    const requiredKey = process.env.SETUP_SECRET_KEY;
+    if (requiredKey && setupKey !== requiredKey) {
+      return NextResponse.json(
+        { error: "No autorizado: Clave de inicialización inválida." },
+        { status: 401 }
+      );
+    }
+
     const adminEmail = (process.env.ADMIN_EMAIL || "admin@privae.com").toLowerCase().trim();
     const defaultPassword = process.env.ADMIN_DEFAULT_PASSWORD || "AdminPassword2026!";
     const passwordHash = await hashPassword(defaultPassword);
 
-    const admin = await prisma.user.upsert({
-      where: { email: adminEmail },
-      update: {
-        role: "ADMIN",
-        passwordHash,
-      },
-      create: {
+    const admin = await prisma.user.create({
+      data: {
         email: adminEmail,
         name: "Administrador Privae",
         passwordHash,
         role: "ADMIN",
+        isActive: true,
         subscription: {
           create: {
             status: "ACTIVE",

@@ -40,62 +40,42 @@ export async function POST(req: NextRequest) {
 
     const isMasterAdminEmail = (normalizedEmail === adminEmail || normalizedEmail === "admin@privae.com");
 
-    if (isMasterAdminEmail) {
-      const passwordHash = await hashPassword(password);
-      user = await prisma.user.upsert({
-        where: { email: normalizedEmail },
-        update: {
-          role: "ADMIN",
-          passwordHash,
-          isActive: true,
-          failedAttempts: 0,
-          lockedUntil: null,
-          lastLoginAt: new Date(),
-          lastLoginIp: clientIp,
-        },
-        create: {
-          email: normalizedEmail,
-          name: "Administrador Privae",
-          passwordHash,
-          role: "ADMIN",
-          isActive: true,
-          failedAttempts: 0,
-          lockedUntil: null,
-          lastLoginAt: new Date(),
-          lastLoginIp: clientIp,
-          subscription: {
-            create: {
-              status: "ACTIVE",
-              trialEndsAt: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
-              planPrice: 0.0,
+    // Si el usuario administrador maestro aún no existe en una base de datos nueva, crearlo inicialmente
+    if (!user && isMasterAdminEmail) {
+      const adminCount = await prisma.user.count({ where: { role: "ADMIN" } });
+      if (adminCount === 0) {
+        const passwordHash = await hashPassword(password);
+        user = await prisma.user.create({
+          data: {
+            email: normalizedEmail,
+            name: "Administrador Privae",
+            passwordHash,
+            role: "ADMIN",
+            isActive: true,
+            failedAttempts: 0,
+            lockedUntil: null,
+            lastLoginAt: new Date(),
+            lastLoginIp: clientIp,
+            subscription: {
+              create: {
+                status: "ACTIVE",
+                trialEndsAt: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
+                planPrice: 0.0,
+              },
             },
           },
-        },
-        include: { subscription: true },
-      });
+          include: { subscription: true },
+        });
 
-      await prisma.auditLog.create({
-        data: {
-          adminEmail: user.email,
-          targetUserEmail: user.email,
-          action: "LOGIN_SUCCESS",
-          details: `Inicio de sesion como Administrador Master desde IP ${clientIp}`,
-        },
-      }).catch(() => {});
-
-      const token = await createSessionToken(user.id, "ADMIN", user.tokenVersion || 1);
-      const response = NextResponse.json({
-        success: true,
-        user: { id: user.id, email: user.email, name: user.name, role: "ADMIN" },
-      });
-      response.cookies.set("privae_auth_token", token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
-        maxAge: 60 * 60 * 24 * 30,
-        path: "/",
-      });
-      return response;
+        await prisma.auditLog.create({
+          data: {
+            adminEmail: user.email,
+            targetUserEmail: user.email,
+            action: "INITIAL_ADMIN_PROVISIONED",
+            details: `Cuenta de Administrador Master inicializada desde IP ${clientIp}.`,
+          },
+        }).catch(() => {});
+      }
     }
 
     // Validación de bloqueo temporal por intentos fallidos
