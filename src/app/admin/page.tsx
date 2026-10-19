@@ -65,6 +65,7 @@ export default function AdminPage() {
   const [auditLogs, setAuditLogs] = useState<any[]>([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
+  const [unauthorized, setUnauthorized] = useState(false);
   const [actionLoading, setActionLoading] = useState(false);
   const [feedback, setFeedback] = useState<string | null>(null);
 
@@ -82,6 +83,10 @@ export default function AdminPage() {
       ),
     ])
       .then(([statsData, usersData]) => {
+        if (statsData.error && (statsData.error.includes("Administrador") || statsData.error.includes("no autorizado"))) {
+          setUnauthorized(true);
+          return;
+        }
         if (statsData.stats) setStats(statsData.stats);
         if (statsData.recentPayments) setRecentPayments(statsData.recentPayments);
         if (statsData.recentUsages) setRecentUsages(statsData.recentUsages);
@@ -617,6 +622,28 @@ export default function AdminPage() {
     return (
       <div className="flex min-h-[50vh] items-center justify-center">
         <RefreshCw className="h-6 w-6 animate-spin text-white" />
+      </div>
+    );
+  }
+
+  if (unauthorized) {
+    return (
+      <div className="mx-auto max-w-lg px-4 pt-36 pb-24 text-center text-white space-y-4">
+        <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-red-500/10 text-red-400 border border-red-500/20">
+          <ShieldAlert className="h-7 w-7" />
+        </div>
+        <h2 className="text-xl font-black uppercase tracking-tight">Acceso Exclusivo de Administrador</h2>
+        <p className="text-xs text-neutral-400 leading-relaxed">
+          Esta sección está reservada para el equipo administrativo de Privae Textil. Tu cuenta no cuenta con permisos de administrador.
+        </p>
+        <div className="pt-2">
+          <a
+            href="/"
+            className="inline-flex items-center gap-2 rounded-xl bg-white px-5 py-2.5 text-xs font-black text-black hover:bg-neutral-200 transition-all"
+          >
+            ← Volver al Taller DTF
+          </a>
+        </div>
       </div>
     );
   }

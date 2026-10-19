@@ -7,8 +7,8 @@ import { runSubscriptionLifecycleChecks } from "@/lib/lifecycle";
 export async function GET() {
   try {
     const user = await getCurrentUser();
-    if (!user) {
-      return NextResponse.json({ error: "Acceso no autorizado" }, { status: 401 });
+    if (!user || user.role !== "ADMIN") {
+      return NextResponse.json({ error: "Acceso no autorizado: Se requiere rol de Administrador" }, { status: 403 });
     }
 
     // Ejecutar revisión automática de ciclo de vida al cargar el panel

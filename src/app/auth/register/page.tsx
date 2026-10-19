@@ -35,8 +35,8 @@ export default function RegisterPage() {
       const redirectUrl = params.get("redirect") || "/";
       const safeRedirect = redirectUrl.startsWith("/") && !redirectUrl.startsWith("//") ? redirectUrl : "/";
 
-      router.push(safeRedirect);
-      router.refresh();
+      // Redirección completa para asegurar actualización inmediata de cookies y estado de sesión
+      window.location.href = safeRedirect;
     } catch (err: any) {
       setError(err.message);
     } finally {

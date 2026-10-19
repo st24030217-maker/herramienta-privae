@@ -43,8 +43,7 @@ export function Navbar() {
   const handleLogout = async () => {
     await fetch("/api/auth/logout", { method: "POST" });
     setUserData(null);
-    router.push("/auth/login");
-    router.refresh();
+    window.location.href = "/auth/login";
   };
 
   const storeUrl = process.env.NEXT_PUBLIC_STORE_URL || "https://privaetextil.com";

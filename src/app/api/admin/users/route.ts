@@ -6,8 +6,8 @@ import { sendTransactionalEventEmail } from "@/lib/email";
 export async function GET(req: NextRequest) {
   try {
     const user = await getCurrentUser();
-    if (!user) {
-      return NextResponse.json({ error: "Acceso no autorizado" }, { status: 401 });
+    if (!user || user.role !== "ADMIN") {
+      return NextResponse.json({ error: "Acceso no autorizado: Se requiere rol de Administrador" }, { status: 403 });
     }
 
     const { searchParams } = new URL(req.url);
@@ -45,8 +45,8 @@ export async function GET(req: NextRequest) {
 export async function PATCH(req: NextRequest) {
   try {
     const adminUser = await getCurrentUser();
-    if (!adminUser) {
-      return NextResponse.json({ error: "Acceso no autorizado" }, { status: 401 });
+    if (!adminUser || adminUser.role !== "ADMIN") {
+      return NextResponse.json({ error: "Acceso no autorizado: Se requiere rol de Administrador" }, { status: 403 });
     }
 
     const { userId, newStatus, addDays, newPassword } = await req.json();

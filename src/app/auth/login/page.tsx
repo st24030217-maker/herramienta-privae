@@ -31,8 +31,16 @@ export default function LoginPage() {
       }
 
       const params = new URLSearchParams(window.location.search);
-      const redirectUrl = params.get("redirect") || "/";
-      const safeRedirect = redirectUrl.startsWith("/") && !redirectUrl.startsWith("//") ? redirectUrl : "/";
+      const redirectParam = params.get("redirect");
+      let safeRedirect = "/";
+
+      if (redirectParam && redirectParam.startsWith("/") && !redirectParam.startsWith("//")) {
+        safeRedirect = redirectParam;
+      } else if (data.user?.role === "ADMIN") {
+        safeRedirect = "/admin";
+      } else {
+        safeRedirect = "/";
+      }
 
       // Redirección completa para asegurar actualización inmediata de cookies y estado de sesión
       window.location.href = safeRedirect;

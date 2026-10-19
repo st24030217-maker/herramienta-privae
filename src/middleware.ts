@@ -34,9 +34,17 @@ export async function middleware(req: NextRequest) {
         return NextResponse.redirect(new URL("/auth/login", req.url));
       }
 
-      // Acceso garantizado para cualquier usuario autenticado en la plataforma
+      // Restricción estricta de rutas de Administrador: solo rol ADMIN
       if (isAdminRoute || isAdminApi) {
-        // Permitido
+        if (verified.payload.role !== "ADMIN") {
+          if (isAdminApi) {
+            return NextResponse.json(
+              { error: "Acceso denegado: Se requiere rol de Administrador" },
+              { status: 403 }
+            );
+          }
+          return NextResponse.redirect(new URL("/", req.url));
+        }
       }
     } catch {
       // Token inválido o manipulado
