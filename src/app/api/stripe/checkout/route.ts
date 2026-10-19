@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
         }
       : {
           price_data: {
-            currency: "usd",
+            currency: (process.env.STRIPE_CURRENCY || "mxn").toLowerCase(),
             product_data: {
               name: "Suscripción Premium Privae Textil DTF - Acceso Ilimitado",
               description: "Acceso completo a los 5 módulos de preparación de imágenes y archivos DTF a 300 DPI.",
