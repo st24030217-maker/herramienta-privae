@@ -37,7 +37,7 @@ export default function PrivacidadPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="rounded-2xl border border-white/15 bg-neutral-950 p-5 space-y-2">
             <div className="flex items-center gap-2 text-white font-bold">
-              <Lock className="h-4 w-4 text-emerald-400" />
+              <Lock className="h-4 w-4 text-white" />
               <span>1. Privacidad Estricta de los Archivos del Cliente</span>
             </div>
             <p className="text-xs text-neutral-300 leading-relaxed">
@@ -47,7 +47,7 @@ export default function PrivacidadPage() {
 
           <div className="rounded-2xl border border-white/15 bg-neutral-950 p-5 space-y-2">
             <div className="flex items-center gap-2 text-white font-bold">
-              <Trash2 className="h-4 w-4 text-emerald-400" />
+              <Trash2 className="h-4 w-4 text-white" />
               <span>2. Procesamiento en Memoria y Eliminación Automática</span>
             </div>
             <p className="text-xs text-neutral-300 leading-relaxed">
@@ -57,7 +57,7 @@ export default function PrivacidadPage() {
 
           <div className="rounded-2xl border border-white/15 bg-neutral-950 p-5 space-y-2">
             <div className="flex items-center gap-2 text-white font-bold">
-              <CreditCard className="h-4 w-4 text-emerald-400" />
+              <CreditCard className="h-4 w-4 text-white" />
               <span>3. No Almacenamiento de Tarjetas Bancarias</span>
             </div>
             <p className="text-xs text-neutral-300 leading-relaxed">
@@ -67,7 +67,7 @@ export default function PrivacidadPage() {
 
           <div className="rounded-2xl border border-white/15 bg-neutral-950 p-5 space-y-2">
             <div className="flex items-center gap-2 text-white font-bold">
-              <Server className="h-4 w-4 text-emerald-400" />
+              <Server className="h-4 w-4 text-white" />
               <span>4. Cifrado de Contraseñas y Sesiones Seguras</span>
             </div>
             <p className="text-xs text-neutral-300 leading-relaxed">

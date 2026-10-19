@@ -37,7 +37,7 @@ export default function TerminosPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="rounded-2xl border border-white/15 bg-neutral-950 p-5 space-y-2">
             <div className="flex items-center gap-2 text-white font-bold">
-              <Clock className="h-4 w-4 text-emerald-400" />
+              <Clock className="h-4 w-4 text-white" />
               <span>1. Prueba Gratuita de 5 Días por Cuenta</span>
             </div>
             <p className="text-xs text-neutral-300 leading-relaxed">
@@ -47,7 +47,7 @@ export default function TerminosPage() {
 
           <div className="rounded-2xl border border-white/15 bg-neutral-950 p-5 space-y-2">
             <div className="flex items-center gap-2 text-white font-bold">
-              <CreditCard className="h-4 w-4 text-emerald-400" />
+              <CreditCard className="h-4 w-4 text-white" />
               <span>2. Suscripción Mensual y Renovación Automática</span>
             </div>
             <p className="text-xs text-neutral-300 leading-relaxed">
@@ -57,7 +57,7 @@ export default function TerminosPage() {
 
           <div className="rounded-2xl border border-white/15 bg-neutral-950 p-5 space-y-2">
             <div className="flex items-center gap-2 text-white font-bold">
-              <ShieldAlert className="h-4 w-4 text-amber-400" />
+              <ShieldAlert className="h-4 w-4 text-white" />
               <span>3. Periodo de Gracia de 3 Días Naturales</span>
             </div>
             <p className="text-xs text-neutral-300 leading-relaxed">
@@ -67,7 +67,7 @@ export default function TerminosPage() {
 
           <div className="rounded-2xl border border-white/15 bg-neutral-950 p-5 space-y-2">
             <div className="flex items-center gap-2 text-white font-bold">
-              <Layers className="h-4 w-4 text-emerald-400" />
+              <Layers className="h-4 w-4 text-white" />
               <span>4. Alcance de las 5 Herramientas DTF a 300 DPI</span>
             </div>
             <p className="text-xs text-neutral-300 leading-relaxed">

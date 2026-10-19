@@ -736,8 +736,8 @@ export function ToolLayout({
 
             {resultUrl && (
               <div className="mt-5 pt-4 border-t border-[#20232A] flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
-                <span className="font-mono text-xs text-emerald-400 font-bold flex items-center gap-1.5">
-                  <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
+                <span className="font-mono text-xs text-white font-bold flex items-center gap-1.5">
+                  <CheckCircle2 className="h-4 w-4 text-white shrink-0" />
                   <span>
                     ¡Procesamiento finalizado! PNG transparente a 300 DPI listo.
                   </span>

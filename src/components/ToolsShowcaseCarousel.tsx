@@ -207,7 +207,7 @@ export function ToolsShowcaseCarousel() {
           className="relative z-10 text-center max-w-4xl mx-auto px-2 space-y-3 mt-3"
         >
           <div className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 backdrop-blur-md px-4 py-1.5 text-xs font-mono font-bold text-white uppercase tracking-widest shadow-[0_0_20px_rgba(255,255,255,0.15)]">
-            <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="h-2 w-2 rounded-full bg-white animate-pulse" />
             <span>05 HERRAMIENTAS • 5 DÍAS PRUEBA GRATIS • 300 DPI • 58 CM DTF</span>
           </div>
 

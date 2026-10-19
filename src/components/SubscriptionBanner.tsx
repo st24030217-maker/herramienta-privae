@@ -37,22 +37,22 @@ export function SubscriptionBanner({
 
   if (status === "GRACE_PERIOD") {
     return (
-      <div className="bg-[#16181D] border-b border-amber-500/30 px-4 py-2 text-center text-xs text-amber-200 relative">
+      <div className="bg-neutral-950 border-b border-neutral-800 px-4 py-2 text-center text-xs text-neutral-300 relative">
         <div className="mx-auto flex max-w-7xl items-center justify-center gap-2 pr-8">
-          <AlertTriangle className="h-4 w-4 text-amber-400 shrink-0" />
+          <AlertTriangle className="h-4 w-4 text-white shrink-0" />
           <span>
             <strong>Período de gracia:</strong> Restan <strong>{daysRemaining} días</strong> para regularizar el acceso al taller.
           </span>
           <Link
             href="/account"
-            className="ml-2 font-mono font-semibold underline text-[#F3F4F6] hover:text-white"
+            className="ml-2 font-mono font-semibold underline text-white hover:text-neutral-300"
           >
             Actualizar facturación
           </Link>
         </div>
         <button
           onClick={handleDismiss}
-          className="absolute right-3 top-1/2 -translate-y-1/2 text-amber-400/70 hover:text-amber-200 p-1 rounded-md"
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-white p-1 rounded-md"
           title="Ocultar aviso"
         >
           <X className="h-4 w-4" />

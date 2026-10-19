@@ -430,26 +430,18 @@ export default function DtfScannerPage() {
             ) : analysis ? (
               <>
                 {/* Tarjeta de Score DTF */}
-                <div className={`rounded-xl border p-6 ${
-                  analysis.status === "ready"
-                    ? "border-emerald-500/30 bg-emerald-950/10"
-                    : analysis.status === "warning"
-                    ? "border-amber-500/30 bg-amber-950/10"
-                    : "border-red-500/30 bg-red-950/10"
-                }`}>
+                <div className="rounded-xl border border-neutral-800 bg-neutral-950 p-6">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
                       <div className="flex items-center gap-2 mb-1">
                         {analysis.status === "ready" ? (
-                          <ShieldCheck className="h-5 w-5 text-emerald-400" />
+                          <ShieldCheck className="h-5 w-5 text-white" />
                         ) : analysis.status === "warning" ? (
-                          <AlertTriangle className="h-5 w-5 text-amber-400" />
+                          <AlertTriangle className="h-5 w-5 text-neutral-300" />
                         ) : (
-                          <AlertCircle className="h-5 w-5 text-red-400" />
+                          <AlertCircle className="h-5 w-5 text-neutral-400" />
                         )}
-                        <span className={`font-mono text-xs font-bold uppercase tracking-wider ${
-                          analysis.status === "ready" ? "text-emerald-400" : analysis.status === "warning" ? "text-amber-400" : "text-red-400"
-                        }`}>
+                        <span className="font-mono text-xs font-bold uppercase tracking-wider text-neutral-300">
                           {analysis.status === "ready"
                             ? "¡Listo para Imprimir!"
                             : analysis.status === "warning"
@@ -460,7 +452,7 @@ export default function DtfScannerPage() {
                       <h2 className="text-2xl font-bold text-white tracking-tight">
                         Calificación de tu Diseño: {analysis.score} de 100
                       </h2>
-                      <p className="mt-1 text-xs text-[#8E95A5]">
+                      <p className="mt-1 text-xs text-neutral-400">
                         {analysis.status === "ready"
                           ? "Tu imagen no tiene fondos raros, no manchará con tinta blanca y saldrá nítida en la tela."
                           : "Tu diseño tiene detalles que pueden arruinar tu playera o gastar tinta blanca innecesaria."}
@@ -468,13 +460,7 @@ export default function DtfScannerPage() {
                     </div>
 
                     <div className="flex items-center justify-center shrink-0">
-                      <div className={`flex h-24 w-24 items-center justify-center rounded-2xl border-4 font-mono font-black text-3xl shadow-lg ${
-                        analysis.status === "ready"
-                          ? "border-emerald-500 text-emerald-300 bg-emerald-500/10"
-                          : analysis.status === "warning"
-                          ? "border-amber-500 text-amber-300 bg-amber-500/10"
-                          : "border-red-500 text-red-300 bg-red-500/10"
-                      }`}>
+                      <div className="flex h-24 w-24 items-center justify-center rounded-2xl border-2 border-white font-mono font-black text-3xl shadow-lg text-white bg-black">
                         {analysis.score}%
                       </div>
                     </div>
@@ -499,7 +485,7 @@ export default function DtfScannerPage() {
                       />
                       <div
                         style={{ width: `${analysis.semiPercent}%` }}
-                        className="bg-amber-400 animate-pulse"
+                        className="bg-neutral-500"
                         title={`Sombras raras (Riesgo): ${analysis.semiPercent}%`}
                       />
                     </div>
@@ -507,17 +493,17 @@ export default function DtfScannerPage() {
                 </div>
 
                 {/* Lista de Hallazgos y Acciones Recomendadas */}
-                <div className="rounded-2xl border border-[#20232A] bg-[#16181D] p-6 space-y-5 shadow-sm">
-                  <h3 className="font-mono text-xs uppercase tracking-wider text-[#8E95A5] font-bold">
+                <div className="rounded-2xl border border-neutral-800 bg-neutral-900/60 p-6 space-y-5 shadow-sm">
+                  <h3 className="font-mono text-xs uppercase tracking-wider text-neutral-400 font-bold">
                     ¿Qué le encontramos a tu diseño? ({analysis.issues.length} detalles)
                   </h3>
 
                   {analysis.issues.length === 0 ? (
-                    <div className="flex items-center gap-4 rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-5 text-sm text-emerald-200">
-                      <CheckCircle2 className="h-6 w-6 text-emerald-400 shrink-0" />
+                    <div className="flex items-center gap-4 rounded-xl border border-neutral-700 bg-neutral-900 p-5 text-sm text-neutral-200">
+                      <CheckCircle2 className="h-6 w-6 text-white shrink-0" />
                       <div>
                         <p className="font-bold text-base text-white">¡Tu diseño está al tiro para estampar!</p>
-                        <p className="text-xs text-emerald-300/80 mt-0.5">Pásalo directo a armar tus metros de 58 cm.</p>
+                        <p className="text-xs text-neutral-400 mt-0.5">Pásalo directo a armar tus metros de 58 cm.</p>
                       </div>
                     </div>
                   ) : (
@@ -525,16 +511,16 @@ export default function DtfScannerPage() {
                       {analysis.issues.map((issue) => (
                         <div
                           key={issue.id}
-                          className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-xl border border-[#20232A] bg-[#0D0E11] p-5 text-xs hover:border-[#8E95A5]/40 transition-all"
+                          className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-xl border border-neutral-800 bg-neutral-950 p-5 text-xs hover:border-neutral-700 transition-all"
                         >
                           <div className="space-y-1.5">
                             <div className="flex items-center gap-2">
                               <span className={`inline-block h-2.5 w-2.5 rounded-full ${
-                                issue.severity === "high" ? "bg-red-400" : issue.severity === "medium" ? "bg-amber-400" : "bg-white"
+                                issue.severity === "high" ? "bg-white ring-2 ring-white/30" : issue.severity === "medium" ? "bg-neutral-400" : "bg-neutral-600"
                               }`} />
-                              <h4 className="font-bold text-sm text-[#F3F4F6]">{issue.title}</h4>
+                              <h4 className="font-bold text-sm text-neutral-100">{issue.title}</h4>
                             </div>
-                            <p className="text-xs text-[#8E95A5] leading-relaxed max-w-xl">
+                            <p className="text-xs text-neutral-400 leading-relaxed max-w-xl">
                               {issue.desc}
                             </p>
                           </div>

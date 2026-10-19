@@ -667,35 +667,35 @@ export default function AdminPage() {
         <div className="flex flex-wrap items-center gap-2">
           <button
             onClick={() => exportToExcel("all")}
-            className="flex items-center gap-1.5 rounded-xl border border-neutral-700 bg-neutral-900 px-3.5 py-2 text-xs font-bold text-white hover:bg-neutral-800 transition-colors shadow-sm"
+            className="flex items-center gap-1.5 rounded-xl border border-neutral-800 bg-neutral-900 px-3.5 py-2 text-xs font-bold text-neutral-200 hover:text-white hover:bg-neutral-800 hover:border-neutral-700 transition-colors shadow-sm"
             title="Exportar datos a formato Excel (.CSV)"
           >
-            <FileSpreadsheet className="h-3.5 w-3.5 text-emerald-400" />
+            <FileSpreadsheet className="h-3.5 w-3.5 text-neutral-300" />
             <span>Exportar Excel</span>
           </button>
 
           <button
             onClick={exportToPdf}
-            className="flex items-center gap-1.5 rounded-xl border border-neutral-700 bg-neutral-900 px-3.5 py-2 text-xs font-bold text-white hover:bg-neutral-800 transition-colors shadow-sm"
+            className="flex items-center gap-1.5 rounded-xl border border-neutral-800 bg-neutral-900 px-3.5 py-2 text-xs font-bold text-neutral-200 hover:text-white hover:bg-neutral-800 hover:border-neutral-700 transition-colors shadow-sm"
             title="Generar o Imprimir Reporte Oficial en PDF"
           >
-            <FileText className="h-3.5 w-3.5 text-sky-400" />
+            <FileText className="h-3.5 w-3.5 text-neutral-300" />
             <span>Reporte PDF</span>
           </button>
 
           <button
             onClick={loadData}
-            className="flex items-center gap-1.5 rounded-xl border border-neutral-800 bg-neutral-900 px-4 py-2 text-xs font-bold text-white hover:bg-neutral-800 transition-colors"
+            className="flex items-center gap-1.5 rounded-xl border border-neutral-800 bg-neutral-900 px-4 py-2 text-xs font-bold text-neutral-200 hover:text-white hover:bg-neutral-800 hover:border-neutral-700 transition-colors"
           >
-            <RefreshCw className="h-3.5 w-3.5" /> Actualizar Panel
+            <RefreshCw className="h-3.5 w-3.5 text-neutral-400" /> Actualizar Panel
           </button>
         </div>
       </div>
 
       {feedback && (
-        <div className="rounded-xl bg-neutral-900 border border-neutral-700 p-3.5 text-xs text-white flex items-center justify-between gap-2">
+        <div className="rounded-xl bg-neutral-900 border border-neutral-800 p-3.5 text-xs text-white flex items-center justify-between gap-2">
           <div className="flex items-center gap-2">
-            <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
+            <CheckCircle2 className="h-4 w-4 text-white shrink-0" />
             <span>{feedback}</span>
           </div>
           <button onClick={() => setFeedback(null)} className="text-neutral-400 hover:text-white">
@@ -728,12 +728,12 @@ export default function AdminPage() {
                   <div className="flex h-full flex-col justify-between select-none font-tanker tracking-wide">
                     <div className="flex items-center justify-between text-xs">
                       <div className="flex items-center gap-2 text-neutral-300 font-bold tracking-wider uppercase text-[11px]">
-                        <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-sky-500/10 text-sky-400 border border-sky-500/20">
+                        <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-neutral-900 text-white border border-neutral-800">
                           <Users className="h-3.5 w-3.5" />
                         </span>
                         <span>Control de Usuarios</span>
                       </div>
-                      <span className="rounded-full bg-neutral-900 border border-neutral-700/80 px-2 py-0.5 text-[10px] uppercase font-bold tracking-wider text-sky-300">
+                      <span className="rounded-full bg-neutral-900 border border-neutral-800 px-2 py-0.5 text-[10px] uppercase font-bold tracking-wider text-neutral-300">
                         {stats.trialUsers} en prueba 5D
                       </span>
                     </div>
@@ -744,14 +744,14 @@ export default function AdminPage() {
                         <span className="text-xs uppercase tracking-wider text-neutral-400 font-bold">Cuentas Registradas</span>
                       </div>
                       <div className="mt-2.5 flex flex-wrap items-center gap-2 text-[11px] uppercase tracking-wider font-bold text-neutral-400">
-                        <span className="inline-flex items-center gap-1 rounded-md bg-emerald-500/10 px-2 py-0.5 text-emerald-400 border border-emerald-500/20">
-                          <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" /> {stats.activeSubscriptions} activos
+                        <span className="inline-flex items-center gap-1 rounded-md bg-neutral-900 px-2 py-0.5 text-neutral-200 border border-neutral-800">
+                          <span className="h-1.5 w-1.5 rounded-full bg-white" /> {stats.activeSubscriptions} activos
                         </span>
-                        <span className="inline-flex items-center gap-1 rounded-md bg-sky-500/10 px-2 py-0.5 text-sky-400 border border-sky-500/20">
+                        <span className="inline-flex items-center gap-1 rounded-md bg-neutral-900 px-2 py-0.5 text-neutral-300 border border-neutral-800">
                           <Clock className="h-3 w-3" /> {stats.trialUsers} prueba activa
                         </span>
                         {stats.suspendedUsers > 0 && (
-                          <span className="inline-flex items-center gap-1 rounded-md bg-rose-500/10 px-2 py-0.5 text-rose-400 border border-rose-500/20">
+                          <span className="inline-flex items-center gap-1 rounded-md bg-neutral-950 px-2 py-0.5 text-neutral-400 border border-neutral-800">
                             <ShieldAlert className="h-3 w-3" /> {stats.suspendedUsers} suspendidos
                           </span>
                         )}
@@ -760,7 +760,7 @@ export default function AdminPage() {
 
                     <div className="flex items-center justify-between pt-2 border-t border-neutral-800/80 text-[11px] uppercase tracking-wider font-bold text-neutral-400">
                       <span>Directorio y accesos</span>
-                      <span className="text-sky-400">Gestionar →</span>
+                      <span className="text-white hover:underline">Gestionar →</span>
                     </div>
                   </div>
                 ),
@@ -775,19 +775,19 @@ export default function AdminPage() {
                   <div className="flex h-full flex-col justify-between select-none font-tanker tracking-wide">
                     <div className="flex items-center justify-between text-xs">
                       <div className="flex items-center gap-2 text-neutral-300 font-bold tracking-wider uppercase text-[11px]">
-                        <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                        <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-neutral-900 text-white border border-neutral-800">
                           <CreditCard className="h-3.5 w-3.5" />
                         </span>
                         <span>Suscripciones</span>
                       </div>
-                      <span className="rounded-full bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 text-[10px] uppercase font-bold tracking-wider text-emerald-400">
+                      <span className="rounded-full bg-neutral-900 border border-neutral-800 px-2 py-0.5 text-[10px] uppercase font-bold tracking-wider text-neutral-300">
                         Stripe
                       </span>
                     </div>
 
                     <div className="my-auto py-2">
                       <div className="flex items-baseline gap-1.5">
-                        <span className="text-3xl sm:text-4xl font-black tracking-tight text-emerald-400 font-tanker">{stats.activeSubscriptions}</span>
+                        <span className="text-3xl sm:text-4xl font-black tracking-tight text-white font-tanker">{stats.activeSubscriptions}</span>
                         <span className="text-xs uppercase tracking-wider text-neutral-400 font-bold">Activas</span>
                       </div>
                       <div className="mt-1.5 text-xs uppercase tracking-wider font-bold text-neutral-400">
@@ -797,7 +797,7 @@ export default function AdminPage() {
 
                     <div className="flex items-center justify-between pt-2 border-t border-neutral-800/80 text-[11px] uppercase tracking-wider font-bold text-neutral-400">
                       <span>Auditoría de cobros</span>
-                      <span className="text-emerald-400">Ver →</span>
+                      <span className="text-white hover:underline">Ver →</span>
                     </div>
                   </div>
                 ),
@@ -812,19 +812,19 @@ export default function AdminPage() {
                   <div className="flex h-full flex-col justify-between select-none font-tanker tracking-wide">
                     <div className="flex items-center justify-between text-xs">
                       <div className="flex items-center gap-2 text-neutral-300 font-bold tracking-wider uppercase text-[11px]">
-                        <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                        <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-neutral-900 text-white border border-neutral-800">
                           <AlertTriangle className="h-3.5 w-3.5" />
                         </span>
                         <span>Accesos</span>
                       </div>
-                      <span className="rounded-full bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 text-[10px] uppercase font-bold tracking-wider text-amber-300">
+                      <span className="rounded-full bg-neutral-900 border border-neutral-800 px-2 py-0.5 text-[10px] uppercase font-bold tracking-wider text-neutral-300">
                         Regla 3D
                       </span>
                     </div>
 
                     <div className="my-auto py-2">
                       <div className="flex items-baseline gap-1.5">
-                        <span className="text-3xl sm:text-4xl font-black tracking-tight text-amber-300 font-tanker">{stats.graceUsers}</span>
+                        <span className="text-3xl sm:text-4xl font-black tracking-tight text-white font-tanker">{stats.graceUsers}</span>
                         <span className="text-xs uppercase tracking-wider text-neutral-400 font-bold">En Gracia</span>
                       </div>
                       <div className="mt-1.5 text-xs uppercase tracking-wider font-bold text-neutral-400">
@@ -834,7 +834,7 @@ export default function AdminPage() {
 
                     <div className="flex items-center justify-between pt-2 border-t border-neutral-800/80 text-[11px] uppercase tracking-wider font-bold text-neutral-400">
                       <span>Corte automático</span>
-                      <span className="text-amber-400">Ver →</span>
+                      <span className="text-white hover:underline">Ver →</span>
                     </div>
                   </div>
                 ),
@@ -849,13 +849,13 @@ export default function AdminPage() {
                   <div className="flex h-full flex-col justify-between select-none font-tanker tracking-wide">
                     <div className="flex items-center justify-between text-xs">
                       <div className="flex items-center gap-2 text-neutral-300 font-bold tracking-wider uppercase text-[11px]">
-                        <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-purple-500/10 text-purple-400 border border-purple-500/20">
+                        <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-neutral-900 text-white border border-neutral-800">
                           <Activity className="h-3.5 w-3.5" />
                         </span>
                         <span>Pipeline DTF Prepress</span>
                       </div>
-                      <span className="inline-flex items-center gap-1 rounded-full bg-neutral-900 border border-neutral-700/80 px-2 py-0.5 text-[10px] uppercase font-bold tracking-wider text-purple-300">
-                        <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" /> Motor 300 DPI
+                      <span className="inline-flex items-center gap-1 rounded-full bg-neutral-900 border border-neutral-800 px-2 py-0.5 text-[10px] uppercase font-bold tracking-wider text-neutral-300">
+                        <span className="h-1.5 w-1.5 rounded-full bg-white animate-pulse" /> Motor 300 DPI
                       </span>
                     </div>
 
@@ -864,28 +864,28 @@ export default function AdminPage() {
                         <span className="text-3xl font-black tracking-tight text-white font-tanker">{stats.totalProcessings}</span>
                         <span className="text-xs uppercase tracking-wider text-neutral-400 font-bold">Archivos Procesados</span>
                         {stats.errorProcessings > 0 ? (
-                          <span className="text-xs text-rose-400 font-bold uppercase tracking-wider">({stats.errorProcessings} fallos)</span>
+                          <span className="text-xs text-neutral-400 font-bold uppercase tracking-wider">({stats.errorProcessings} fallos)</span>
                         ) : (
-                          <span className="text-xs text-emerald-400 font-bold uppercase tracking-wider">(0 errores)</span>
+                          <span className="text-xs text-neutral-300 font-bold uppercase tracking-wider">(0 errores)</span>
                         )}
                       </div>
 
                       {/* Steps del motor DTF reales */}
                       <div className="grid grid-cols-4 gap-2 text-[10px] text-center uppercase tracking-wider font-bold">
-                        <div className="rounded-lg bg-neutral-900/90 border border-neutral-800 p-1.5">
-                          <div className="text-emerald-400">✓ Subida</div>
+                        <div className="rounded-lg bg-black border border-neutral-800 p-1.5">
+                          <div className="text-white">✓ Subida</div>
                           <div className="text-neutral-500 text-[9px]">PNG / PDF</div>
                         </div>
-                        <div className="rounded-lg bg-neutral-900/90 border border-neutral-800 p-1.5">
-                          <div className="text-emerald-400">✓ Alfa</div>
+                        <div className="rounded-lg bg-black border border-neutral-800 p-1.5">
+                          <div className="text-white">✓ Alfa</div>
                           <div className="text-neutral-500 text-[9px]">Limpieza</div>
                         </div>
-                        <div className="rounded-lg bg-neutral-900/90 border border-neutral-800 p-1.5">
-                          <div className="text-emerald-400">✓ Semitono</div>
+                        <div className="rounded-lg bg-black border border-neutral-800 p-1.5">
+                          <div className="text-white">✓ Semitono</div>
                           <div className="text-neutral-500 text-[9px]">Trama DTF</div>
                         </div>
-                        <div className="rounded-lg bg-neutral-900/90 border border-neutral-800 p-1.5">
-                          <div className="text-purple-400">✓ 300 DPI</div>
+                        <div className="rounded-lg bg-black border border-neutral-800 p-1.5">
+                          <div className="text-white">✓ 300 DPI</div>
                           <div className="text-neutral-500 text-[9px]">Exportación</div>
                         </div>
                       </div>
@@ -893,7 +893,7 @@ export default function AdminPage() {
 
                     <div className="flex items-center justify-between pt-2 border-t border-neutral-800/80 text-[11px] uppercase tracking-wider font-bold text-neutral-400">
                       <span>Bitácora técnica</span>
-                      <span className="text-purple-400">Ver logs →</span>
+                      <span className="text-white hover:underline">Ver logs →</span>
                     </div>
                   </div>
                 ),
@@ -908,12 +908,12 @@ export default function AdminPage() {
                   <div className="flex h-full flex-col justify-between select-none font-tanker tracking-wide">
                     <div className="flex items-center justify-between text-xs">
                       <div className="flex items-center gap-2 text-neutral-300 font-bold tracking-wider uppercase text-[11px]">
-                        <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+                        <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-neutral-900 text-white border border-neutral-700">
                           <Settings className="h-3.5 w-3.5" />
                         </span>
                         <span>Pasarela & Parámetros</span>
                       </div>
-                      <span className="rounded-full bg-cyan-500/10 border border-cyan-500/20 px-2 py-0.5 text-[10px] uppercase font-bold tracking-wider text-cyan-300">
+                      <span className="rounded-full bg-neutral-900 border border-neutral-700 px-2 py-0.5 text-[10px] uppercase font-bold tracking-wider text-neutral-300">
                         Live Config
                       </span>
                     </div>
@@ -942,7 +942,7 @@ export default function AdminPage() {
 
                     <div className="flex items-center justify-between pt-2 border-t border-neutral-800/80 text-[11px] uppercase tracking-wider font-bold text-neutral-400">
                       <span>Ajustar precio y pasarela</span>
-                      <span className="text-cyan-400">Configurar →</span>
+                      <span className="text-white">Configurar →</span>
                     </div>
                   </div>
                 ),
@@ -1031,7 +1031,7 @@ export default function AdminPage() {
                 className="flex items-center gap-1.5 rounded-lg border border-neutral-800 bg-neutral-900 px-3 py-2 text-xs font-bold text-neutral-300 hover:text-white hover:border-neutral-700 transition-colors shadow-sm"
                 title="Exportar lista de usuarios a Excel"
               >
-                <FileSpreadsheet className="h-3.5 w-3.5 text-emerald-400" />
+                <FileSpreadsheet className="h-3.5 w-3.5 text-neutral-300" />
                 <span className="hidden sm:inline">Excel</span>
               </button>
             </div>
@@ -1078,10 +1078,10 @@ export default function AdminPage() {
                               status === "ACTIVE"
                                 ? "bg-white text-black border-white"
                                 : status === "TRIAL"
-                                ? "bg-neutral-900 text-white border-neutral-700"
+                                ? "bg-neutral-900 text-neutral-200 border-neutral-700"
                                 : status === "GRACE_PERIOD"
-                                ? "bg-amber-500/20 text-amber-300 border-amber-400/50"
-                                : "bg-red-500/15 text-red-300 border-red-500/30"
+                                ? "bg-neutral-900 text-neutral-300 border-neutral-700"
+                                : "bg-neutral-950 text-neutral-500 border-neutral-800"
                             }`}
                           >
                             {status}
@@ -1110,14 +1110,14 @@ export default function AdminPage() {
                           <button
                             onClick={() => handleUpdateStatus(u.id, "ACTIVE")}
                             disabled={actionLoading}
-                            className="rounded bg-white text-black px-2.5 py-1 text-[10px] font-bold hover:bg-neutral-200"
+                            className="rounded bg-white text-black px-2.5 py-1 text-[10px] font-bold hover:bg-neutral-200 transition-colors"
                           >
                             Activar Premium
                           </button>
                           <button
                             onClick={() => handleUpdateStatus(u.id, "TRIAL", 5)}
                             disabled={actionLoading}
-                            className="rounded bg-neutral-900 border border-neutral-700 px-2 py-1 text-[10px] font-bold text-neutral-200 hover:bg-neutral-800"
+                            className="rounded bg-neutral-900 border border-neutral-700 px-2 py-1 text-[10px] font-bold text-neutral-200 hover:bg-neutral-800 transition-colors"
                           >
                             Dar 5D Prueba
                           </button>
@@ -1126,7 +1126,7 @@ export default function AdminPage() {
                               handleUpdateStatus(u.id, "GRACE_PERIOD")
                             }
                             disabled={actionLoading}
-                            className="rounded bg-amber-500/20 border border-amber-500/40 px-2 py-1 text-[10px] font-bold text-amber-300 hover:bg-amber-500/30"
+                            className="rounded bg-neutral-900 border border-neutral-700 px-2 py-1 text-[10px] font-bold text-neutral-300 hover:bg-neutral-800 transition-colors"
                           >
                             Gracia 3D
                           </button>
@@ -1135,14 +1135,14 @@ export default function AdminPage() {
                               handleUpdateStatus(u.id, "SUSPENDED")
                             }
                             disabled={actionLoading}
-                            className="rounded bg-red-500/15 border border-red-500/30 px-2 py-1 text-[10px] font-bold text-red-300 hover:bg-red-500/25"
+                            className="rounded bg-neutral-950 border border-neutral-800 px-2 py-1 text-[10px] font-bold text-neutral-400 hover:bg-neutral-900 hover:text-neutral-200 transition-colors"
                           >
                             Suspender
                           </button>
                           <button
                             onClick={() => handleResetPassword(u.id, u.email)}
                             disabled={actionLoading}
-                            className="rounded bg-sky-500/15 border border-sky-500/30 px-2 py-1 text-[10px] font-bold text-sky-300 hover:bg-sky-500/25"
+                            className="rounded bg-neutral-900 border border-neutral-700 px-2 py-1 text-[10px] font-bold text-neutral-200 hover:bg-neutral-800 transition-colors"
                             title="Cambiar la contraseña de este usuario"
                           >
                             Restablecer Clave
@@ -1170,7 +1170,7 @@ export default function AdminPage() {
               className="flex items-center gap-1.5 rounded-lg border border-neutral-800 bg-neutral-900 px-3 py-1.5 text-xs font-bold text-neutral-300 hover:text-white hover:border-neutral-700 transition-colors shadow-sm"
               title="Exportar reporte de pagos a Excel"
             >
-              <FileSpreadsheet className="h-3.5 w-3.5 text-emerald-400" />
+              <FileSpreadsheet className="h-3.5 w-3.5 text-neutral-300" />
               <span>Exportar Pagos Excel</span>
             </button>
           </div>
@@ -1215,8 +1215,8 @@ export default function AdminPage() {
                         <span
                           className={`rounded-full px-2.5 py-0.5 text-[10px] font-bold border ${
                             p.status === "PAID"
-                              ? "bg-emerald-500/15 text-emerald-300 border-emerald-500/30"
-                              : "bg-red-500/15 text-red-300 border-red-500/30"
+                              ? "bg-white text-black border-white"
+                              : "bg-neutral-900 text-neutral-400 border-neutral-800"
                           }`}
                         >
                           {p.status}
@@ -1346,7 +1346,7 @@ export default function AdminPage() {
                 className="flex items-center gap-1.5 rounded-lg border border-neutral-800 bg-neutral-900 px-2.5 py-1 text-xs font-bold text-neutral-300 hover:text-white hover:border-neutral-700 transition-colors shadow-sm"
                 title="Exportar bitácora DTF a Excel"
               >
-                <FileSpreadsheet className="h-3 w-3 text-emerald-400" />
+                <FileSpreadsheet className="h-3 w-3 text-neutral-300" />
                 <span className="hidden sm:inline">Excel</span>
               </button>
             </div>
@@ -1368,16 +1368,16 @@ export default function AdminPage() {
                         {u.canvasSize ? `• ${u.canvasSize}` : ""}
                       </div>
                       {u.errorMessage && (
-                        <div className="text-[11px] text-red-400 mt-1">
+                        <div className="text-[11px] text-neutral-400 mt-1">
                           Error: {u.errorMessage}
                         </div>
                       )}
                     </div>
                     <span
-                      className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${
+                      className={`rounded-full px-2 py-0.5 text-[10px] font-bold border ${
                         u.status === "ERROR"
-                          ? "bg-red-500/20 text-red-300"
-                          : "bg-emerald-500/20 text-emerald-300"
+                          ? "bg-neutral-950 text-neutral-400 border-neutral-800"
+                          : "bg-white text-black border-white"
                       }`}
                     >
                       {u.status}

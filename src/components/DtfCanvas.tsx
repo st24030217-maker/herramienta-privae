@@ -1052,7 +1052,7 @@ export function DtfCanvas() {
             <span className="font-bold text-[#F3F4F6]">{occupiedHeightCm.toFixed(1)} cm</span>
             <span className="text-[#8E95A5]">/ {canvasHeightCm} cm</span>
             <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-              rollUtilizationPercent > 85 ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30" : "bg-[#20232A] text-white"
+              rollUtilizationPercent > 85 ? "bg-white text-black font-extrabold" : "bg-neutral-800 text-neutral-300"
             }`}>
               {rollUtilizationPercent}%
             </span>
@@ -1251,11 +1251,11 @@ export function DtfCanvas() {
                             <span
                               className={
                                 isLowDpi
-                                  ? "text-amber-400 font-bold"
-                                  : "text-emerald-400"
+                                  ? "text-white font-bold"
+                                  : "text-neutral-400"
                               }
                             >
-                              • {effDpi} DPI {isLowDpi ? "⚠️ Baja res." : "✓"}
+                              • {effDpi} DPI {isLowDpi ? "(Baja res.)" : "✓"}
                             </span>
                           </p>
                         </div>

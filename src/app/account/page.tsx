@@ -208,13 +208,13 @@ export default function AccountPage() {
 
       {/* Aviso prioritario si está en los 3 días naturales de gracia por pago fallido */}
       {sub.status === "GRACE_PERIOD" && (
-        <div className="rounded-2xl border-2 border-amber-400/70 bg-amber-500/10 p-5 text-amber-100 shadow-lg flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="rounded-2xl border border-neutral-700 bg-neutral-900 p-5 text-neutral-200 shadow-lg flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="space-y-1">
-            <div className="flex items-center gap-2 font-black text-amber-300 text-sm uppercase">
-              <AlertTriangle className="h-5 w-5 shrink-0" />
+            <div className="flex items-center gap-2 font-black text-white text-sm uppercase">
+              <AlertTriangle className="h-5 w-5 shrink-0 text-white" />
               <span>Aviso de Pago Pendiente — Periodo de Gracia Activo (3 Días Naturales)</span>
             </div>
-            <p className="text-xs text-amber-100/90 leading-relaxed">
+            <p className="text-xs text-neutral-300 leading-relaxed">
               Tu último cobro de renovación falló o quedó pendiente. Tienes{" "}
               <strong>{sub.daysRemaining} día(s) restantes de gracia</strong> para actualizar tu método de pago o realizar el cobro antes de que se suspenda el acceso a las herramientas Premium.
             </p>
@@ -230,7 +230,7 @@ export default function AccountPage() {
             <button
               onClick={handleStripePortal}
               disabled={actionLoading}
-              className="rounded-xl border border-amber-300/50 bg-black/50 px-4 py-2.5 text-xs font-bold text-white hover:bg-black/80 transition-all"
+              className="rounded-xl border border-neutral-700 bg-black/50 px-4 py-2.5 text-xs font-bold text-white hover:bg-black/80 transition-all"
             >
               Actualizar Tarjeta
             </button>
@@ -240,13 +240,13 @@ export default function AccountPage() {
 
       {/* Aviso si la prueba de 5 días o el periodo de gracia terminó */}
       {!sub.isAccessGranted && (
-        <div className="rounded-2xl border-2 border-red-500/60 bg-red-500/10 p-5 text-red-100 shadow-lg flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="rounded-2xl border border-neutral-700 bg-neutral-900 p-5 text-neutral-200 shadow-lg flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="space-y-1">
-            <div className="flex items-center gap-2 font-black text-red-300 text-sm uppercase">
-              <AlertTriangle className="h-5 w-5 shrink-0" />
+            <div className="flex items-center gap-2 font-black text-white text-sm uppercase">
+              <AlertTriangle className="h-5 w-5 shrink-0 text-white" />
               <span>Acceso a Herramientas Premium Bloqueado</span>
             </div>
-            <p className="text-xs text-red-100/90 leading-relaxed">
+            <p className="text-xs text-neutral-300 leading-relaxed">
               {sub.status === "SUSPENDED"
                 ? "Finalizaron los 3 días de gracia sin regularizar el pago. Tu cuenta sigue conservada: reactiva tu suscripción para volver a procesar archivos."
                 : "Tu prueba gratuita de 5 días ha terminado. Contrata tu suscripción Premium mensual para desbloquear los 5 módulos a 300 DPI."}
@@ -255,7 +255,7 @@ export default function AccountPage() {
           <button
             onClick={handleStripeCheckout}
             disabled={actionLoading}
-            className="rounded-xl bg-white px-5 py-3 text-xs font-black text-black hover:bg-neutral-200 transition-all shrink-0 shadow-glow-white"
+            className="rounded-xl bg-white px-5 py-3 text-xs font-black text-black hover:bg-neutral-200 transition-all shrink-0"
           >
             Activar Suscripción Premium ({priceFormatted})
           </button>
@@ -264,23 +264,15 @@ export default function AccountPage() {
 
       {feedback && (
         <div
-          className={`flex items-center justify-between gap-2 rounded-lg p-3.5 text-xs border ${
-            feedback.type === "success"
-              ? "bg-white/10 border-white/20 text-white"
-              : "bg-red-500/10 border-red-500/30 text-red-200"
-          }`}
+          className="flex items-center justify-between gap-2 rounded-lg p-3.5 text-xs border border-neutral-700 bg-neutral-900 text-white"
         >
           <div className="flex items-center gap-2">
-            {feedback.type === "success" ? (
-              <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-400" />
-            ) : (
-              <AlertTriangle className="h-4 w-4 shrink-0 text-red-400" />
-            )}
+            <CheckCircle2 className="h-4 w-4 shrink-0 text-white" />
             <span>{feedback.text}</span>
           </div>
           <button
             onClick={() => setFeedback(null)}
-            className="hover:opacity-70 text-xs px-1"
+            className="hover:opacity-70 text-xs px-1 text-neutral-400"
           >
             ✕
           </button>
@@ -319,8 +311,8 @@ export default function AccountPage() {
                 <strong
                   className={
                     sub.isAccessGranted
-                      ? "text-emerald-400 font-bold"
-                      : "text-red-400 font-bold"
+                      ? "text-white font-bold"
+                      : "text-neutral-400 font-bold"
                   }
                 >
                   {sub.isAccessGranted ? "ACTIVO (300 DPI)" : "BLOQUEADO"}
@@ -349,15 +341,15 @@ export default function AccountPage() {
                   <Crown className="h-3.5 w-3.5" /> Suscripción Premium Activa
                 </span>
               ) : sub.status === "GRACE_PERIOD" ? (
-                <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/20 text-amber-300 px-3 py-1 text-xs font-bold border border-amber-400/50">
+                <span className="inline-flex items-center gap-1 rounded-full bg-neutral-900 text-neutral-300 px-3 py-1 text-xs font-bold border border-neutral-700">
                   <AlertTriangle className="h-3.5 w-3.5" /> Periodo de Gracia (3 Días)
                 </span>
               ) : sub.status === "TRIAL" ? (
-                <span className="inline-flex items-center gap-1 rounded-full bg-neutral-900 text-white px-3 py-1 text-xs font-bold border border-neutral-700">
+                <span className="inline-flex items-center gap-1 rounded-full bg-neutral-900 text-neutral-200 px-3 py-1 text-xs font-bold border border-neutral-700">
                   <Clock className="h-3.5 w-3.5" /> Prueba Gratuita (5 Días)
                 </span>
               ) : (
-                <span className="inline-flex items-center gap-1 rounded-full bg-red-500/15 text-red-300 px-3 py-1 text-xs font-bold border border-red-500/30">
+                <span className="inline-flex items-center gap-1 rounded-full bg-neutral-950 text-neutral-500 px-3 py-1 text-xs font-bold border border-neutral-800">
                   {sub.status === "SUSPENDED" ? "Suspendida por Falta de Pago" : "Finalizada / Cancelada"}
                 </span>
               )}
@@ -450,7 +442,7 @@ export default function AccountPage() {
                     <button
                       onClick={() => handleManageSubscription("reactivate")}
                       disabled={actionLoading}
-                      className="inline-flex items-center gap-2 rounded-xl border border-emerald-500/40 bg-emerald-500/10 px-4 py-2.5 text-xs font-bold text-emerald-300 hover:bg-emerald-500/20 transition-all disabled:opacity-50"
+                      className="inline-flex items-center gap-2 rounded-xl border border-neutral-700 bg-neutral-900 px-4 py-2.5 text-xs font-bold text-white hover:bg-neutral-800 transition-all disabled:opacity-50"
                     >
                       <RotateCcw className="h-4 w-4" />
                       <span>Reactivar Renovación Automática</span>
@@ -459,7 +451,7 @@ export default function AccountPage() {
                     <button
                       onClick={() => handleManageSubscription("cancel")}
                       disabled={actionLoading}
-                      className="inline-flex items-center gap-2 rounded-xl border border-neutral-700 bg-neutral-900 px-4 py-2.5 text-xs font-bold text-neutral-300 hover:border-red-500/50 hover:text-red-300 transition-all disabled:opacity-50"
+                      className="inline-flex items-center gap-2 rounded-xl border border-neutral-800 bg-neutral-950 px-4 py-2.5 text-xs font-bold text-neutral-400 hover:border-neutral-700 hover:text-white transition-all disabled:opacity-50"
                     >
                       <XCircle className="h-4 w-4" />
                       <span>Cancelar Suscripción</span>
@@ -508,8 +500,8 @@ export default function AccountPage() {
                       <span
                         className={`rounded-full px-2.5 py-0.5 text-[10px] font-bold border ${
                           p.status === "PAID"
-                            ? "bg-emerald-500/15 text-emerald-300 border-emerald-500/30"
-                            : "bg-red-500/15 text-red-300 border-red-500/30"
+                            ? "bg-white text-black border-white"
+                            : "bg-neutral-900 text-neutral-400 border-neutral-800"
                         }`}
                       >
                         {p.status === "PAID" ? "APROBADO" : "FALLIDO"}

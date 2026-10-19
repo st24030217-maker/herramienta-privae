@@ -55,8 +55,8 @@ export default function ForgotPasswordPage() {
           </div>
 
           {error && (
-            <div className="mb-4 flex items-center gap-2 rounded-lg bg-red-500/10 border border-red-500/30 p-3 text-xs text-red-200">
-              <AlertCircle className="h-4 w-4 shrink-0 text-red-400" />
+            <div className="mb-4 flex items-center gap-2 rounded-lg bg-neutral-900 border border-neutral-700 p-3 text-xs text-white">
+              <AlertCircle className="h-4 w-4 shrink-0 text-white" />
               <span>{error}</span>
             </div>
           )}
@@ -65,7 +65,7 @@ export default function ForgotPasswordPage() {
             <div className="space-y-4">
               <div className="rounded-lg bg-white/10 border border-white/20 p-4 text-xs text-white space-y-2">
                 <div className="flex items-center gap-2 font-bold">
-                  <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
+                  <CheckCircle2 className="h-4 w-4 text-white shrink-0" />
                   <span>Solicitud Procesada</span>
                 </div>
                 <p className="text-neutral-300 leading-relaxed">{successMsg}</p>

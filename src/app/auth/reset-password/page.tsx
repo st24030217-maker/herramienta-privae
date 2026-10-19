@@ -62,15 +62,15 @@ function ResetPasswordForm() {
       </div>
 
       {error && (
-        <div className="mb-4 flex items-center gap-2 rounded-lg bg-red-500/10 border border-red-500/30 p-3 text-xs text-red-200">
-          <AlertCircle className="h-4 w-4 shrink-0 text-red-400" />
+        <div className="mb-4 flex items-center gap-2 rounded-lg bg-neutral-900 border border-neutral-700 p-3 text-xs text-white">
+          <AlertCircle className="h-4 w-4 shrink-0 text-white" />
           <span>{error}</span>
         </div>
       )}
 
       {success ? (
         <div className="rounded-lg bg-white/10 border border-white/20 p-4 text-xs text-white text-center space-y-2">
-          <CheckCircle2 className="h-6 w-6 text-emerald-400 mx-auto" />
+          <CheckCircle2 className="h-6 w-6 text-white mx-auto" />
           <p className="font-bold">¡Contraseña actualizada con éxito!</p>
           <p className="text-neutral-300">Redirigiendo al inicio de sesión...</p>
         </div>
