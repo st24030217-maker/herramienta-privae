@@ -1,9 +1,16 @@
-# Guía Ejecutiva de la Plataforma
-## Privae Textil · Software Web de Preparación DTF a 300 DPI
+# Privae Textil — Plataforma de Preparación DTF a 300 DPI
+## Guía Ejecutiva y Ficha Técnica del Proyecto
 
-**Preparado para:** Dirección y Clientes de Privae Textil  
-**Fecha:** Octubre de 2026  
-**Versión:** 1.0 (Producción Oficial)
+![Privae Textil Logo](https://raw.githubusercontent.com/st24030217-maker/herramienta-privae/main/public/logo.png)
+
+**Enlaces Oficiales del Proyecto:**
+- **Plataforma Web Activa (Producción):** [https://herramienta-privae.vercel.app](https://herramienta-privae.vercel.app)
+- **Repositorio de Código en GitHub:** [https://github.com/st24030217-maker/herramienta-privae](https://github.com/st24030217-maker/herramienta-privae)
+- **Tienda Oficial Privae Textil:** [https://privaetextil.com](https://privaetextil.com)
+
+**Preparado para:** Dirección, Socios y Clientes de Privae Textil  
+**Fecha:** 19 de Octubre de 2026  
+**Versión:** 1.0.0 (Producción Oficial)
 
 ---
 
@@ -165,7 +172,9 @@ Toda la aplicación fue diseñada bajo un estándar visual sobrio y elegante:
 ---
 
 ## 9. Resumen de Accesos Rápidos
-
-- **Portal Principal de Herramientas:** Tu dirección web principal (`/`).
-- **Panel Administrativo:** `/admin` (acceso restringido exclusivamente para tu cuenta de administrador).
-- **Área de Cliente (Mi Cuenta):** `/account` (donde los clientes ven sus días, facturas y métodos de pago).
+ 
+- **Consola Principal de Herramientas:** [https://herramienta-privae.vercel.app](https://herramienta-privae.vercel.app)
+- **Panel de Control Administrativo:** [https://herramienta-privae.vercel.app/admin](https://herramienta-privae.vercel.app/admin) (acceso restringido exclusivamente para administradores).
+- **Área de Usuario (Mi Cuenta & Pagos):** [https://herramienta-privae.vercel.app/account](https://herramienta-privae.vercel.app/account)
+- **Repositorio de Código Fuente:** [https://github.com/st24030217-maker/herramienta-privae](https://github.com/st24030217-maker/herramienta-privae)
+- **Sitio y Tienda Oficial Privae Textil:** [https://privaetextil.com](https://privaetextil.com)
