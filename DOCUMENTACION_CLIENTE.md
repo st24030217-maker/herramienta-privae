@@ -93,7 +93,45 @@ Para que cada cliente se sienta atendido y conozca el estado de su cuenta:
 
 ---
 
-## 6. Tu Panel de Control como Administrador
+## 6. Tecnologías Utilizadas en el Desarrollo
+
+Para lograr un sistema rápido, seguro y escalable, se seleccionó un conjunto de tecnologías de estándar industrial:
+
+### Interfaz y Experiencia de Usuario (Frontend)
+- **Next.js 14 (App Router) y React 18:** Arquitectura moderna que permite tiempos de carga instantáneos y navegación ultrarrápida entre herramientas sin recargar la página.
+- **Tailwind CSS:** Sistema de diseño de alta precisión que garantiza una interfaz minimalista de lujo, responsiva y adaptable a cualquier pantalla (móvil, tablet o computadora).
+- **Framer Motion:** Biblioteca de animaciones de alto rendimiento para transiciones suaves en notificaciones de bienvenida y tarjetas interactivas.
+- **Lucide Icons:** Iconografía vectorial SVG limpia y formal (libre de emojis), manteniendo una presentación sobria y corporativa.
+
+### Motor de Procesamiento de Imágenes DTF
+- **Sharp y Buffers en Memoria (Node.js):** Procesamiento de imágenes de alta velocidad directamente en memoria RAM, permitiendo manipular archivos pesados sin perder calidad y reduciendo el consumo de almacenamiento.
+- **Inyector de Metadatos de Resolución (300 DPI):** Módulo técnico desarrollado a medida para incrustar la resolución física de 300 DPI exactos en la cabecera de los archivos PNG con transparencia real (canal alfa RGBA).
+- **HTML5 Canvas API:** Motor gráfico interactivo para el armador de pliegos de 58 cm, con soporte para arrastrar, rotar, duplicar y calcular el aprovechamiento de tela en tiempo real.
+
+### Base de Datos y Lógica de Negocio (Backend)
+- **PostgreSQL en Neon Cloud:** Base de datos relacional serverless de alta disponibilidad, segura y escalable automáticamente conforme crece el número de clientes.
+- **Prisma ORM:** Capa de acceso a datos que protege la aplicación contra inyecciones SQL y garantiza la integridad de usuarios, suscripciones y pagos.
+- **SQLite:** Motor de base de datos local sincronizado automáticamente para pruebas de desarrollo rápidas y sin dependencias externas.
+
+### Seguridad y Control de Sesiones
+- **Bcrypt.js:** Algoritmo de hash criptográfico irreversible para resguardar las contraseñas de los usuarios.
+- **JOSE / JWT (JSON Web Tokens):** Sesiones seguras mediante tokens firmados criptográficamente y almacenados en cookies protegidas (`HttpOnly`, `SameSite: Lax`).
+- **Versionado de Tokens (`tokenVersion`):** Sistema de seguridad que permite revocar inmediatamente todas las sesiones activas de un usuario si cambia su contraseña o si el administrador desactiva su cuenta.
+
+### Pagos y Facturación Recurrente
+- **Stripe API:** Plataforma líder mundial de pagos por internet para gestionar suscripciones mensuales automáticas, cobros periódicos y periodos de gracia bajo certificación bancaria internacional PCI-DSS Nivel 1.
+
+### Notificaciones y Correo Electrónico
+- **Nodemailer y Gmail SMTP:** Motor de envío de correos electrónicos transaccionales conectado a los servidores oficiales de Google (`smtp.gmail.com`).
+- **Plantillas HTML Responsive:** Correos con diseño optimizado para verse impecables tanto en la aplicación móvil de Gmail como en navegadores de escritorio.
+
+### Infraestructura y Despliegue en la Nube
+- **Vercel Edge Network:** Infraestructura de nube global de baja latencia con despliegue continuo (CI/CD) conectado al repositorio de GitHub.
+- **GitHub:** Control de versiones profesional del código fuente con trazabilidad total de cambios.
+
+---
+
+## 7. Tu Panel de Control como Administrador
 
 Desde tu acceso exclusivo de administrador (`/admin`) tienes el control total del negocio:
 
@@ -116,7 +154,7 @@ Desde tu acceso exclusivo de administrador (`/admin`) tienes el control total de
 
 ---
 
-## 7. Diseño Minimalista de Lujo
+## 8. Diseño Minimalista de Lujo
 
 Toda la aplicación fue diseñada bajo un estándar visual sobrio y elegante:
 - Colores neutros (negro profundo, grises de precisión y blanco de alto contraste).
@@ -126,7 +164,7 @@ Toda la aplicación fue diseñada bajo un estándar visual sobrio y elegante:
 
 ---
 
-## 8. Resumen de Accesos Rápidos
+## 9. Resumen de Accesos Rápidos
 
 - **Portal Principal de Herramientas:** Tu dirección web principal (`/`).
 - **Panel Administrativo:** `/admin` (acceso restringido exclusivamente para tu cuenta de administrador).
