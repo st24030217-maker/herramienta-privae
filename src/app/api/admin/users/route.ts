@@ -67,6 +67,7 @@ export async function PATCH(req: NextRequest) {
       newPassword,
       toggleActive,
       unlockAccount,
+      sendWelcomeEmail,
     } = await req.json();
 
     if (!userId) {
@@ -103,6 +104,34 @@ export async function PATCH(req: NextRequest) {
       return NextResponse.json({
         success: true,
         message: `Cuenta de ${targetUser.email} desbloqueada exitosamente.`,
+      });
+    }
+
+    // Reenvío manual de correo de bienvenida por parte del Administrador
+    if (sendWelcomeEmail) {
+      const userSub = await prisma.subscription.findUnique({ where: { userId } });
+      await sendTransactionalEventEmail({
+        userId: targetUser.id,
+        recipient: targetUser.email,
+        userName: targetUser.name,
+        eventType: "ALTA_INICIO_PRUEBA",
+        extraData: {
+          trialEndsAt: userSub?.trialEndsAt,
+        },
+      });
+
+      await prisma.auditLog.create({
+        data: {
+          adminEmail: adminUser.email,
+          targetUserEmail: targetUser.email,
+          action: "SEND_WELCOME_EMAIL",
+          details: `Correo oficial de bienvenida reenviado manualmente a ${targetUser.email} por ${adminUser.email}`,
+        },
+      });
+
+      return NextResponse.json({
+        success: true,
+        message: `Correo de bienvenida enviado exitosamente a ${targetUser.email}.`,
       });
     }
 

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { verifyPassword, createSessionToken, hashPassword } from "@/lib/auth";
 import { rateLimit } from "@/lib/rate-limit";
+import { sendTransactionalEventEmail } from "@/lib/email";
 
 export async function POST(req: NextRequest) {
   try {
@@ -195,6 +196,28 @@ export async function POST(req: NextRequest) {
         details: `Inicio de sesión exitoso desde IP ${clientIp}.`,
       },
     }).catch(() => {});
+
+    // Envío automático de bienvenida por correo si no se había enviado antes
+    if (user.role !== "ADMIN") {
+      const alreadySent = await prisma.emailLog.findFirst({
+        where: {
+          recipient: user.email,
+          eventType: "ALTA_INICIO_PRUEBA",
+        },
+      });
+
+      if (!alreadySent) {
+        await sendTransactionalEventEmail({
+          userId: user.id,
+          recipient: user.email,
+          userName: user.name,
+          eventType: "ALTA_INICIO_PRUEBA",
+          extraData: {
+            trialEndsAt: user.subscription?.trialEndsAt,
+          },
+        }).catch(() => {});
+      }
+    }
 
     const token = await createSessionToken(user.id, user.role, user.tokenVersion || 1);
 

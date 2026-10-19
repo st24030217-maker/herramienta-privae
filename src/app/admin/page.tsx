@@ -220,6 +220,26 @@ export default function AdminPage() {
     }
   };
 
+  const handleSendWelcomeEmail = async (userId: string, userEmail: string) => {
+    setActionLoading(true);
+    setFeedback(null);
+    try {
+      const res = await fetch("/api/admin/users", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId, sendWelcomeEmail: true }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || "No se pudo enviar el correo de bienvenida.");
+      setFeedback(data.message || `Correo de bienvenida enviado a ${userEmail}.`);
+      loadData();
+    } catch (err: any) {
+      setFeedback(err.message || "Error al enviar correo de bienvenida.");
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
   const handleSaveSettings = async (e: React.FormEvent) => {
     e.preventDefault();
     setActionLoading(true);
@@ -1253,6 +1273,14 @@ export default function AdminPage() {
                             title="Cambiar la contraseña de este usuario"
                           >
                             Restablecer Clave
+                          </button>
+                          <button
+                            onClick={() => handleSendWelcomeEmail(u.id, u.email)}
+                            disabled={actionLoading}
+                            className="rounded bg-neutral-900 border border-neutral-700 px-2 py-1 text-[10px] font-bold text-neutral-300 hover:text-white hover:bg-neutral-800 transition-colors"
+                            title="Enviar o reenviar correo oficial de bienvenida a Gmail"
+                          >
+                            Enviar Bienvenida
                           </button>
                         </td>
                       </tr>
