@@ -1,16 +1,16 @@
+![Privae Textil](https://raw.githubusercontent.com/st24030217-maker/herramienta-privae/main/public/logo.png)
+
 # Privae Textil — Plataforma de Preparación DTF a 300 DPI
 ## Guía Ejecutiva y Ficha Técnica del Proyecto
 
-![Privae Textil Logo](https://raw.githubusercontent.com/st24030217-maker/herramienta-privae/main/public/logo.png)
-
-**Enlaces Oficiales del Proyecto:**
-- **Plataforma Web Activa (Producción):** [https://herramienta-privae.vercel.app](https://herramienta-privae.vercel.app)
-- **Repositorio de Código en GitHub:** [https://github.com/st24030217-maker/herramienta-privae](https://github.com/st24030217-maker/herramienta-privae)
-- **Tienda Oficial Privae Textil:** [https://privaetextil.com](https://privaetextil.com)
-
-**Preparado para:** Dirección, Socios y Clientes de Privae Textil  
-**Fecha:** 19 de Octubre de 2026  
-**Versión:** 1.0.0 (Producción Oficial)
+| Ficha del Proyecto | Detalle Oficial |
+| :--- | :--- |
+| **Plataforma Web Activa (Producción)** | [https://herramienta-privae.vercel.app](https://herramienta-privae.vercel.app) |
+| **Repositorio de Código en GitHub** | [https://github.com/st24030217-maker/herramienta-privae](https://github.com/st24030217-maker/herramienta-privae) |
+| **Tienda Oficial Privae Textil** | [https://privaetextil.com](https://privaetextil.com) |
+| **Destinatarios** | Dirección, Socios y Clientes de Privae Textil |
+| **Fecha de Emisión** | Octubre 2026 |
+| **Estado y Versión** | v1.0.0 (Producción Oficial) |
 
 ---
 
@@ -172,9 +172,11 @@ Toda la aplicación fue diseñada bajo un estándar visual sobrio y elegante:
 ---
 
 ## 9. Resumen de Accesos Rápidos
- 
-- **Consola Principal de Herramientas:** [https://herramienta-privae.vercel.app](https://herramienta-privae.vercel.app)
-- **Panel de Control Administrativo:** [https://herramienta-privae.vercel.app/admin](https://herramienta-privae.vercel.app/admin) (acceso restringido exclusivamente para administradores).
-- **Área de Usuario (Mi Cuenta & Pagos):** [https://herramienta-privae.vercel.app/account](https://herramienta-privae.vercel.app/account)
-- **Repositorio de Código Fuente:** [https://github.com/st24030217-maker/herramienta-privae](https://github.com/st24030217-maker/herramienta-privae)
-- **Sitio y Tienda Oficial Privae Textil:** [https://privaetextil.com](https://privaetextil.com)
+
+| Módulo / Recurso | Enlace Directo | Descripción de Acceso |
+| :--- | :--- | :--- |
+| **Consola Principal** | [herramienta-privae.vercel.app](https://herramienta-privae.vercel.app) | Taller DTF en línea con las 5 herramientas activas |
+| **Panel de Administración** | [herramienta-privae.vercel.app/admin](https://herramienta-privae.vercel.app/admin) | Control central de usuarios, métricas y suscripciones |
+| **Mi Cuenta y Facturación** | [herramienta-privae.vercel.app/account](https://herramienta-privae.vercel.app/account) | Perfil del usuario y estado de suscripción en Stripe |
+| **Repositorio GitHub** | [github.com/st24030217-maker/herramienta-privae](https://github.com/st24030217-maker/herramienta-privae) | Código fuente, base de datos y trazabilidad técnica |
+| **Tienda Oficial Privae Textil** | [privaetextil.com](https://privaetextil.com) | Portal web comercial y catálogo oficial de la marca |
