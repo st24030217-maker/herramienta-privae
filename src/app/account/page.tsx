@@ -64,7 +64,7 @@ export default function AccountPage() {
   } | null>(null);
 
   const fetchUserData = () => {
-    fetch("/api/auth/me")
+    fetch("/api/auth/me", { cache: "no-store" })
       .then((res) => res.json())
       .then((data) => {
         if (data.authenticated) {

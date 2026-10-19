@@ -134,6 +134,34 @@ export default function AdminPage() {
     }
   };
 
+  const handleResetPassword = async (userId: string, userEmail: string) => {
+    const newPass = prompt(`Ingresa la nueva contraseña para ${userEmail}:`, "Prueba123!");
+    if (!newPass) return;
+    if (newPass.length < 6) {
+      alert("La contraseña debe tener al menos 6 caracteres.");
+      return;
+    }
+    setActionLoading(true);
+    setFeedback(null);
+    try {
+      const res = await fetch("/api/admin/users", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId, newPassword: newPass }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        throw new Error(data.error || "No se pudo actualizar la contraseña.");
+      }
+      setFeedback(`Contraseña de ${userEmail} actualizada exitosamente a: "${newPass}"`);
+      loadData();
+    } catch (err: any) {
+      setFeedback(err.message || "Error al actualizar contraseña.");
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
   const handleSaveSettings = async (e: React.FormEvent) => {
     e.preventDefault();
     setActionLoading(true);
@@ -1083,6 +1111,14 @@ export default function AdminPage() {
                             className="rounded bg-red-500/15 border border-red-500/30 px-2 py-1 text-[10px] font-bold text-red-300 hover:bg-red-500/25"
                           >
                             Suspender
+                          </button>
+                          <button
+                            onClick={() => handleResetPassword(u.id, u.email)}
+                            disabled={actionLoading}
+                            className="rounded bg-sky-500/15 border border-sky-500/30 px-2 py-1 text-[10px] font-bold text-sky-300 hover:bg-sky-500/25"
+                            title="Cambiar la contraseña de este usuario"
+                          >
+                            Restablecer Clave
                           </button>
                         </td>
                       </tr>

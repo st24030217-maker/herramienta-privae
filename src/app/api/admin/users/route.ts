@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { getCurrentUser } from "@/lib/auth";
+import { getCurrentUser, hashPassword } from "@/lib/auth";
 import { sendTransactionalEventEmail } from "@/lib/email";
 
 export async function GET(req: NextRequest) {
@@ -49,7 +49,49 @@ export async function PATCH(req: NextRequest) {
       return NextResponse.json({ error: "Acceso no autorizado" }, { status: 401 });
     }
 
-    const { userId, newStatus, addDays } = await req.json();
+    const { userId, newStatus, addDays, newPassword } = await req.json();
+
+    if (!userId) {
+      return NextResponse.json(
+        { error: "ID de usuario requerido" },
+        { status: 400 }
+      );
+    }
+
+    const targetUser = await prisma.user.findUnique({ where: { id: userId } });
+    if (!targetUser) {
+      return NextResponse.json({ error: "Usuario no encontrado" }, { status: 404 });
+    }
+
+    // Restablecimiento de contraseña solicitado por el Administrador
+    if (newPassword) {
+      if (typeof newPassword !== "string" || newPassword.length < 6) {
+        return NextResponse.json(
+          { error: "La contraseña debe tener al menos 6 caracteres" },
+          { status: 400 }
+        );
+      }
+      const passwordHash = await hashPassword(newPassword);
+      await prisma.user.update({
+        where: { id: userId },
+        data: { passwordHash },
+      });
+      await prisma.auditLog.create({
+        data: {
+          adminEmail: adminUser.email,
+          targetUserEmail: targetUser.email,
+          action: "RESET_PASSWORD",
+          details: `Contraseña restablecida exitosamente por el administrador para ${targetUser.email}`,
+        },
+      });
+
+      if (!newStatus) {
+        return NextResponse.json({
+          success: true,
+          message: `Contraseña de ${targetUser.email} actualizada con éxito.`,
+        });
+      }
+    }
 
     const VALID_STATUSES = [
       "TRIAL",
@@ -60,16 +102,11 @@ export async function PATCH(req: NextRequest) {
       "CANCELED",
     ];
 
-    if (!userId || !newStatus || !VALID_STATUSES.includes(newStatus)) {
+    if (!newStatus || !VALID_STATUSES.includes(newStatus)) {
       return NextResponse.json(
         { error: "Parámetros insuficientes o estado no válido" },
         { status: 400 }
       );
-    }
-
-    const targetUser = await prisma.user.findUnique({ where: { id: userId } });
-    if (!targetUser) {
-      return NextResponse.json({ error: "Usuario no encontrado" }, { status: 404 });
     }
 
     const updateData: any = { status: newStatus };

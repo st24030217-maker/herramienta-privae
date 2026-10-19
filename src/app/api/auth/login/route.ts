@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
       req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
       "unknown";
 
-    const { allowed, retryAfterSec } = rateLimit(`login:${clientIp}`, 10, 15 * 60 * 1000);
+    const { allowed, retryAfterSec } = rateLimit(`login:${clientIp}`, 30, 15 * 60 * 1000);
     if (!allowed) {
       return NextResponse.json(
         { error: "Demasiados intentos. Inténtalo más tarde." },
