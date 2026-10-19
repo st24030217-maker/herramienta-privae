@@ -197,11 +197,16 @@ export default function AccountPage() {
     <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:px-8 space-y-8">
       <AnimatedContent distance={20} trigger="mount">
         <div className="border-b border-neutral-800 pb-5">
-          <h1 className="text-2xl sm:text-3xl font-black text-white uppercase tracking-tight">
-            Área de Usuario · Mi Cuenta & Suscripción
-          </h1>
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <h1 className="text-2xl sm:text-3xl font-black text-white uppercase tracking-tight">
+              Área de Usuario · Mi Cuenta
+            </h1>
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-neutral-700 bg-neutral-900 px-3 py-1 text-xs font-mono font-bold text-neutral-200">
+              {user.role === "ADMIN" ? "👑 Administrador" : "✦ Cliente DTF"}: {user.name || user.email}
+            </span>
+          </div>
           <p className="mt-1 text-xs sm:text-sm text-neutral-400">
-            Consulta el estado de tu prueba de 5 días, tu suscripción Premium, próxima fecha de cobro, método de pago y opciones de cancelación o reactivación.
+            ¡Hola, {user.name || user.email.split("@")[0]}! Consulta el estado de tu suscripción, días disponibles, facturación y descargas.
           </p>
         </div>
       </AnimatedContent>

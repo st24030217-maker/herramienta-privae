@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import CardNav from "@/components/CardNav";
 import { SubscriptionBanner } from "./SubscriptionBanner";
+import { UserWelcomeNotification } from "./UserWelcomeNotification";
 
 interface UserData {
   id: string;
@@ -41,6 +42,12 @@ export function Navbar() {
   }, [pathname]);
 
   const handleLogout = async () => {
+    try {
+      if (typeof window !== "undefined") {
+        sessionStorage.removeItem("privae_last_welcomed_user_id");
+        sessionStorage.removeItem("privae_welcome_trigger");
+      }
+    } catch {}
     await fetch("/api/auth/logout", { method: "POST" });
     setUserData(null);
     window.location.href = "/auth/login";
@@ -177,6 +184,9 @@ export function Navbar() {
           isAccessGranted={userData.subscription.isAccessGranted}
         />
       )}
+
+      {/* Notificación de Bienvenida Personalizada por Usuario */}
+      <UserWelcomeNotification user={userData} />
     </>
   );
 }

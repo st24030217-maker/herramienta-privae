@@ -63,6 +63,11 @@ export async function GET() {
     ]);
 
     return NextResponse.json({
+      admin: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+      },
       stats: {
         totalUsers,
         activeSubscriptions,

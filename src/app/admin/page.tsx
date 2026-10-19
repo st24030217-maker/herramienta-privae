@@ -68,6 +68,7 @@ export default function AdminPage() {
   const [unauthorized, setUnauthorized] = useState(false);
   const [actionLoading, setActionLoading] = useState(false);
   const [feedback, setFeedback] = useState<string | null>(null);
+  const [adminInfo, setAdminInfo] = useState<{ id: string; email: string; name: string | null } | null>(null);
 
   // Configuración dinámica del Plan y Pasarela (Sección 02 y 09)
   const [planPriceUsd, setPlanPriceUsd] = useState("19.99");
@@ -87,6 +88,7 @@ export default function AdminPage() {
           setUnauthorized(true);
           return;
         }
+        if (statsData.admin) setAdminInfo(statsData.admin);
         if (statsData.stats) setStats(statsData.stats);
         if (statsData.recentPayments) setRecentPayments(statsData.recentPayments);
         if (statsData.recentUsages) setRecentUsages(statsData.recentUsages);
@@ -653,14 +655,21 @@ export default function AdminPage() {
       {/* Header */}
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-neutral-800 pb-5">
         <div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             <Crown className="h-6 w-6 text-white" />
             <h1 className="text-2xl sm:text-3xl font-black text-white uppercase tracking-tight">
               Panel Administrativo · Privae Textil
             </h1>
+            {adminInfo && (
+              <span className="hidden sm:inline-flex items-center gap-1.5 rounded-full border border-neutral-700 bg-neutral-900 px-3 py-0.5 text-xs font-mono font-bold text-neutral-300">
+                👑 Admin: {adminInfo.name || adminInfo.email}
+              </span>
+            )}
           </div>
           <p className="mt-1 text-xs sm:text-sm text-neutral-400">
-            Gestión de usuarios, pruebas de 5 días, suscripciones, pagos de pasarela, configuración de precio y soporte técnico.
+            {adminInfo
+              ? `Bienvenido, ${adminInfo.name || adminInfo.email}. Control maestro de usuarios, suscripciones y configuración de pasarela.`
+              : "Gestión de usuarios, pruebas de 5 días, suscripciones, pagos de pasarela, configuración de precio y soporte técnico."}
           </p>
         </div>
 

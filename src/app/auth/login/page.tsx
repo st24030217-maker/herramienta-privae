@@ -42,6 +42,13 @@ export default function LoginPage() {
         safeRedirect = "/";
       }
 
+      if (typeof window !== "undefined") {
+        try {
+          sessionStorage.setItem("privae_welcome_trigger", data.user?.id || "login");
+          sessionStorage.removeItem("privae_last_welcomed_user_id");
+        } catch {}
+      }
+
       // Redirección completa para asegurar actualización inmediata de cookies y estado de sesión
       window.location.href = safeRedirect;
     } catch (err: any) {
