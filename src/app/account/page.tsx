@@ -107,6 +107,17 @@ export default function AccountPage() {
     }
   }, []);
 
+  useEffect(() => {
+    if (!clientSecret) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setClientSecret(null);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [clientSecret]);
+
   const handleStripeCheckout = async () => {
     setActionLoading(true);
     setFeedback(null);
@@ -584,27 +595,34 @@ export default function AccountPage() {
 
       {/* Modal Stripe Embedded Checkout */}
       {clientSecret && stripePromise && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-md p-4 animate-in fade-in duration-200">
-          <div className="relative w-full max-w-2xl max-h-[92vh] overflow-hidden rounded-3xl border border-neutral-800 bg-[#0D0E11] shadow-2xl flex flex-col">
-            <div className="flex items-center justify-between px-6 py-4 border-b border-neutral-800">
+        <div
+          onClick={() => setClientSecret(null)}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-150"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="relative w-full max-w-lg max-h-[82vh] overflow-hidden rounded-2xl border border-neutral-800 bg-[#0D0E11] shadow-2xl flex flex-col"
+          >
+            <div className="flex items-center justify-between px-5 py-3.5 border-b border-neutral-800 bg-neutral-950/80">
               <div>
-                <h2 className="text-sm font-black uppercase tracking-wider text-white">
+                <h2 className="text-xs font-black uppercase tracking-wider text-white">
                   Suscripcion Premium Privae Textil
                 </h2>
-                <p className="text-xs text-neutral-400 mt-0.5">
-                  Procesamiento seguro con Stripe sin salir de la plataforma
+                <p className="text-[11px] text-neutral-400">
+                  Pago seguro integrado con Stripe
                 </p>
               </div>
               <button
                 onClick={() => setClientSecret(null)}
-                className="rounded-xl border border-neutral-800 bg-neutral-900 p-2 text-neutral-400 hover:border-neutral-700 hover:text-white transition-all"
-                title="Cerrar modal de pago"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-neutral-800 bg-neutral-900 px-3 py-1.5 text-xs font-semibold text-neutral-300 hover:border-neutral-700 hover:text-white transition-all"
+                title="Cerrar ventana (Esc)"
               >
-                <X className="h-4 w-4" />
+                <span>Cerrar</span>
+                <X className="h-3.5 w-3.5" />
               </button>
             </div>
 
-            <div className="p-4 sm:p-6 overflow-y-auto max-h-[calc(92vh-80px)] min-h-[440px]">
+            <div className="p-3 sm:p-5 overflow-y-auto max-h-[calc(82vh-60px)]">
               <EmbeddedCheckoutProvider
                 stripe={stripePromise}
                 options={{ clientSecret }}
