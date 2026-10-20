@@ -14,8 +14,18 @@ import {
   ExternalLink,
   XCircle,
   RotateCcw,
+  X,
 } from "lucide-react";
 import { AnimatedContent } from "@/components/AnimatedContent";
+import { loadStripe } from "@stripe/stripe-js";
+import {
+  EmbeddedCheckoutProvider,
+  EmbeddedCheckout,
+} from "@stripe/react-stripe-js";
+
+const stripePromise = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+  ? loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
+  : null;
 
 interface UserAccountData {
   id: string;
@@ -58,6 +68,7 @@ export default function AccountPage() {
   const [user, setUser] = useState<UserAccountData | null>(null);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
+  const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [feedback, setFeedback] = useState<{
     text: string;
     type: "success" | "error" | "info";
@@ -81,13 +92,14 @@ export default function AccountPage() {
       const params = new URLSearchParams(window.location.search);
       if (params.get("payment") === "success") {
         setFeedback({
-          text: "¡Pago aprobado con éxito en Stripe! Tu suscripción Premium está activa.",
+          text: "Pago aprobado con exito en Stripe. Tu suscripcion Premium esta activa.",
           type: "success",
         });
         window.history.replaceState({}, "", "/account");
+        fetchUserData();
       } else if (params.get("payment") === "cancelled") {
         setFeedback({
-          text: "El proceso de suscripción en Stripe fue cancelado.",
+          text: "El proceso de suscripcion en Stripe fue cancelado.",
           type: "info",
         });
         window.history.replaceState({}, "", "/account");
@@ -99,14 +111,17 @@ export default function AccountPage() {
     setActionLoading(true);
     setFeedback(null);
     try {
-      const res = await fetch("/api/stripe/checkout", {
+      const isEmbedded = Boolean(stripePromise);
+      const res = await fetch(`/api/stripe/checkout${isEmbedded ? "?embedded=true" : ""}`, {
         method: "POST",
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
         throw new Error(data.error || "No se pudo iniciar el checkout de Stripe.");
       }
-      if (data.url) {
+      if (isEmbedded && data.clientSecret) {
+        setClientSecret(data.clientSecret);
+      } else if (data.url) {
         window.location.href = data.url;
       }
     } catch (err: any) {
@@ -114,6 +129,7 @@ export default function AccountPage() {
         text: err.message || "Error al conectar con Stripe.",
         type: "error",
       });
+    } finally {
       setActionLoading(false);
     }
   };
@@ -279,7 +295,7 @@ export default function AccountPage() {
             onClick={() => setFeedback(null)}
             className="hover:opacity-70 text-xs px-1 text-neutral-400"
           >
-            ✕
+            <X className="h-3.5 w-3.5" />
           </button>
         </div>
       )}
@@ -565,6 +581,40 @@ export default function AccountPage() {
           </div>
         </div>
       </AnimatedContent>
+
+      {/* Modal Stripe Embedded Checkout */}
+      {clientSecret && stripePromise && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-md p-4 animate-in fade-in duration-200">
+          <div className="relative w-full max-w-2xl max-h-[92vh] overflow-hidden rounded-3xl border border-neutral-800 bg-[#0D0E11] shadow-2xl flex flex-col">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-neutral-800">
+              <div>
+                <h2 className="text-sm font-black uppercase tracking-wider text-white">
+                  Suscripcion Premium Privae Textil
+                </h2>
+                <p className="text-xs text-neutral-400 mt-0.5">
+                  Procesamiento seguro con Stripe sin salir de la plataforma
+                </p>
+              </div>
+              <button
+                onClick={() => setClientSecret(null)}
+                className="rounded-xl border border-neutral-800 bg-neutral-900 p-2 text-neutral-400 hover:border-neutral-700 hover:text-white transition-all"
+                title="Cerrar modal de pago"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            <div className="p-4 sm:p-6 overflow-y-auto max-h-[calc(92vh-80px)] min-h-[440px]">
+              <EmbeddedCheckoutProvider
+                stripe={stripePromise}
+                options={{ clientSecret }}
+              >
+                <EmbeddedCheckout className="w-full" />
+              </EmbeddedCheckoutProvider>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

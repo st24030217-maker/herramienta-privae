@@ -45,12 +45,12 @@ export async function POST(req: NextRequest) {
           quantity: 1,
         };
 
-    const session = await stripe.checkout.sessions.create({
+    const isEmbedded = req.nextUrl.searchParams.get("embedded") === "true";
+
+    const sessionParams: any = {
       customer: customerId,
       mode: "subscription",
       line_items: [lineItem],
-      success_url: `${origin}/account?payment=success&session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${origin}/account?payment=cancelled`,
       subscription_data: {
         metadata: {
           userId: user.id,
@@ -60,9 +60,22 @@ export async function POST(req: NextRequest) {
         userId: user.id,
       },
       allow_promotion_codes: true,
-    });
+    };
 
-    return NextResponse.json({ url: session.url });
+    if (isEmbedded) {
+      sessionParams.ui_mode = "embedded";
+      sessionParams.return_url = `${origin}/account?payment=success&session_id={CHECKOUT_SESSION_ID}`;
+    } else {
+      sessionParams.success_url = `${origin}/account?payment=success&session_id={CHECKOUT_SESSION_ID}`;
+      sessionParams.cancel_url = `${origin}/account?payment=cancelled`;
+    }
+
+    const session = await stripe.checkout.sessions.create(sessionParams);
+
+    return NextResponse.json({
+      url: session.url,
+      clientSecret: session.client_secret,
+    });
   } catch (error: any) {
     console.error("Error al crear sesión de checkout de Stripe:", error);
     return NextResponse.json(
